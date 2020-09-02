@@ -1,0 +1,135 @@
+/* *****************************
+ * var
+ * *****************************/
+:root {
+    --header-height: 150px;
+    --padding: 20px;
+    --margin: 15px;
+}
+
+
+/* *****************************
+ * font
+ * *****************************/
+.suns-serif {
+    font-family: 'Hiragino Kaku Gothic ProN','ヒラギノ角ゴ ProN W3','メイリオ', Meiryo,'ヒラギノ角ゴシック','Hiragino Sans',sans-serif;
+}
+.serif {
+    font-family: 'ヒラギノ明朝 ProN','Hiragino Mincho ProN','Yu Mincho Light','YuMincho','Yu Mincho','游明朝体',serif;
+}
+
+
+/* *****************************
+ * common
+ * *****************************/
+h1 {
+    font-size: large;
+}
+body {
+    background-color: #530e0ee8;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+}
+#wrapper {
+    box-sizing: border-box;
+    width: max(500px, 90%);
+    height: 100vh;
+    margin: 0 auto;
+    padding: var(--margin) 0;
+}
+
+header {
+    margin: 0;
+    margin-bottom: var(--margin);
+    background-color: white;
+    height; var(--header-height);
+    padding: 0;
+    border-radius: 10px;
+    padding: var(--padding);
+}
+
+main {
+    margin: var(--margin) auto;
+    background-color: white;
+    border-radius: 10px;
+    padding: var(--padding);
+    height: calc(99vh - var(--margin)*3 - var(--header-height));
+}
+
+p {
+    text-indent: 1em;
+    margin: 5px 0;
+}
+/* *****************************
+ * tab
+ * *****************************/
+.tabs {
+
+}
+.tab_item {
+    display: inline-block;
+    color: white;
+    background-color: background-color: rgba(10, 10, 10, 80%);
+}
+
+.tab_item:checked {
+    background-color: pink;
+    color: white;
+}
+
+/* *****************************
+ * header
+ * *****************************/
+header h1 {
+    display: inline-block;
+}
+#info-checkbox{
+    display: none;
+}
+
+#info-panel {
+    display: none;
+}
+#info-checkbox:checked ~ #info-panel {
+    display: block;
+    float: right;
+}
+#info-checkbox:checked ~ .info:after {
+    color: rgb(0, 123, 255);
+    font-size: small;
+    content: "閉じる";
+}
+
+.info-item {
+    display: inline-block;
+    margin-right: 10px;
+}
+p.panel {
+    font-size: small;
+    float: right;
+    color: white;
+    width: max(250px, 50%);
+    background-color: rgba(10, 10, 10, 80%);
+    border-radius: 10px;
+    padding: 20px;
+    font-weight: lighter;
+}
+p.panel a {
+    color: inherit;
+}
+p.panel a::after{
+    margin-left: 0.5em;
+    content: url("data:image/svg+xml;charset=UTF-9,<svg width='1em' height='1em' viewBox='0 0 16 16' class='bi bi-box-arrow-up-right' fill='white' xmlns='http://www.w3.org/2000/svg'>  <path fill-rule='evenodd' d='M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z'/>  <path fill-rule='evenodd' d='M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z'/></svg>");
+}
+p.panel a:hover {
+    color: pink;
+}
+/* *****************************
+ * images
+ * *****************************/
+.info:before {
+    margin-left: var(--margin);
+    margin-right: 2px;
+    content: url("data:image/svg+xml;charset=UTF-9,<svg width='1em' height='1em' viewBox='0 0 16 16' class='bi bi-info-circle-fill' fill='rgb(0,123,255)' xmlns='http://www.w3.org/2000/svg'>  <path fill-rule='evenodd' d='M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412l-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM8 5.5a1 1 0 1 0 0-2 1 1 0 0 0 0 2z'/></svg>");
+}
