@@ -56,7 +56,7 @@ def header(jsonfile):
 def tabItemContainer(tab_items, container_id):
     return div(tab_items, myclass='tab_container', id=container_id)
 
-def addTab(tabname, id, name, tab_container_id, content, checked=False):
+def addTab(tabname, id, name, tab_container_id, content, checked=''):
     suffix = '_content'
     style = "<style>"\
         + "#" + id + suffix +"{display: none;}"\
@@ -110,73 +110,107 @@ def makedirs(path, fource = False):
 html parts
 ********************************* """
 def h1(content, myclass='', id=''):
-    return "<h1" + attribute(myclass, id) + ">" + content + "</h1>"
+    attr_dict = {
+            'class': myclass,
+            'id': id
+            }
+    return "<h1" + attributes(attr_dict) + ">" + content + "</h1>"
 
-def slider(id, name, myclass='',\
-        value = '50', min='0', max='100', step='1',\
-        unit = ''):
+def slider(id, name,\
+        value = '50', min = '0', max='100',\
+        step='1', unit=''\
+        ):
+    attr_dict={
+        'value': value,
+        'min': min,
+        'max': max,
+        'step': step
+    }
     html = label(name, id);
     html += "<input type='range'"\
-            + attribute(myclass, id, name=name)\
-            + " min=" + min\
-            + " max=" + max\
-            + " step=" + step
-    html += span(value, myclass='slider_value');
+            + attributes(attr_dict)
+    html += span(value, myclass='slider_value')
     if unit != '':
         html += span(unit, myclass='slider_unit')
     return html
 
-def input (type, myclass='', id='', name='', title='', checked=False):
+def input (type, myclass='', id='', name='', checked=''):
     html_str = "<input type='" + type + "'"
-    html_str += attribute(myclass, id, name=name, checked=checked)
+    attr_dict = {
+            'class': myclass,
+            'id' : id,
+            'name' : name,
+            'checked': checked
+            }
+    html_str += attributes(attr_dict)
     html_str += ">"
     return html_str
 
 def label(label_str, for_id, myclass='', id='', title=''):
-    html =  "<label for='" + for_id + "'" + attribute(myclass, id, title) + ">"
+    attr_dict = {
+            'for': for_id,
+            'class': myclass,
+            'id': id,
+            'title': title
+            }
+    html =  "<label" + attributes(attr_dict) + ">"
     html += label_str + "</label>"
     return html
 
-def attribute(myclass, id, title='', target='', name='', checked=False):
+# ex {'class' : 'float', 'id': 'myid'}
+def attributes(attr_dict):
     html_str = ""
-    if id != '':
-        html_str += " id='" + id + "'"
-    if myclass != '':
-        html_str += " class='" + myclass + "'"
-    if name != '':
-        html_str += " name='" + name + "'"
-    if title != '':
-        html_str += " title='" + title + "'"
-    if target != '':
-        html_str += " target=" + target + "'"
-    if checked:
-        html_str += " checked='checked'"
+    for key in attr_dict:
+        if attr_dict[key] != '':
+            html_str += ' ' + key + " = " + attr_dict[key]
     return html_str
 
 def div(content, myclass='', id=''):
     html_str = "<div"
-    html_str += attribute(myclass, id)
+    attr = {
+            'class': myclass,
+            'id': id
+            }
+    html_str += attributes(attr)
     html_str += ">" + content  + "</div>"
     return html_str
 
 def a(url, description, myclass='', id='', target=''):
-    html_str = "<a href='" + url + "'"
-    html_str += attribute(myclass, id, target)
+    html_str = "<a"
+    attr = {
+            'href': url,
+            'class': myclass,
+            'id': id,
+            'target': target
+            }
+    html_str += attributes(attr)
     html_str += ">" + description + "</a>"
     return html_str
 
 def button(title, myclass='', id =''):
     html_str = "<button"
-    html_str += attribute(myclass, id);
+    attr = {
+            'class': myclass,
+            'id': id
+            }
+    html_str += attributes(attr);
     return html_str + ">" + title + "</button>"
 
 def span(content, myclass="", id=""):
     html_str = "<span"
-    html_str += attribute(myclass, id);
+    attr = {
+            'class': myclass,
+            'id': id
+            }
+    html_str += attributes(attr);
     return html_str + ">" + content + "</span>"
 
 def p(content, myclass='', id=''):
-    html_str = "<p" + attribute(myclass, id) + ">"
+    attr = {
+            'class': myclass,
+            'id': id
+            }
+    html_str = "<p" + attributes(attr) + ">"
     html_str += content;
     html_str += "</p>"
     return html_str
@@ -188,7 +222,7 @@ data = {}
 data["HEAD"] = head("SimEpidemic", stylesheets=["../css/common.css"])
 data["HEADER"] = header(JSON_DIR + "info.json")
 tab1 = addTab('tabname', 'id', 'page_tabs', 'tabs', 'content')
-tab2 = addTab('tabname2', 'id2', 'page_tabs', 'tabs', 'content2', True)
+tab2 = addTab('tabname2', 'id2', 'page_tabs', 'tabs', 'content2', 'checked')
 tabitems = tab1['tab_item'] + tab2["tab_item"]
 tab_contents = tab1["tab_content"] + tab2["tab_content"]
 data["MAIN"] = tabItemContainer(tabitems + tab_contents, 'tabs')
