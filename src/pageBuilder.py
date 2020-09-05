@@ -112,6 +112,20 @@ html parts
 def h1(content, myclass='', id=''):
     return "<h1" + attribute(myclass, id) + ">" + content + "</h1>"
 
+def slider(id, name, myclass='',\
+        value = '50', min='0', max='100', step='1',\
+        unit = ''):
+    html = label(name, id);
+    html += "<input type='range'"\
+            + attribute(myclass, id, name=name)\
+            + " min=" + min\
+            + " max=" + max\
+            + " step=" + step
+    html += span(value, myclass='slider_value');
+    if unit != '':
+        html += span(unit, myclass='slider_unit')
+    return html
+
 def input (type, myclass='', id='', name='', title='', checked=False):
     html_str = "<input type='" + type + "'"
     html_str += attribute(myclass, id, name=name, checked=checked)
@@ -179,5 +193,6 @@ tabitems = tab1['tab_item'] + tab2["tab_item"]
 tab_contents = tab1["tab_content"] + tab2["tab_content"]
 data["MAIN"] = tabItemContainer(tabitems + tab_contents, 'tabs')
 data["MAIN"] += tab1["tab_content"] + tab2["tab_content"]
+data["MAIN"] += div(slider('sample', 'さんぷる', unit='サンプル'));
 with open(OUTPUT_DIR + "index.html", mode="w") as f:
     f.write(rephrase(TEMPLATE_DIR + "base.html", data))
