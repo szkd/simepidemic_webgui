@@ -8,8 +8,6 @@ const
 TEMPLATE_DIR = "templates/"
 JSON_DIR = "json/"
 OUTPUT_DIR = "../SimEpidemic/"
-""" OUTPUT """
-
 
 """ ******************************
 content
@@ -30,7 +28,7 @@ def head(title, stylesheets=[], scripts=[]):
     return html
 
 def header(jsonfile):
-    html = "<header class='suns-serif'>"
+    html = "<header>"
     data = json2dict(jsonfile)
     data["SIGNATURE"] = \
             a(data["SIGNATURE"]["link"],\
@@ -41,10 +39,10 @@ def header(jsonfile):
             data["DESCRIPTION"]["project"],\
             target='_blank')
 
-    html += h1(data["TITLE"])\
+    html += h(1, data["TITLE"])\
             + input('checkbox', id='info-checkbox')\
             + label('', 'info-checkbox', myclass= 'info', title="これは何?")\
-            + p(data["DESCRIPTION"], myclass='panel suns-serif', id='info-panel')
+            + p(data["DESCRIPTION"], myclass='panel sans-serif', id='info-panel')
     html += div(\
             span("ver." + data["VERSION"], myclass="info-item")\
             + span("更新日: " + data["UPDATE"], myclass="info-item")\
@@ -53,6 +51,9 @@ def header(jsonfile):
     html+= "</header>"
     return html
 
+""" ****************************** 
+tab
+********************************* """
 def tabItemContainer(tab_items, container_id):
     return div(tab_items, myclass='tab_container', id=container_id)
 
@@ -109,12 +110,6 @@ def makedirs(path, fource = False):
 """ ******************************
 html parts
 ********************************* """
-def h1(content, myclass='', id=''):
-    attr_dict = {
-            'class': myclass,
-            'id': id
-            }
-    return "<h1" + attributes(attr_dict) + ">" + content + "</h1>"
 
 def slider(id, name,\
         value = '50', min = '0', max='100',\
@@ -128,10 +123,11 @@ def slider(id, name,\
     }
     html = label(name, id);
     html += "<input type='range'"\
-            + attributes(attr_dict)
+            + attributes(attr_dict) + ">"
     html += span(value, myclass='slider_value')
     if unit != '':
         html += span(unit, myclass='slider_unit')
+    html = div(html, myclass='slider_wrapper')
     return html
 
 def input (type, myclass='', id='', name='', checked=''):
@@ -147,6 +143,7 @@ def input (type, myclass='', id='', name='', checked=''):
     return html_str
 
 def label(label_str, for_id, myclass='', id='', title=''):
+    myclass = 'sans-sefif ' + myclass
     attr_dict = {
             'for': for_id,
             'class': myclass,
@@ -162,7 +159,7 @@ def attributes(attr_dict):
     html_str = ""
     for key in attr_dict:
         if attr_dict[key] != '':
-            html_str += ' ' + key + " = " + attr_dict[key]
+            html_str += " " + key + " = '" + attr_dict[key] + "'"
     return html_str
 
 def div(content, myclass='', id=''):
@@ -214,6 +211,13 @@ def p(content, myclass='', id=''):
     html_str += content;
     html_str += "</p>"
     return html_str
+
+def h(level, content, myclass='', id=''):
+    attr_dict = {
+            'class': myclass,
+            'id': id
+            }
+    return "<h" + level + attributes(attr_dict) + ">" + content + "</h" + level + ">"
 """ ******************************
 build
 ******************************** """

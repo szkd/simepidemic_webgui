@@ -14,8 +14,8 @@
 /* *****************************
  * font
  * *****************************/
-.suns-serif {
-    font-family: 'Hiragino Kaku Gothic ProN','ヒラギノ角ゴ ProN W3','メイリオ', Meiryo,'ヒラギノ角ゴシック','Hiragino Sans',sans-serif;
+*, .sans-serif {
+    font-family: 'Kaku Gothic ProN','ヒラギノ角ゴ ProN W3','メイリオ', 'Meiryo','ヒラギノ角ゴシック','Hiragino Sans', sans-serif;
 }
 .serif {
     font-family: 'ヒラギノ明朝 ProN','Hiragino Mincho ProN','Yu Mincho Light','YuMincho','Yu Mincho','游明朝体',serif;
@@ -25,6 +25,9 @@
 /* *****************************
  * common
  * *****************************/
+* {
+    box-sizing: border-box;
+}
 h1 {
     font-size: large;
 }
@@ -35,7 +38,6 @@ body {
     padding: 0;
 }
 #wrapper {
-    box-sizing: border-box;
     width: max(500px, 90%);
     height: 100vh;
     margin: 0 auto;
@@ -43,7 +45,6 @@ body {
 }
 
 header {
-    box-sizing: border-box;
     height: var(--header-height);
     margin: 0;
     margin-bottom: var(--margin);
@@ -62,11 +63,29 @@ p {
     text-indent: 1em;
     margin: 5px 0;
 }
+
+/* *****************************
+ * slider
+ * *****************************/
+input[type="range"] {
+    height: 3em;
+    vertical-align: middle;
+}
+.slider_wrapper {
+    margin: var(--margin);
+    padding: 0 var(--padding);
+    background-color: var(--my-black);
+    color: white;
+}
+
+.slider_value, .slider_unit {
+    display: inline-block;
+    margin-left: 8px;
+}
 /* *****************************
  * tab
  * *****************************/
 .tab_container {
-    box-sizing: border-box;
     padding: 0;
     margin:0;
     height: var(--tab-height);
@@ -79,7 +98,6 @@ p {
     background-color: rgb(0, 80, 100);
 }
 .tab_item {
-    box-sizing: border-box;
     display: inline-block;
     color: white;
     height: var(--tab-height);
@@ -95,7 +113,6 @@ p {
 }
 
 .tab_content {
-    box-sizing: border-box;
     border-radius: 15px;
     border-top-left-radius: 0;
     background-color:white;
@@ -122,7 +139,8 @@ header h1 {
     margin: 0;
     position: absolute;
     top: 60px;
-    left: 300px;
+    left: 250px;
+    width: max(210px, 42vw);
 }
 #info-checkbox:checked ~ .info:after {
     color: rgb(0, 123, 255);

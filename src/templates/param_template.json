@@ -1,0 +1,197 @@
+{
+    'populationSize': {
+        'description':'初期人口',
+        'classification' : '世界',
+        'unit':'人',
+        'type': 'int',
+        'default': 10000,
+        'min': 100
+    },
+    'worldSize' : {
+        'description':'世界の大きさ',
+        'classification':'世界',
+        'unit':'距離単位',
+        'type': 'int',
+        'default': 360,
+        'min':10
+    },
+    'mesh': {
+        'description':'メッシュ',
+        'classification':'世界',
+        'unit':'-h',
+        'type': 'int',
+        'default': 18,
+        'min':1,
+        'max': 999
+    },
+    'stepsPerDay' : {
+        'description':'1日当たりステップ数',
+        'classification':'世界',
+        'unit':'ステップ',
+        'type': 'int',
+        'default': 4,
+        'min':1,
+        'max': 999
+    },
+    'initialInfected' : {
+        'description' : '初期状態での感染者数',
+        'classification' : '世界',
+        'unit' : '人',
+        'type': 'int',
+        'default':4,
+        'min': 1,
+        'max': 999
+    },
+    'infectionProberbility' : {
+        'description' : '感染確率',
+        'classification': '発症機序',
+        'unit': '%',
+        'type' : 'float',
+        'default': 50.0,
+        'min': 0.0,
+        'max': 100.0
+    },
+    'infectionDistance' : {
+        'description': '感染距離',
+        'classification': '発症機序',
+        'type': 'float',
+        'unit': '距離単位',
+        'default': 4.0,
+        'min': 1.0,
+        'max': 20.0
+    },
+    'incubation': {
+        'description': '潜伏期間',
+        'classification': '発症機序',
+        'type': '分布',
+        'unit': '日',
+        'default': [1.0,14.0,5.0]
+    },
+    'fatality' : {
+        'description': '発症から死亡まで',
+        'classification': '発症機序',
+        'type': '分布',
+        'unit': '日',
+        'default': [4.0,20.0,16.0]
+    },
+    'recovery': {
+        'description': '快復開始まで',
+        'classification': '発症機序',
+        'type': '分布',
+        'unit': '日',
+        'default': [4.0,40.0,10.0]
+    },
+    'immunity': {
+        'description': '免疫有効期間',
+        'classification': '発症機序',
+        'type': '分布',
+        'unit': '日',
+        'default': [30.0,360.0,180.0]
+    },
+    'distancingStrength' : {
+        'description': '社会的距離の強さ',
+        'classification': '対策',
+        'type': 'float',
+        'unit': '%',
+        'default': 50.0,
+        'min': 0.0,
+        'max': 100.0
+    },
+    'distancingObedience': {
+        'description': '社会的距離協力率',
+        'classification': '対策',
+        'type': 'float',
+        'unit': '%',
+        'default': 20.0,
+        'min': 0.0,
+        'max': 100.0
+    },
+    'mobilityFrequency': {
+        'description': '移動頻度',
+        'classification': '対策',
+        'type': 'float',
+        'unit': '%',
+        'default': 50.0,
+        'min': 0.0,
+        'max': 100.0
+    },
+    'mobilityDistance': {
+        'description': '移動距離',
+        'classification': '対策',
+        'type': '分布',
+        'unit': '%',
+        'default': [10.0,80.0,30.0]
+    },
+    'contactTracing': {
+        'description': '接触者追跡',
+        'classification': '対策',
+        'type': 'float',
+        'unit': '%',
+        'default': 20.0,
+        'min': 0.0,
+        'max': 100.0
+    },
+    'testDelay': {
+        'description': '検査の遅れ',
+        'classification': '検査',
+        'type' : 'float',
+        'unit': '日',
+        'default': 1.0,
+        'min': 0.0,
+        'max': 10.0
+    },
+    'testProcess': {
+        'description': '処理期間',
+        'classification': '検査',
+        'type': 'float',
+        'unit': '日',
+        'default': 1.0,
+        'min': 0.0,
+        'max': 10.0
+    },
+    'testInterval': {
+        'description': '検査間隔',
+        'classification': '検査',
+        'type': 'float',
+        'unit': '日',
+        'default': 2.0,
+        'min': 0.0,
+        'max': 10.0
+    },
+    'testSensitivity': {
+        'description': '感度',
+        'classification': '検査',
+        'type': 'float',
+        'unit': '%',
+        'default': 70.0,
+        'min': 0.0,
+        'max': 100.0
+    },
+    'testSpecificity': {
+        'description': '特異度',
+        'classification': '検査',
+        'type': 'float',
+        'unit': '%',
+        'default': 99.8,
+        'min': 0.0,
+        'max': 100.0
+    },
+    'subjectAsymptomatic' : {
+        'description': '疑症状検査対象者',
+        'classification': '検査',
+        'type': 'float',
+        'unit': '%',
+        'default': 1.0,
+        'min': 0.0,
+        'max': 100.0
+    },
+    'subjectSymptomatic': {
+        'description': '有症状検査対象者',
+        'classification': '検査',
+        'type': 'float',
+        'unit': '%',
+        'default': 99.0,
+        'min': 0.0,
+        'max': 100.0
+    }
+}
