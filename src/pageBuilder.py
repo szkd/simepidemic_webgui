@@ -15,47 +15,47 @@ content
 """ ****************************** 
 partial
 ********************************* """
+def paramPanels(jsonfile):
+    params = json2dict(jsonfile)
+
 def head(title, stylesheets=[], scripts=[]):
-    html = "<head><title>" + title + "</title>"\
-            + "<meta charset='utf-8'>"
+    html = tagWithEnd("title", title)\
+            + tagWithoutEnd("meta", {'charset': 'utf-8'})
     for stylesheet in stylesheets:
-        html +="<link rel='stylesheet' href='"\
-               + stylesheet + "'>"
+        html += tagWithoutEnd("link", {'rel': 'stylesheet', 'href': stylesheet})
     for script in scripts:
-        html+="<script href='"\
-                + script + "'></script>"
-    html+="</head>"
-    return html
+        html+= tagWithEnd("script", '', {'href':script})
+    return tagWithEnd("head", html)
 
 def header(jsonfile):
-    html = "<header>"
     data = json2dict(jsonfile)
     data["SIGNATURE"] = \
-            a(data["SIGNATURE"]["link"],\
-            data["SIGNATURE"]["name"])
+            tagWithEnd("a", data["SIGNATURE"]["name"],\
+            {'href' : data["SIGNATURE"]["link"]})
+
     data["DESCRIPTION"] = \
             data["DESCRIPTION"]["description"]\
-            + a(data["DESCRIPTION"]["project-link"],\
+            + tagWithEnd("a",\
             data["DESCRIPTION"]["project"],\
-            target='_blank')
+            {'href' : data["DESCRIPTION"]["project-link"],\
+            'target' : '_blank'})
 
-    html += h(1, data["TITLE"])\
-            + input('checkbox', id='info-checkbox')\
-            + label('', 'info-checkbox', myclass= 'info', title="これは何?")\
-            + p(data["DESCRIPTION"], myclass='panel sans-serif', id='info-panel')
-    html += div(\
-            span("ver." + data["VERSION"], myclass="info-item")\
-            + span("更新日: " + data["UPDATE"], myclass="info-item")\
-            + span(data["SIGNATURE"], myclass="info-item"),\
-            )
-    html+= "</header>"
-    return html
+    html  = tagWithEnd("h1", data["TITLE"])
+    html += tagWithoutEnd('input', { 'type': 'checkbox', 'id':'info-checkbox'})
+    html += tagWithEnd("label", '', {'for': 'info-checkbox', 'class': 'info', 'title' : "これは何?"})
+    html +=  tagWithEnd("p", data["DESCRIPTION"],{'class': 'panel', 'id':'info-panel'})
+    html = tagWithEnd("div", html)
+    subinfo = tagWithEnd("span", "ver." + data["VERSION"],{'class': 'info-item'})
+    subinfo += tagWithEnd("span", "更新日: " + data["UPDATE"], {'class': 'info-item'})
+    subinfo += tagWithEnd("span", data["SIGNATURE"], {'class':'info-item'})
+    html += tagWithEnd("div", subinfo)
+    return tagWithEnd("header", html)
 
 """ ****************************** 
 tab
 ********************************* """
 def tabItemContainer(tab_items, container_id):
-    return div(tab_items, myclass='tab_container', id=container_id)
+    return tagWithEnd("div", tab_items, {'class' : 'tab_container', 'id' : container_id})
 
 def addTab(tabname, id, name, tab_container_id, content, checked=''):
     suffix = '_content'
@@ -68,11 +68,10 @@ def addTab(tabname, id, name, tab_container_id, content, checked=''):
         + "color: var(--my-black);"\
         + "border: none;"\
         + "}"
-        #+ "background-color: rgba(10, 10, 10, 80%);"
     style += "</style>"
-    tab = input('radio', myclass='tab_checkbox', id=id, name=name, checked = checked)
-    tab += label(tabname, id, myclass='tab_item')
-    tabcontent = div(content, myclass='tab_content', id=id+suffix)
+    tab = tagWithoutEnd("input", {'type':'radio', 'class' : 'tab_checkbox', 'id': id, 'name': name, 'checked': 'checked'})
+    tab += tagWithEnd("label", tabname, {'for':id, 'class': 'tab_item'})
+    tabcontent = tagWithEnd("div",content, {'class': 'tab_content', 'id' : id+suffix})
     return {'tab_item': style + tab, 'tab_content': tabcontent}
 
 """ ******************************
@@ -110,49 +109,35 @@ def makedirs(path, fource = False):
 """ ******************************
 html parts
 ********************************* """
+def slider( name, attr, unit=''):
+    attr['type'] = 'range'
+    if 'id' not in attr:
+        return 'error'
+    if 'value' not in attr:
+        return 'error'
 
-def slider(id, name,\
-        value = '50', min = '0', max='100',\
-        step='1', unit=''\
-        ):
-    attr_dict={
-        'value': value,
-        'min': min,
-        'max': max,
-        'step': step
-    }
-    html = label(name, id);
-    html += "<input type='range'"\
-            + attributes(attr_dict) + ">"
-    html += span(value, myclass='slider_value')
+    html = tagWithEnd("label", name, {\
+            'for': attr['id'],
+            'class': 'slider_label'\
+            });
+    html += tagWithoutEnd("input", attr)
+    html += tagWithEnd("span",\
+            attr['value'],\
+            {'class': 'slider_value'});
     if unit != '':
-        html += span(unit, myclass='slider_unit')
-    html = div(html, myclass='slider_wrapper')
+        html += tagWithEnd("span", unit, {'class': 'slider_unit'})
+    html = tagWithEnd("div", html, {'class': 'slider_wrapper'})
     return html
 
-def input (type, myclass='', id='', name='', checked=''):
-    html_str = "<input type='" + type + "'"
-    attr_dict = {
-            'class': myclass,
-            'id' : id,
-            'name' : name,
-            'checked': checked
-            }
-    html_str += attributes(attr_dict)
-    html_str += ">"
+def tagWithoutEnd(tagname, attr_dict={}) :
+    html_str = "<" + tagname + attributes(attr_dict) + ">"
     return html_str
 
-def label(label_str, for_id, myclass='', id='', title=''):
-    myclass = 'sans-sefif ' + myclass
-    attr_dict = {
-            'for': for_id,
-            'class': myclass,
-            'id': id,
-            'title': title
-            }
-    html =  "<label" + attributes(attr_dict) + ">"
-    html += label_str + "</label>"
-    return html
+def tagWithEnd(tagname, content, attr_dict={}):
+    html_str = tagWithoutEnd(tagname, attr_dict)
+    html_str += content
+    html_str += "</" + tagname +">"
+    return html_str;
 
 # ex {'class' : 'float', 'id': 'myid'}
 def attributes(attr_dict):
@@ -162,62 +147,6 @@ def attributes(attr_dict):
             html_str += " " + key + " = '" + attr_dict[key] + "'"
     return html_str
 
-def div(content, myclass='', id=''):
-    html_str = "<div"
-    attr = {
-            'class': myclass,
-            'id': id
-            }
-    html_str += attributes(attr)
-    html_str += ">" + content  + "</div>"
-    return html_str
-
-def a(url, description, myclass='', id='', target=''):
-    html_str = "<a"
-    attr = {
-            'href': url,
-            'class': myclass,
-            'id': id,
-            'target': target
-            }
-    html_str += attributes(attr)
-    html_str += ">" + description + "</a>"
-    return html_str
-
-def button(title, myclass='', id =''):
-    html_str = "<button"
-    attr = {
-            'class': myclass,
-            'id': id
-            }
-    html_str += attributes(attr);
-    return html_str + ">" + title + "</button>"
-
-def span(content, myclass="", id=""):
-    html_str = "<span"
-    attr = {
-            'class': myclass,
-            'id': id
-            }
-    html_str += attributes(attr);
-    return html_str + ">" + content + "</span>"
-
-def p(content, myclass='', id=''):
-    attr = {
-            'class': myclass,
-            'id': id
-            }
-    html_str = "<p" + attributes(attr) + ">"
-    html_str += content;
-    html_str += "</p>"
-    return html_str
-
-def h(level, content, myclass='', id=''):
-    attr_dict = {
-            'class': myclass,
-            'id': id
-            }
-    return "<h" + level + attributes(attr_dict) + ">" + content + "</h" + level + ">"
 """ ******************************
 build
 ******************************** """
@@ -231,6 +160,8 @@ tabitems = tab1['tab_item'] + tab2["tab_item"]
 tab_contents = tab1["tab_content"] + tab2["tab_content"]
 data["MAIN"] = tabItemContainer(tabitems + tab_contents, 'tabs')
 data["MAIN"] += tab1["tab_content"] + tab2["tab_content"]
-data["MAIN"] += div(slider('sample', 'さんぷる', unit='サンプル'));
+data["MAIN"] += tagWithEnd("div",\
+        slider('さんぷる', {'id': 'slider', 'value': '50'}, unit='サンプル')\
+        );
 with open(OUTPUT_DIR + "index.html", mode="w") as f:
     f.write(rephrase(TEMPLATE_DIR + "base.html", data))
