@@ -15,8 +15,28 @@ content
 """ ****************************** 
 partial
 ********************************* """
-def paramPanels(jsonfile):
-    params = json2dict(jsonfile)
+def paramPanel(jsonfile):
+    categories = json2dict(jsonfile)
+    panels =""
+    for category in categories:
+        c = categories[category]
+        paramlist = c['param-list']
+        panel_title = c['name'] if 'name' in c else 'カテゴリ名前がない!'
+        params = ""
+        for param in paramlist:
+            if param['form'] == 'slider':
+                param['min'] = param['min'] if 'min' in param else '0'
+                param['max'] = param['max'] if 'max' in param else '100'
+                param['value'] = param['default'] if 'default' in param else '50'
+                unit = param['value'] if 'value' in param else ''
+                description = param['description'] if 'description' in param else '謎のパラメータ'
+                del param['unit'], param['form'], param['type'], param['description']
+                params += slider(description, param, unit = unit)
+            else:
+                params += ''
+        panel =  tagWithEnd("h3", panel_title) + params
+        panels += tagWithEnd("div", panel, {'class': 'param-panel'})
+    return panels
 
 def head(title, stylesheets=[], scripts=[]):
     html = tagWithEnd("title", title)\
@@ -29,9 +49,8 @@ def head(title, stylesheets=[], scripts=[]):
 
 def header(jsonfile):
     data = json2dict(jsonfile)
-    data["SIGNATURE"] = \
-            tagWithEnd("a", data["SIGNATURE"]["name"],\
-            {'href' : data["SIGNATURE"]["link"]})
+    data["SIGNATURE"] = tagWithEnd("a", data["SIGNATURE"]["name"],\
+                        {'href' : data["SIGNATURE"]["link"]})
 
     data["DESCRIPTION"] = \
             data["DESCRIPTION"]["description"]\
@@ -40,10 +59,10 @@ def header(jsonfile):
             {'href' : data["DESCRIPTION"]["project-link"],\
             'target' : '_blank'})
 
-    html  = tagWithEnd("h1", data["TITLE"])
+    html = tagWithEnd("h1", data["TITLE"])
     html += tagWithoutEnd('input', { 'type': 'checkbox', 'id':'info-checkbox'})
     html += tagWithEnd("label", '', {'for': 'info-checkbox', 'class': 'info', 'title' : "これは何?"})
-    html +=  tagWithEnd("p", data["DESCRIPTION"],{'class': 'panel', 'id':'info-panel'})
+    html +=  tagWithEnd("p", data["DESCRIPTION"],{'id':'info-panel'})
     html = tagWithEnd("div", html)
     subinfo = tagWithEnd("span", "ver." + data["VERSION"],{'class': 'info-item'})
     subinfo += tagWithEnd("span", "更新日: " + data["UPDATE"], {'class': 'info-item'})
@@ -111,16 +130,22 @@ html parts
 ********************************* """
 def slider( name, attr, unit=''):
     attr['type'] = 'range'
-    if 'id' not in attr:
-        return 'error'
     if 'value' not in attr:
         return 'error'
+    if 'name' not in attr:
+        return 'error'
+    if 'min' not in attr:
+        attr['min'] = '0'
+    if 'max' not in attr:
+        attr['max'] = '100'
 
     html = tagWithEnd("label", name, {\
-            'for': attr['id'],
+            'for': attr['name'],
             'class': 'slider_label'\
             });
+    html += tagWithEnd("span", attr['min'])
     html += tagWithoutEnd("input", attr)
+    html += tagWithEnd("span", attr['max'])
     html += tagWithEnd("span",\
             attr['value'],\
             {'class': 'slider_value'});
@@ -137,7 +162,7 @@ def tagWithEnd(tagname, content, attr_dict={}):
     html_str = tagWithoutEnd(tagname, attr_dict)
     html_str += content
     html_str += "</" + tagname +">"
-    return html_str;
+    return html_str
 
 # ex {'class' : 'float', 'id': 'myid'}
 def attributes(attr_dict):
@@ -160,8 +185,7 @@ tabitems = tab1['tab_item'] + tab2["tab_item"]
 tab_contents = tab1["tab_content"] + tab2["tab_content"]
 data["MAIN"] = tabItemContainer(tabitems + tab_contents, 'tabs')
 data["MAIN"] += tab1["tab_content"] + tab2["tab_content"]
-data["MAIN"] += tagWithEnd("div",\
-        slider('さんぷる', {'id': 'slider', 'value': '50'}, unit='サンプル')\
-        );
+data["MAIN"] += paramPanel(TEMPLATE_DIR + 'param_template.json')
 with open(OUTPUT_DIR + "index.html", mode="w") as f:
     f.write(rephrase(TEMPLATE_DIR + "base.html", data))
+
