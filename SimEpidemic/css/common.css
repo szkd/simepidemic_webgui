@@ -10,23 +10,18 @@
     --back-color: rgb(31, 31, 83);
 }
 
-
-/* *****************************
- * font
- * *****************************/
-*, .sans-serif {
-    font-family: 'Kaku Gothic ProN','ヒラギノ角ゴ ProN W3','メイリオ', 'Meiryo','ヒラギノ角ゴシック','Hiragino Sans', sans-serif;
-}
-.serif {
-    font-family: 'ヒラギノ明朝 ProN','Hiragino Mincho ProN','Yu Mincho Light','YuMincho','Yu Mincho','游明朝体',serif;
-}
-
-
 /* *****************************
  * common
  * *****************************/
 * {
     box-sizing: border-box;
+    font-size: 10pt;
+}
+*, .sans-serif {
+    font-family: 'Kaku Gothic ProN','ヒラギノ角ゴ ProN W3','メイリオ', 'Meiryo','ヒラギノ角ゴシック','Hiragino Sans', sans-serif;
+}
+.serif {
+    font-family: 'ヒラギノ明朝 ProN','Hiragino Mincho ProN','Yu Mincho Light','YuMincho','Yu Mincho','游明朝体',serif;
 }
 h1 {
     font-size: large;
@@ -64,18 +59,42 @@ p {
     margin: 5px 0;
 }
 
+h3 {
+    font-size: 1em;
+    margin: 0;
+}
+input {
+    display: inline-block;
+    margin: 0 var(--margin);
+    height: 30px;
+    vertical-align: middle;
+}
+input[type = "number"] {
+    width: 50px;
+}
+
 /* *****************************
  * slider
  * *****************************/
-input[type="range"] {
-    height: 3em;
-    vertical-align: middle;
+.param-panel {
+    color: white;
+    background-color: var(--my-black);
+    padding: var(--padding);
+    border-radius: 10px;
+    margin: var(--margin);
+    flex-grow: 1 1;
+}
+.panels {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.param-title {
+    display: block;
+    margin-top: var(--margin);
 }
 .slider_wrapper {
-    margin: var(--margin);
-    padding: 0 var(--padding);
-    background-color: var(--my-black);
-    color: white;
+
 }
 
 .slider_value, .slider_unit {
@@ -100,6 +119,7 @@ input[type="range"] {
 .tab_item {
     display: inline-block;
     color: white;
+    font-size: 12pt;
     height: var(--tab-height);
     background-color: var(--my-black);
     padding-left: var(--padding);
