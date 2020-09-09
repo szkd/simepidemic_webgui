@@ -25,7 +25,7 @@ partial
 def paramSlider(param):
     param['min'] = param['min'] if 'min' in param else '0'
     param['max'] = param['max'] if 'max' in param else '100'
-    param['value'] = param['default'] if 'default' in param else '50'
+    param['value'] = param['value'] if 'value' in param else '50'
     unit = param['unit'] if 'unit' in param else ''
     description = param['description'] if 'description' in param else '謎のパラメータ'
     description = tag("div", description, {"class": 'param-title'})
@@ -90,7 +90,7 @@ def head(title, stylesheets=[], scripts=[]):
     for stylesheet in stylesheets:
         html += tag("link", attr={'rel': 'stylesheet', 'href': stylesheet}, end=False)
     for script in scripts:
-        html+= tag("script", '', {'href':script})
+        html+= tag("script", '', {'src':script})
     return tag("head", html)
 
 def header(jsonfile):
