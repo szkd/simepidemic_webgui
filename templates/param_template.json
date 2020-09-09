@@ -6,46 +6,48 @@
                 "name": "populationSize",
                 "description":"初期人口",
                 "unit":"人",
-                "type": "int",
-                "value": "10.00",
+                "step": "1",
+                "value": "10000",
                 "min": "100",
-                "form": "number"
+                "type": "number"
             },
             {
                 "name":"worldSize",
                 "description":"世界の大きさ",
                 "unit":"距離単位",
-                "type": "int",
+                "step": "1",
                 "value": "360",
                 "min": "10",
-                "form": "number"
+                "type": "number",
+                "info": "一辺の長さ"
             },
             {
                 "name": "mesh",
-                "form": "slider",
+                "type": "range",
                 "description":"メッシュ",
                 "unit":"-h",
-                "type": "int",
+                "step": "1",
                 "value": "18",
                 "min": "1 ",
-                "max": "999"
+                "max": "999",
+                "info": "縦横の各分割数"
             },
             {
                 "name": "stepsPerDay",
-                "form": "slider",
+                "type": "range",
                 "description":"1日当たりステップ数",
                 "unit":"ステップ",
-                "type": "int",
+                "step": "1",
                 "value": "4",
                 "min":"1",
                 "max": "999"
             },
             {
                 "name": "initialInfected",
-                "form": "slider",
+                "type": "range",
                 "description" : "初期状態での感染者数",
                 "unit" : "人",
-                "type": "int",
+                "step": "1",
                 "value":"4",
                 "min": "1",
                 "max": "999"
@@ -57,19 +59,19 @@
         "param-list": [
             {
                 "name": "infectionProberbility",
-                "form": "slider",
+                "type": "range",
                 "description" : "感染確率",
                 "unit": "%",
-                "type" : "float",
+                "step" : "0.1",
                 "value": "50.0",
                 "min": "0.0",
                 "max": "100.0"
             },
             {
                 "name": "infectionDistance",
-                "form": "slider",
+                "type": "range",
                 "description": "感染距離",
-                "type": "float",
+                "step": "0.1",
                 "unit": "距離単位",
                 "value": "4.0",
                 "min": "1.0",
@@ -77,33 +79,33 @@
             },
             {
                 "name": "incubation",
-                "form": "distribution",
+                "type": "distribution",
                 "description": "潜伏期間",
-                "type": "分布",
+                "step": "分布",
                 "unit": "日",
                 "value": ["1.0","14.0","5.0"]
             },
             {
                 "name": "fatality",
-                "form": "distribution",
+                "type": "distribution",
                 "description": "発症から死亡まで",
-                "type": "分布",
+                "step": "分布",
                 "unit": "日",
                 "value": ["4.0","20.0","16.0"]
             },
             {
                 "name": "recovery",
-                "form": "distribution",
+                "type": "distribution",
                 "description": "快復開始まで",
-                "type": "分布",
+                "step": "分布",
                 "unit": "日",
                 "value": ["4.0","40.0","10.0"]
             },
             {
                 "name": "immunity",
-                "form": "distribution",
+                "type": "distribution",
                 "description": "免疫有効期間",
-                "type": "分布",
+                "step": "分布",
                 "unit": "日",
                 "value": ["30.0","360.0", "180.0"]
             }
@@ -114,9 +116,9 @@
         "param-list": [
             {
                 "name": "distancingStrength",
-                "form": "slider",
+                "type": "range",
                 "description": "社会的距離の強さ",
-                "type": "float",
+                "step": "0.1",
                 "unit": "%",
                 "value": "50.0",
                 "min": "0.0",
@@ -124,9 +126,9 @@
             },
             {
                 "name": "distancingObedience",
-                "form": "slider",
+                "type": "range",
                 "description": "社会的距離協力率",
-                "type": "float",
+                "step": "0.1",
                 "unit": "%",
                 "value": "20.0",
                 "min": "0.0",
@@ -134,9 +136,9 @@
             },
             {
                 "name": "mobilityFrequency",
-                "form": "slider",
+                "type": "range",
                 "description": "移動頻度",
-                "type": "float",
+                "step": "0.1",
                 "unit": "%",
                 "value": "50.0",
                 "min": "0.0",
@@ -144,21 +146,23 @@
             },
             {
                 "name": "mobilityDistance",
-                "form": "distribution",
+                "type": "distribution",
                 "description": "移動距離",
-                "type": "分布",
+                "step": "分布",
                 "unit": "%",
-                "value": ["10.0","80.0","30.0"]
+                "value": ["10.0","80.0","30.0"],
+                "info": "世界の大きさとの比"
             },
             {
                 "name": "contactTracing",
-                "form": "slider",
+                "type": "range",
                 "description": "接触者追跡",
-                "type": "float",
+                "step": "0.1",
                 "unit": "%",
                 "value": "20.0",
                 "min": "0.0",
-                "max": "100.0"
+                "max": "100.0",
+                "info": "捕捉率"
             }
         ]
     },
@@ -167,9 +171,9 @@
         "param-list": [
             {
                 "name": "testDelay",
-                "form": "slider",
+                "type": "range",
                 "description": "検査の遅れ",
-                "type" : "float",
+                "step" : "0.1",
                 "unit": "日",
                 "value": "1.0",
                 "min": "0.0",
@@ -177,29 +181,31 @@
             },
             {
                 "name": "testProcess",
-                "form": "slider",
+                "type": "range",
                 "description": "処理期間",
-                "type": "float",
+                "step": "0.1",
                 "unit": "日",
                 "value": "1.0",
                 "min": "0.0",
-                "max": "10.0"
+                "max": "10.0",
+                "info": "検査から判明まで"
             },
             {
                 "name":"testInterval", 
-                "form": "slider",
+                "type": "range",
                 "description": "検査間隔",
-                "type": "float",
+                "step": "0.1",
                 "unit": "日",
                 "value": "2.0",
                 "min": "0.0",
-                "max": "10.0"
+                "max": "10.0",
+                "info": "次の検査まで"
             },
             {
                 "name": "testSensitivity",
-                "form": "slider",
+                "type": "range",
                 "description": "感度",
-                "type": "float",
+                "step": "0.1",
                 "unit": "%",
                 "value": "70.0",
                 "min": "0.0",
@@ -207,9 +213,9 @@
             },
             {
                 "name": "testSpecificity",
-                "form": "slider",
+                "type": "range",
                 "description": "特異度",
-                "type": "float",
+                "step": "0.1",
                 "unit": "%",
                 "value": "99.8",
                 "min": "0.0",
@@ -217,9 +223,9 @@
             },
             {
                 "name": "subjectAsymptomatic",
-                "form": "slider",
+                "type": "range",
                 "description": "疑症状検査対象者",
-                "type": "float",
+                "step": "0.1",
                 "unit": "%",
                 "value": "1.0",
                 "min": "0.0",
@@ -227,9 +233,9 @@
             },
             {
                 "name": "subjectSymptomatic",
-                "form": "slider",
+                "type": "range",
                 "description": "有症状検査対象者",
-                "type": "float",
+                "step": "0.1",
                 "unit": "%",
                 "value": "99.0",
                 "min": "0.0",

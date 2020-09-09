@@ -60,7 +60,7 @@ p {
 }
 
 h3 {
-    font-size: 1em;
+    font-size: 12pt;
     margin: 0;
 }
 input {
@@ -69,38 +69,50 @@ input {
     height: 30px;
     vertical-align: middle;
 }
-input[type = "number"] {
-    width: 50px;
+input[type="number"] {
+    width: 70px;
 }
 
 /* *****************************
- * slider
+ * param
  * *****************************/
+.dist-input {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    margin-left: calc(var(--margin)*2);
+}
+.dist-item {
+    flex-grow: 1;
+    width: 70px;
+}
 .param-panel {
     color: white;
     background-color: var(--my-black);
     padding: var(--padding);
     border-radius: 10px;
-    margin: var(--margin);
-    flex-grow: 1 1;
-}
-.panels {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    margin-bottom: var(--margin);
+    width: 100%;
 }
 .param-title {
     display: block;
-    margin-top: var(--margin);
+    margin-left: var(--margin);
+    margin-bottom: 0;
 }
-.slider_wrapper {
-
+.param-num {
+    margin: calc(var(--margin)/2);
+    margin-top: calc(var(--margin)/2);
+    margin-left: var(--margin);
+}
+.slider, .param-input {
+    margin-left: calc(var(--margin)*2);
 }
 
 .slider_value, .slider_unit {
     display: inline-block;
     margin-left: 8px;
 }
+
 /* *****************************
  * tab
  * *****************************/

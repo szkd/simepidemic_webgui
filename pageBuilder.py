@@ -21,24 +21,25 @@ def paramSlider(param):
     param['value'] = param['default'] if 'default' in param else '50'
     unit = param['unit'] if 'unit' in param else ''
     description = param['description'] if 'description' in param else '謎のパラメータ'
-    del param['unit'], param['form'], param['type'], param['description']
+    description = tag("div", description, {"class": 'param-title'})
+    del param['unit'],  param['description']
     return slider(description, param, unit = unit)
 
 def paramNumber(param):
     for_id = param['name']
-    label = tag("label", param['description'], {'for': for_id, 'class': 'param-title'})
-    param['type'] = 'number'
+    label = tag("label", param['description'], {'for': for_id, 'class': 'num-label'})
     unit = tag("span", param['unit'] if 'unit' in param else '')
-    del param['description'], param['unit'], param['form']
+    del param['description'], param['unit']
+    param['class'] = "param-input"
     numbox = tag("input", attr=param, end=False)
-    return tag("div", label + numbox + unit, {'class': 'param_num'})
+    return tag("div", label + numbox + unit, {'class': 'param-num'})
 
 def paramDistribution(param):
+    param["type"] = "number"
     values = param['value']
     unit = param['unit'] if 'unit' in param else ''
-    param['type'] = 'number'
-    html_str = tag("span", param['description'], {'class': 'param-title'})
-    del param['description'], param['unit'], param['form']
+    title = param['description']
+    del param['description'], param['unit']
 
     def num(value, labelname, suffix, unit) :
         param['id'] = param['name'] + suffix
@@ -47,12 +48,15 @@ def paramDistribution(param):
                 + tag("input", attr=param)+ tag("span", unit) if unit != '' else ''
         return  tag("div", input_str, {'class': 'dist-num'})
 
-    html_str += num(values[0], "最小値", "_min", unit)
-    html_str += num(values[1], "最大値", "_max", unit)
-    html_str += num(values[2], "最頻値", "_mode", unit)
-    return tag("div", html_str, {'class': 'param_dist'})
+    html_str = tag("div", num(values[0], "最小値", "_min", unit), {'class': 'dist-item'})
+    html_str += tag("div", num(values[1], "最大値", "_max", unit), {'class': 'dist-item'})
+    html_str += tag("div", num(values[2], "最頻値", "_mode", unit), {'class': 'dist-item'})
+    title = tag("div", title, {'class': 'param-title'})
+    html_str = tag("div", html_str, {'class': 'dist-input'})
 
-def paramPanel(jsonfile):
+    return tag("div", title + html_str, {'class': 'param_dist'})
+
+def paramPanels(jsonfile,template_html):
     categories = json2dict(jsonfile)
     panels =""
     for category in categories:
@@ -61,16 +65,16 @@ def paramPanel(jsonfile):
         panel_title = c['name'] if 'name' in c else 'カテゴリ名前がない!'
         params = ""
         for param in paramlist:
-            if param['form'] == 'slider':
+            if param['type'] == 'range':
                 params += paramSlider(param)
-            elif param["form"] == 'number':
+            elif param['type'] == 'number':
                 params += paramNumber(param)
-            elif param["form"] == 'distribution':
+            elif param['type'] == 'distribution':
                 params += paramDistribution(param)
             else:
-                params += '謎のふぉーむ: ' + param['form']
-        panel =  tag("h3", panel_title) + params
-        panels += tag("div", panel, {'class': 'param-panel'})
+                params += '謎のふぉーむ: ' + param['type']
+        checkbox_id = 'checkbox-' + param['name']
+        panels += rephrase(template_html, {'ID': checkbox_id, 'PANEL-TITLE': panel_title, 'PANEL-CONTENT': params}, 1000)
     return tag("div", panels, {'class': 'panels'})
 
 def head(title, stylesheets=[], scripts=[]):
@@ -164,7 +168,7 @@ def makedirs(path, fource = False):
 """ ******************************
 html parts
 ********************************* """
-def slider( name, attr, unit=''):
+def slider( label, attr, unit=''):
     attr['type'] = 'range'
     if 'value' not in attr:
         return 'error'
@@ -175,11 +179,7 @@ def slider( name, attr, unit=''):
     if 'max' not in attr:
         attr['max'] = '100'
 
-    html = tag("label", name, {\
-            'for': attr['name'],
-            'class': 'param-title'\
-            });
-    html += tag("span", attr['min'])
+    html = tag("span", attr['min'])
     html += tag("input", attr=attr, end=False)
     html += tag("span", attr['max'])
     html += tag("span",\
@@ -187,8 +187,8 @@ def slider( name, attr, unit=''):
             {'class': 'slider_value'});
     if unit != '':
         html += tag("span", unit, {'class': 'slider_unit'})
-    html = tag("div", html, {'class': 'slider_wrapper'})
-    return html
+    slider_input = tag("div", html, {'class': 'slider'})
+    return tag("div", label + slider_input)
 
 def tag(tagname, content = '', attr={}, end=True):
     html_str = "<" + tagname + attributes(attr) + ">"

@@ -1,0 +1,24 @@
+<div class="param-panel">
+    <input type="checkbox" id="ID" style="display:none;" checked="checked" title="折りたたみ">
+    <label for="ID" title="折りたたみ"> PANEL-TITLE </label>
+    <style>
+        label[for='ID']::before {
+            content: '▶︎';
+        }
+        #ID:checked ~ label[for="ID"]::before {
+            content: '▼';
+        }
+        #ID-content {
+            display: none;
+        }
+        #ID:checked ~ #ID-content {
+            display: block;
+        }
+    </style>
+    <div id="ID-content">
+    PANEL-CONTENT
+    </div>
+ </div>
+
+
+
