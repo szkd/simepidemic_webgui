@@ -149,17 +149,25 @@ def slider( label, attr, unit=''):
         return 'error'
     if 'name' not in attr:
         return 'error'
+    if 'step' not in attr:
+        return 'error'
     if 'min' not in attr:
         attr['min'] = '0'
     if 'max' not in attr:
         attr['max'] = '100'
+    if 'id' not in attr:
+        attr['id'] = 'slider_' +  attr['name'] + attr['value']
 
+    print(attr['value']);
+
+    attr['oninput'] = 'sliderValueChanged(this.value, ' + attr['id'] + '_view)'
     html = tag("span", attr['min'])
     html += tag("input", attr=attr, end=False)
     html += tag("span", attr['max'])
-    html += tag("span",\
-            attr['value'],\
-            {'class': 'slider_value'});
+    html += tag("input", attr={'type': 'number', 'step': attr['step'],\
+            'value': attr['value'], 'class': 'slider_value', 'id': attr['id'] + '_view',\
+            'oninput': 'sliderValueChanged(this.value, ' + attr['id'] + ')'},\
+            end= False);
     if unit != '':
         html += tag("span", unit, {'class': 'slider_unit'})
     slider_input = tag("div", html, {'class': 'slider'})
@@ -204,7 +212,7 @@ def addTab(tabname, id, name, c_func, checked=False):
 build
 ******************************** """
 data = {}
-data["HEAD"] = head("SimEpidemic", stylesheets=["css/common.css"])
+data["HEAD"] = head("SimEpidemic", stylesheets=["css/common.css"], scripts=["script.js"])
 data["HEADER"] = header(CONTENTS_DIR + "info.json")
 tablist = json2dict(TEMPLATE_DIR + "tabs.json", ordered = True)
 tab_items = ""
