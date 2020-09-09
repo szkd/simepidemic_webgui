@@ -98,17 +98,7 @@ def header(jsonfile):
             {'href' : data["DESCRIPTION"]["project-link"],\
             'target' : '_blank'})
 
-    html = tag("h1", data["TITLE"])
-    html += tag('input', attr={ 'type': 'checkbox', 'id':'info-checkbox'}, end=False)
-
-    html += tag("label", '', {'for': 'info-checkbox', 'class': 'info', 'title' : "これは何?"})
-    html +=  tag("p", data["DESCRIPTION"],{'id':'info-panel'})
-    html = tag("div", html)
-    subinfo = tag("span", "ver." + data["VERSION"],{'class': 'info-item'})
-    subinfo += tag("span", "更新日: " + data["UPDATE"], {'class': 'info-item'})
-    subinfo += tag("span", data["SIGNATURE"], {'class':'info-item'})
-    html += tag("div", subinfo)
-    return tag("header", html)
+    return rephrase(TEMPLATE_DIR + "header.html", data)
 
 """ ****************************** 
 tab
@@ -147,13 +137,13 @@ def json2dict(filename, ordered=False):
 """ ******************************
 tools
 ********************************* """
-def rephrase(template_file, data_dict):
+def rephrase(template_file, data_dict, count=1):
     template_str = ""
     with open(template_file) as f:
         template_str = f.read()
 
     for key in data_dict:
-        template_str = template_str.replace(key, data_dict[key], 1)
+        template_str = template_str.replace(key, data_dict[key], count)
     return template_str
 
 def makedirs(path, fource = False):
