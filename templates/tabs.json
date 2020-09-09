@@ -5,5 +5,8 @@
     },
     "param" : {
         "tabname": "パラメータ"
+    },
+    "statistics": {
+        "tabname": "統計情報"
     }
 }

@@ -6,10 +6,24 @@ from collections import OrderedDict
 content
 ********************************* """
 def sim():
-    return "sim"
-def param():
-    html = paramPanels(TEMPLATE_DIR + 'param.json', TEMPLATE_DIR + 'param-panel.html')
+    command = { "start": "開始", "stop": "停止", "step": "1ステップ進む", "reset": "初期化"}
+    html=""
+    for key in command:
+        html += tag("button",command[key], {'class': 'command-button', 'type': 'submit', 'formaction' : key})
+    html = tag("form", html, {'class': 'cmd-btn-list', 'method': 'get', 'target': 'result'})
     return html
+
+def param():
+    commander = ["名前をつけて保存", "既定値に戻す","サーバーから取得する"]
+    html=""
+    for command in commander:
+        html += tag("button", command, {'class': 'command-button'})
+    html = tag("div", html, {'class': 'cmd-btn-list'})
+    html += paramPanels(TEMPLATE_DIR + 'param.json', TEMPLATE_DIR + 'param-panel.html')
+    return html
+
+def statistics():
+    return 'statistics'
 """ ********************************
 const
 ******************************** """
@@ -19,6 +33,7 @@ OUTPUT_DIR = "SimEpidemic/"
 PAGE_FUNC = {}
 PAGE_FUNC["sim"] = sim
 PAGE_FUNC["param"] = param
+PAGE_FUNC["statistics"] = statistics
 """ ****************************** 
 partial
 ********************************* """
@@ -157,8 +172,6 @@ def slider( label, attr, unit=''):
         attr['max'] = '100'
     if 'id' not in attr:
         attr['id'] = 'slider_' +  attr['name'] + attr['value']
-
-    print(attr['value']);
 
     attr['oninput'] = 'sliderValueChanged(this.value, ' + attr['id'] + '_view)'
     html = tag("span", attr['min'])

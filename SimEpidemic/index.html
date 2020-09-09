@@ -43,7 +43,16 @@
     color: var(--my-black);
     border: none;
 }
-</style><input type = 'radio' id = 'param' name = 'page_tab' style = 'display:none;'><label for = 'param' class = 'tab_item'>パラメータ</label><div class = 'tab_content' id = 'sim_content'>sim</div><div class = 'tab_content' id = 'param_content'><div class = 'panels'><div class="param-panel">
+</style><input type = 'radio' id = 'param' name = 'page_tab' style = 'display:none;'><label for = 'param' class = 'tab_item'>パラメータ</label><style>#statistics_content{display: none;}
+#statistics:checked ~ #statistics_content{
+    display: block;
+}
+#statistics:checked + .tab_item{
+    background-color:white;
+    color: var(--my-black);
+    border: none;
+}
+</style><input type = 'radio' id = 'statistics' name = 'page_tab' style = 'display:none;'><label for = 'statistics' class = 'tab_item'>統計情報</label><div class = 'tab_content' id = 'sim_content'><form class = 'cmd-btn-list' method = 'get' target = 'result'><button class = 'command-button' type = 'submit' formaction = 'start'>開始</button><button class = 'command-button' type = 'submit' formaction = 'stop'>停止</button><button class = 'command-button' type = 'submit' formaction = 'step'>1ステップ進む</button><button class = 'command-button' type = 'submit' formaction = 'reset'>初期化</button></form></div><div class = 'tab_content' id = 'param_content'><div class = 'cmd-btn-list'><button class = 'command-button'>名前をつけて保存</button><button class = 'command-button'>既定値に戻す</button><button class = 'command-button'>サーバーから取得する</button></div><div class = 'panels'><div class="param-panel">
     <input type="checkbox" id="checkbox-initialInfected" style="display:none;" checked="checked" title="折りたたみ">
     <label for="checkbox-initialInfected" title="折りたたみ"> 世界 </label>
     <style>
@@ -139,7 +148,7 @@
 
 
 
-</div></div></div>
+</div></div><div class = 'tab_content' id = 'statistics_content'>statistics</div></div>
             </main>
         </div>
     </body>
