@@ -121,9 +121,6 @@ input[type="number"] {
     margin:0;
     height: var(--tab-height);
 }
-.tab_checkbox {
-    display: none;
-}
 
 .tab_item:hover {
     background-color: rgb(0, 80, 100);

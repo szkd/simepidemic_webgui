@@ -1,0 +1,9 @@
+#ID_content{display: none;}
+#ID:checked ~ #ID_content{
+    display: block;
+}
+#ID:checked + .tab_item{
+    background-color:white;
+    color: var(--my-black);
+    border: none;
+}

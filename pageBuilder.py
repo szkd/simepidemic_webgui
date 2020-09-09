@@ -2,16 +2,23 @@
 import os
 import shutil
 from collections import OrderedDict
+""" ******************************
+content
+********************************* """
+def sim():
+    return "sim"
+def param():
+    html = paramPanels(TEMPLATE_DIR + 'param.json', TEMPLATE_DIR + 'param-panel.html')
+    return html
 """ ********************************
 const
 ******************************** """
 TEMPLATE_DIR = "templates/"
 CONTENTS_DIR = "contents/"
 OUTPUT_DIR = "SimEpidemic/"
-
-""" ******************************
-content
-********************************* """
+PAGE_FUNC = {}
+PAGE_FUNC["sim"] = sim
+PAGE_FUNC["param"] = param
 """ ****************************** 
 partial
 ********************************* """
@@ -100,28 +107,6 @@ def header(jsonfile):
 
     return rephrase(TEMPLATE_DIR + "header.html", data)
 
-""" ****************************** 
-tab
-********************************* """
-def tabItemContainer(tab_items, container_id):
-    return tag("div", tab_items, {'class' : 'tab_container', 'id' : container_id})
-
-def addTab(tabname, id, name, tab_container_id, content, checked=''):
-    suffix = '_content'
-    style = "<style>"\
-        + "#" + id + suffix +"{display: none;}"\
-        + "#" + id + ":checked ~ #" + id + suffix\
-        + "{display: block;}"
-    style += "#" + id + ":checked + ." + "tab_item" + "{"\
-        + "background-color: white;"\
-        + "color: var(--my-black);"\
-        + "border: none;"\
-        + "}"
-    style += "</style>"
-    tab = tag("input", attr={'type':'radio', 'class' : 'tab_checkbox', 'id': id, 'name': name, 'checked': 'checked'}, end=False)
-    tab += tag("label", tabname, {'for':id, 'class': 'tab_item'})
-    tabcontent = tag("div",content, {'class': 'tab_content', 'id' : id+suffix})
-    return {'tab_item': style + tab, 'tab_content': tabcontent}
 
 """ ******************************
 json
@@ -194,6 +179,26 @@ def attributes(attr_dict):
         if attr_dict[key] != '':
             html_str += " " + key + " = '" + attr_dict[key] + "'"
     return html_str
+""" ****************************** 
+tab
+********************************* """
+def tabItemContainer(tab_items, container_id, myclass = 'tab_container'):
+    return tag("div", tab_items, {'class' : myclass, 'id' : container_id})
+
+def addTab(tabname, id, name, c_func, checked=False):
+    attr={
+            'type':'radio',
+            'id': id,
+            'name': name,
+            'style': 'display:none;'
+            }
+    if checked:
+        attr['checked'] = 'checked'
+    tab = tag("input",attr= attr, end=False)
+    tab += tag("label", tabname, {'for':id, 'class': 'tab_item'})
+    tabcontent = tag("div", c_func(), {'class': 'tab_content', 'id': id + '_content'})
+    style = tag("style", rephrase(TEMPLATE_DIR + "tab_style.css", {'ID': id}, 100))
+    return {'tab_item': style + tab, 'tab_content': tabcontent}
 
 """ ******************************
 build
@@ -201,13 +206,16 @@ build
 data = {}
 data["HEAD"] = head("SimEpidemic", stylesheets=["css/common.css"])
 data["HEADER"] = header(CONTENTS_DIR + "info.json")
-panels = paramPanel(TEMPLATE_DIR + 'param_template.json')
-tab1 = addTab('パラメータ', 'id', 'page_tabs', 'tabs', panels, 'checked')
-tab2 = addTab('tabname2', 'id2', 'page_tabs', 'tabs', 'content2')
-tabitems = tab1['tab_item'] + tab2["tab_item"]
-tab_contents = tab1["tab_content"] + tab2["tab_content"]
-data["MAIN"] = tabItemContainer(tabitems + tab_contents, 'tabs')
-data["MAIN"] += tab1["tab_content"] + tab2["tab_content"]
+tablist = json2dict(TEMPLATE_DIR + "tabs.json", ordered = True)
+tab_items = ""
+tab_contents = ""
+for key in tablist:
+    checked = False if 'checked' not in tablist[key] else True
+    tab = addTab(tablist[key]["tabname"], key, 'page_tab', PAGE_FUNC[key], checked)
+    tab_items += tab['tab_item']
+    tab_contents += tab['tab_content']
+
+data["MAIN"] = tabItemContainer(tab_items + tab_contents,'tabs')
 with open(OUTPUT_DIR + "index.html", mode="w") as f:
     f.write(rephrase(TEMPLATE_DIR + "base.html", data))
 

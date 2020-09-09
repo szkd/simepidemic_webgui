@@ -1,0 +1,9 @@
+{
+    "sim" : {
+        "tabname": "シミュレーション",
+        "checked": "checked"
+    },
+    "param" : {
+        "tabname": "パラメータ"
+    }
+}
