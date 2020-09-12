@@ -2,6 +2,12 @@
 import os
 import shutil
 from collections import OrderedDict
+""" ********************************
+const
+******************************** """
+TEMPLATE_DIR = "templates/"
+CONTENTS_DIR = "contents/"
+OUTPUT_DIR = "SimEpidemic/"
 """ ******************************
 content
 ********************************* """
@@ -13,23 +19,41 @@ def sim():
     html = tag("form", html, {'class': 'cmd-btn-list', 'method': 'get', 'target': 'result'})
     return html
 
+""" ********************************* """
+""" ********************************* """
+param_formname = 'param-form'
+defaults_formname = 'defaults'
 def param():
-    commander = ["名前をつけて保存", "既定値に戻す","サーバーから取得する"]
-    html=""
+    commander = {\
+            "save": {\
+                "title": "現在の設定を保存",\
+                'onclick': "saveParams('" + param_formname + "')"},\
+            "reset": {\
+                "title": "既定値に戻す",\
+                "onclick": "resetParams('" + defaults_formname + "', '" + param_formname + "')"\
+                }\
+            }
+
+    commands = ""
+    params = ""
     for command in commander:
-        html += tag("button", command, {'class': 'command-button'})
-    html = tag("div", html, {'class': 'cmd-btn-list'})
-    html += paramPanels(TEMPLATE_DIR + 'param.json', TEMPLATE_DIR + 'param-panel.html')
-    return html
+        c = commander[command]
+        title = c["title"]
+        del c["title"]
+        c["class"] = 'command-button'
+        commands += tag("button", title, c)
+    commands = tag("div", commands, {'class': 'cmd-btn-list'})
+    params += paramPanels(TEMPLATE_DIR + 'param.json', TEMPLATE_DIR + 'param-panel.html')
+    p_form = tag("form", params, {'name': param_formname});
+    d_form = tag("form", params, {'name': defaults_formname, 'style': 'display:none;'});
+    return commands + p_form + d_form
 
 def statistics():
     return 'statistics'
-""" ********************************
-const
-******************************** """
-TEMPLATE_DIR = "templates/"
-CONTENTS_DIR = "contents/"
-OUTPUT_DIR = "SimEpidemic/"
+
+""" ****************************** 
+page function
+********************************* """
 PAGE_FUNC = {}
 PAGE_FUNC["sim"] = sim
 PAGE_FUNC["param"] = param
@@ -70,9 +94,9 @@ def paramDistribution(param):
                 + tag("input", attr=param)+ tag("span", unit) if unit != '' else ''
         return  tag("div", input_str, {'class': 'dist-num'})
 
-    html_str = tag("div", num(values[0], "最小値", "_min", unit), {'class': 'dist-item'})
-    html_str += tag("div", num(values[1], "最大値", "_max", unit), {'class': 'dist-item'})
-    html_str += tag("div", num(values[2], "最頻値", "_mode", unit), {'class': 'dist-item'})
+    html_str = tag("div", num(values[0], "最小値", "-min", unit), {'class': 'dist-item'})
+    html_str += tag("div", num(values[1], "最大値", "-max", unit), {'class': 'dist-item'})
+    html_str += tag("div", num(values[2], "最頻値", "-mode", unit), {'class': 'dist-item'})
     title = tag("div", title, {'class': 'param-title'})
     html_str = tag("div", html_str, {'class': 'dist-input'})
 
@@ -172,15 +196,15 @@ def slider( label, attr, unit=''):
         attr['max'] = '100'
     if 'id' not in attr:
         attr['id'] = 'slider_' +  attr['name'] + attr['value']
-
-    attr['oninput'] = 'sliderValueChanged(this.value, ' + attr['id'] + '_view)'
+    prefix='view'
+    attr['oninput'] = 'sliderValueChanged(this.value,' + "\'" + prefix + attr['id'] +"\'" + ')'
     html = tag("span", attr['min'])
     html += tag("input", attr=attr, end=False)
     html += tag("span", attr['max'])
     html += tag("input", attr={'type': 'number', 'step': attr['step'],\
-            'value': attr['value'], 'class': 'slider_value', 'id': attr['id'] + '_view',\
-            'oninput': 'sliderValueChanged(this.value, ' + attr['id'] + ')'},\
-            end= False);
+            'value': attr['value'], 'class': 'slider_value', 'id': prefix + attr['id'],\
+            'oninput': 'sliderValueChanged(this.value, ' + "\'" + attr['id'] + "\'" + ')'},\
+            end= False)
     if unit != '':
         html += tag("span", unit, {'class': 'slider_unit'})
     slider_input = tag("div", html, {'class': 'slider'})
@@ -198,7 +222,7 @@ def attributes(attr_dict):
     html_str = ""
     for key in attr_dict:
         if attr_dict[key] != '':
-            html_str += " " + key + " = '" + attr_dict[key] + "'"
+            html_str += ' ' + key + ' = "' + attr_dict[key] + '"'
     return html_str
 """ ****************************** 
 tab
@@ -239,4 +263,3 @@ for key in tablist:
 data["MAIN"] = tabItemContainer(tab_items + tab_contents,'tabs')
 with open(OUTPUT_DIR + "index.html", mode="w") as f:
     f.write(rephrase(TEMPLATE_DIR + "base.html", data))
-
