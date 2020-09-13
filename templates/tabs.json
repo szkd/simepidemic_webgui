@@ -6,6 +6,9 @@
     "param" : {
         "tabname": "パラメータ"
     },
+    "scenario" : {
+      "tabname": "シナリオ"
+    },
     "statistics": {
         "tabname": "統計情報"
     }

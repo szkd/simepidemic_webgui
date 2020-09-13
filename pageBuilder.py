@@ -56,6 +56,13 @@ def param():
     d_form = tag("form", params, {'name': defaults_formname, 'style': 'display:none;'});
     return commands + p_form + d_form
 
+""" ********************************* """
+""" ********************************* """
+def scenario():
+    panels = paramPanels(TEMPLATE_DIR + "scenario.json", TEMPLATE_DIR + 'param-panel.html')
+    return panels;
+""" ********************************* """
+""" ********************************* """
 def statistics():
     return 'statistics'
 
@@ -65,6 +72,7 @@ page function
 PAGE_FUNC = {}
 PAGE_FUNC["sim"] = sim
 PAGE_FUNC["param"] = param
+PAGE_FUNC["scenario"] = scenario
 PAGE_FUNC["statistics"] = statistics
 """ ****************************** 
 partial
