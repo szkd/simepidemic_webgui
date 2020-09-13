@@ -9,14 +9,22 @@ TEMPLATE_DIR = "templates/"
 CONTENTS_DIR = "contents/"
 OUTPUT_DIR = "SimEpidemic/"
 """ ******************************
-content
+image
 ********************************* """
+settings_icon = "url(\"data:image/svg+xml;charset=UTF-8,<svg width='1em' height='1em' viewBox='0 0 16 16' class='bi bi-gear-fill' fill='white' xmlns='http://www.w3.org/2000/svg'>  <path fill-rule='evenodd' d='M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 0 0-5.86 2.929 2.929 0 0 0 0 5.858z'/></svg>\");"
+""" ********************************
+const
+******************************** """
 def sim():
-    command = { "start": "開始", "stop": "停止", "step": "1ステップ進む", "reset": "初期化"}
     html=""
+    ID = 'sim-settings'
+    command = { "start": "開始", "stop": "停止", "step": "1ステップ進む", "reset": "初期化"}
+    settings = tag("div", panel(ID, "設定", "設定のなかみ",\
+            icon_normal = settings_icon,\
+            icon_checked = settings_icon))
     for key in command:
         html += tag("button",command[key], {'class': 'command-button', 'type': 'submit', 'formaction' : key})
-    html = tag("form", html, {'class': 'cmd-btn-list', 'method': 'get', 'target': 'result'})
+    html = settings + tag("form", html, {'class': 'cmd-btn-list', 'method': 'get', 'target': 'result'})
     return html
 
 """ ********************************* """
@@ -102,6 +110,17 @@ def paramDistribution(param):
 
     return tag("div", title + html_str, {'class': 'param_dist'})
 
+def panel(id, title, content, myclass='', icon_normal = '"▶︎"', icon_checked = '"▼"'):
+    template_html = TEMPLATE_DIR + "panel.html"
+    attr = {}
+    attr['ID'] = id
+    attr['PANEL-TITLE'] = title
+    attr['PANEL-CONTENT'] = content
+    attr['CLASS'] = myclass
+    attr['ICON-NORMAL'] = icon_normal
+    attr['ICON-CHECKED'] = icon_checked
+    return rephrase(template_html, attr, 1000);
+
 def paramPanels(jsonfile,template_html):
     categories = json2dict(jsonfile)
     panels =""
@@ -120,7 +139,7 @@ def paramPanels(jsonfile,template_html):
             else:
                 params += '謎のふぉーむ: ' + param['type']
         checkbox_id = 'checkbox-' + param['name']
-        panels += rephrase(template_html, {'ID': checkbox_id, 'PANEL-TITLE': panel_title, 'PANEL-CONTENT': params}, 1000)
+        panels += panel(checkbox_id,  panel_title, params)
     return tag("div", panels, {'class': 'panels'})
 
 def head(title, stylesheets=[], scripts=[]):
