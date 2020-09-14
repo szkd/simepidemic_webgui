@@ -6,14 +6,18 @@ from collections import OrderedDict
 const
 ******************************** """
 TEMPLATE_DIR = "templates/"
-CONTENTS_DIR = "contents/"
 OUTPUT_DIR = "SimEpidemic/"
+CONTENTS_DIR = OUTPUT_DIR + "contents/"
+SIM_DIR = TEMPLATE_DIR + "sim/"
+PARAM_DIR = TEMPLATE_DIR + "param/"
+COMMON_DIR = TEMPLATE_DIR + "common/"
+SCENARIO_DIR = TEMPLATE_DIR + "scenario/"
 """ ******************************
 image
 ********************************* """
 settings_icon = "url(\"data:image/svg+xml;charset=UTF-8,<svg width='1em' height='1em' viewBox='0 0 16 16' class='bi bi-gear-fill' fill='white' xmlns='http://www.w3.org/2000/svg'>  <path fill-rule='evenodd' d='M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 0 0-5.86 2.929 2.929 0 0 0 0 5.858z'/></svg>\");"
 """ ********************************
-const
+pages
 ******************************** """
 def sim():
     html=""
@@ -30,7 +34,6 @@ def sim():
 """ ********************************* """
 """ ********************************* """
 param_formname = 'param-form'
-defaults_formname = 'defaults'
 def param():
     commander = {\
             "save": {\
@@ -38,7 +41,7 @@ def param():
                 'onclick': "saveParams('" + param_formname + "')"},\
             "reset": {\
                 "title": "既定値に戻す",\
-                "onclick": "resetParams('" + defaults_formname + "', '" + param_formname + "')"\
+                "onclick": "resetParams();"\
                 }\
             }
 
@@ -51,15 +54,14 @@ def param():
         c["class"] = 'command-button'
         commands += tag("button", title, c)
     commands = tag("div", commands, {'class': 'cmd-btn-list'})
-    params += paramPanels(TEMPLATE_DIR + 'param.json', TEMPLATE_DIR + 'param-panel.html')
+    params += paramPanels(PARAM_DIR + 'param.json', COMMON_DIR + 'panel.html')
     p_form = tag("form", params, {'name': param_formname});
-    d_form = tag("form", params, {'name': defaults_formname, 'style': 'display:none;'});
-    return commands + p_form + d_form
+    return commands + p_form
 
 """ ********************************* """
 """ ********************************* """
 def scenario():
-    panels = paramPanels(TEMPLATE_DIR + "scenario.json", TEMPLATE_DIR + 'param-panel.html')
+    panels = paramPanels(SCENARIO_DIR + "scenario.json", COMMON_DIR + 'panel.html')
     return panels;
 """ ********************************* """
 """ ********************************* """
@@ -119,7 +121,7 @@ def paramDistribution(param):
     return tag("div", title + html_str, {'class': 'param_dist'})
 
 def panel(id, title, content, myclass='', icon_normal = '"▶︎"', icon_checked = '"▼"'):
-    template_html = TEMPLATE_DIR + "panel.html"
+    template_html = COMMON_DIR + "panel.html"
     attr = {}
     attr['ID'] = id
     attr['PANEL-TITLE'] = title
@@ -171,7 +173,7 @@ def header(jsonfile):
             {'href' : data["DESCRIPTION"]["project-link"],\
             'target' : '_blank'})
 
-    return rephrase(TEMPLATE_DIR + "header.html", data)
+    return rephrase(COMMON_DIR + "header.html", data)
 
 
 """ ******************************
@@ -269,7 +271,7 @@ def addTab(tabname, id, name, c_func, checked=False):
     tab = tag("input",attr= attr, end=False)
     tab += tag("label", tabname, {'for':id, 'class': 'tab_item'})
     tabcontent = tag("div", c_func(), {'class': 'tab_content', 'id': id + '_content'})
-    style = tag("style", rephrase(TEMPLATE_DIR + "tab_style.css", {'ID': id}, 100))
+    style = tag("style", rephrase(COMMON_DIR + "tab_style.css", {'ID': id}, 100))
     return {'tab_item': style + tab, 'tab_content': tabcontent}
 
 """ ******************************
@@ -278,7 +280,7 @@ build
 data = {}
 data["HEAD"] = head("SimEpidemic", stylesheets=["css/common.css"], scripts=["script.js"])
 data["HEADER"] = header(CONTENTS_DIR + "info.json")
-tablist = json2dict(TEMPLATE_DIR + "tabs.json", ordered = True)
+tablist = json2dict(COMMON_DIR + "tabs.json", ordered = True)
 tab_items = ""
 tab_contents = ""
 for key in tablist:
@@ -289,4 +291,4 @@ for key in tablist:
 
 data["MAIN"] = tabItemContainer(tab_items + tab_contents,'tabs')
 with open(OUTPUT_DIR + "index.html", mode="w") as f:
-    f.write(rephrase(TEMPLATE_DIR + "base.html", data))
+    f.write(rephrase(COMMON_DIR + "base.html", data))
