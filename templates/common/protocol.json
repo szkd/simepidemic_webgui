@@ -1,0 +1,265 @@
+{
+    "world": {
+        "category": "世界",
+        "protocol": [
+            {
+                "description": "既定値の世界IDの取得",
+                "method": "GET",
+                "action": "getWorldID",
+                "result": "text/plain"
+            },
+            {
+                "description": "世界の生成",
+                "method": "GET",
+                "action": "newWorld",
+                "result": "text/plain"
+            },
+            {
+                "description": "世界の消去",
+                "method": "GET",
+                "action": "closeWorld",
+                "name": {
+                    "world": {
+                        "type": "string",
+                        "required": "required",
+                        "hint": "消去する世界のID"
+                    }
+                }
+            }
+        ]
+    },
+    "param": {
+        "category": "パラメータ",
+        "protocol": [
+            {
+                "description": "パラメータ値の取得",
+                "method": "GET",
+                "action": "getParams",
+                "target": "saveResult",
+                "result": "iframe",
+                "name": {
+                    "save": {
+                        "type": "text",
+                        "hint": "ファイル名．このオプションが添えられた場合は，ダウンロード形式で応答する。"
+                    },
+                    "format": {
+                        "type": "number",
+                        "hint": "整数，JSONフォーマットオプション"
+                    },
+                    "world": {
+                        "type": "text",
+                        "hint": "世界ID"
+                    }
+                }
+            },
+            {
+                "description": "パラメータ値の設定",
+                "method": "POST",
+                "action": "setParams",
+                "type": "form-data",
+                "target": "loadParamResult",
+                "result": "iframe",
+                "name": {
+                    "name": {
+                        "type": "text",
+                        "required": "required",
+                        "hint": "対象の世界ID, 'default'であれば既定値世界を表す"
+                    },
+                    "filename": {
+                        "type": "text",
+                        "hint": "よくわからないがjsonデータになっていればいいようだ"
+                    }
+                }
+            },
+            {
+                "description": "パラメータ値の設定",
+                "method": "POST",
+                "action": "setParams",
+                "type": "form-data",
+                "target": "loadParamResult",
+                "result": "iframe",
+                "name": {
+                    "パラメーター名": {
+                        "type": "text",
+                        "required": "required",
+                        "hint": "パラメータ値を指定"
+                    },
+                    "world": {
+                        "type": "text",
+                        "hint": "世界ID"
+                    }
+                }
+            }
+        ]
+    },
+    "control": {
+        "category": "実行の制御",
+        "protocol": [
+            {
+                "description": "開始",
+                "method": "GET",
+                "action": "start",
+                "target": "result",
+                "result": "iframe",
+                "name": {
+                    {
+                        "stopAt": {
+                            "hint": "整数，シミュレーションを止める日数",
+                            "type": "number",
+                            "step": "1"
+                        },
+                        "world": {
+                        "type": "text",
+                            "hint": "世界ID"
+                        }
+                    }
+                }
+            },
+            {
+                "description": "一歩",
+                "method": "GET",
+                "action": "step",
+                "target": "result",
+                "result": "iframe",
+                "name": {
+                    "world": {
+                        "type": "text",
+                        "hint": "世界ID"
+                    }
+                }
+            },
+            {
+                "description": "停止",
+                "method": "GET",
+                "action": "stop",
+                "target": "result",
+                "result": "iframe",
+                "name": {
+                    "world": {
+                        "type": "text",
+                        "hint": "世界ID"
+                    }
+                }
+            },
+            {
+                "description": "初期化",
+                "method": "GET",
+                "action": "reset",
+                "target": "result",
+                "result": "iframe",
+                "name": {
+                    "world": {
+                        "type": "text",
+                        "hint": "世界ID"
+                    }
+                }
+            }
+        ]
+    },
+    "result": {
+        "category": "実行の監視と結果の取得",
+        "protocol": [
+            {
+                "description": "数値情報の取得",
+                "method": "GET",
+                "action": "getIndexes",
+                "target": "currentIndexes",
+                "result": "iframe",
+                "name": {
+                    "names": {
+                        "hint": "names=[統計指標名1, 統計指標名2,...]または統計指標名=1",
+                        "type": "text",
+                        "required": "required"
+                    },
+                    "fromStep": {
+                        "type": "number",
+                        "hint": "可能であれば指定のステップから現在までの履歴を取得"
+                    },
+                    "fromDay": {
+                        "type": "number",
+                        "hint": "fromStepよりも優先される,可能であれば指定の日から現在までの履歴を取得"
+                    },
+                    "window": {
+                        "type": "number",
+                        "hint": "日毎の値の移動平均の窓幅の日周．"
+                    },
+                    "format": {
+                        "type": "number",
+                        "hint": "JSONフォーマット"
+                    },
+                    "world": {
+                        "type": "text",
+                        "hint": "世界ID"
+                    }
+                }
+            },
+            {
+                "description": "分布情報の取得",
+                "method": "GET",
+                "action": "getDistribution",
+                "target": "distribution",
+                "result": "iframe",
+                "name": {
+                    "names": {
+                        "hint": "names=[統計指標名1, 統計指標名2,...]または統計指標名=1",
+                        "type": "text",
+                        "required": "required"
+                    },
+                    "format": {
+                        "type": "number",
+                        "hint": "JSONフォーマット"
+                    },
+                    "world": {
+                        "type": "text",
+                        "hint": "世界ID"
+                    }
+                }
+            },
+            {
+                "description": "個体の健康状態の取得",
+                "method": "GET",
+                "action": "getPopulation",
+                "target": "populationData",
+                "result": "iframe",
+                "name": {
+                    "format": {
+                        "type": "number",
+                        "hint": "JSONフォーマット"
+                    },
+                    "world": {
+                        "type": "text",
+                        "hint": "世界ID"
+                    }
+                }
+            }
+        ]
+    },
+    "scenario": {
+        "category": "シナリオ",
+        "protocol": [
+            {
+                "description": "シナリオの設定",
+                "method": "POST",
+                "action": "getScenario",
+                "target": "loadScenario",
+                "result": "iframe",
+                "type": "form-data"
+                                JSONデータがから配列[]である場合はシナリオは消去される"
+            },
+            {
+                "description": "シナリオの設定",
+                "method": "POST",
+                "action": "getScenario",
+                "target": "loadScenario",
+                "result": "iframe",
+                "name": {
+                    "scenario": {
+                        "type": "text",
+                        "required": "required",
+                        "hint": "設定したいシナリオを表現するJSONデータの文字列．JSONデータがから配列[]である場合はシナリオは消去される"
+                    }
+                }
+            }
+        ]
+    }
+}
