@@ -65,13 +65,65 @@ function saveParams(formname) {
     }
 }
 
-function resetParams(defaults_formname, param_formname) {
-    let defaults = document.forms[defaults_formname].elements;
-    let params = document.forms[param_formname].elements;
-    for( let key in defaults){
-        let d = defaults[key];
-        let t = params[key];
-        t.value = d.value;
-    }
+/** 仮置き，サーバーからGETでデフォルト値を設定したJsonFileを読み込む方が良い
+ * もしくは当初の予定通りhiddenにしたデフォ値のフォームを複製するか？
+ * */
+function getDefaultParams() {
+    /*
+     * var req = new SMLHttpRequest();
+     * req.open('GET', 'contents/defaultparams.json');
+     * req.responseType = 'json';
+     * req.send();
+     * req.onload = function(){
+     *  return req.response;
+     *  }
+     *  */
+    let default_vals = {
+        "populationSize":"10000",
+        "worldSize":"360",
+        "mesh":"18",
+        "stepsPerDay":"4",
+        "initialInfected":"4",
+        "infectionProberbility":"50.0",
+        "infectionDistance":"4.0",
+        "incubation":["1.0", "14.0","5.0"],
+        "fatality":["4.0","20.0","16.0"],
+        "recovery":["4.0","40.0","10.0"],
+        "immunity":["30.0","360.0","180.0"],
+        "distancingStrength":"50.0",
+        "distancingObedience":"20.0",
+        "mobilityFrequency":"50.0",
+        "mobilityDistance":["10.0","80.0","30.0"],
+        "contactTracing":"20.0",
+        "testDelay":"1.0",
+        "testProcess":"1.0",
+        "testInterval":"2.0",
+        "testSensitivity":"70.0",
+        "testSpecificity":"99.8",
+        "subjectAsymptomatic":"1.0",
+        "subjectSymptomatic":"99.0"
+    };
+    return default_vals;
 }
 
+function loadParams(val_dict) {
+    for (let key in val_dict) {
+        var element = document.getElementById(key);
+        if(typeof(val_dict[key]) == "string") {
+            element.value = val_dict[key];
+            var view = document.getElementById("view" + key);
+            if(view !== null) {
+                view.value = val_dict[key];
+            }
+            continue;
+        }
+       document.getElementById(element.id + "-min").value = val_dict[key][0]
+       document.getElementById(element.id + "-max").value = val_dict[key][1]
+       document.getElementById(element.id + "-mode").value = val_dict[key][2]
+
+    }
+}
+function resetParams(param_formname) {
+    let val_dict = getDefaultParams();
+    loadParams(val_dict);
+}

@@ -65,7 +65,7 @@
     <input type="checkbox" id="sim-settings" style="display:none;" checked="checked" title="折りたたみ">
     <label for="sim-settings" title="折りたたみ"> 設定 </label>
     <style>
-        #sim-settings ~ label[for="sim-settings"]::before {
+        label[for="sim-settings"]::before {
             content: url("data:image/svg+xml;charset=UTF-8,<svg width='1em' height='1em' viewBox='0 0 16 16' class='bi bi-gear-fill' fill='white' xmlns='http://www.w3.org/2000/svg'>  <path fill-rule='evenodd' d='M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 0 0-5.86 2.929 2.929 0 0 0 0 5.858z'/></svg>");;
             vertical-align: sub;
         }
@@ -81,17 +81,17 @@
         }
     </style>
     <div id="sim-settings-content">
-    設定のなかみ
+    simSettings
     </div>
  </div>
 
 
 
-</div><form class = "cmd-btn-list" method = "get" target = "result"><button class = "command-button" type = "submit" formaction = "start">開始</button><button class = "command-button" type = "submit" formaction = "stop">停止</button><button class = "command-button" type = "submit" formaction = "step">1ステップ進む</button><button class = "command-button" type = "submit" formaction = "reset">初期化</button></form></div><div class = "tab_content" id = "param_content"><div class = "cmd-btn-list"><button onclick = "saveParams('param-form')" class = "command-button">現在の設定を保存</button><button onclick = "resetParams('defaults', 'param-form')" class = "command-button">既定値に戻す</button></div><form name = "param-form"><div class = "panels"><div class="panel ">
+</div><form class = "cmd-btn-list" method = "get" target = "result"><button class = "command-button" type = "submit" formaction = "start">開始</button><button class = "command-button" type = "submit" formaction = "stop">停止</button><button class = "command-button" type = "submit" formaction = "step">1ステップ進む</button><button class = "command-button" type = "submit" formaction = "reset">初期化</button></form></div><div class = "tab_content" id = "param_content"><div class = "cmd-btn-list"><button onclick = "saveParams('param-form')" class = "command-button">現在の設定を保存</button><button onclick = "resetParams('param-form');" class = "command-button">既定値に戻す</button></div><form name = "param-form"><div class = "panels"><div class="panel ">
     <input type="checkbox" id="checkbox-initialInfected" style="display:none;" checked="checked" title="折りたたみ">
     <label for="checkbox-initialInfected" title="折りたたみ"> 世界 </label>
     <style>
-        #checkbox-initialInfected ~ label[for="checkbox-initialInfected"]::before {
+        label[for="checkbox-initialInfected"]::before {
             content: "▶︎";
             vertical-align: sub;
         }
@@ -107,7 +107,7 @@
         }
     </style>
     <div id="checkbox-initialInfected-content">
-    <div class = "param-num"><label for = "populationSize" class = "num-label">初期人口</label><input name = "populationSize" step = "1" value = "10000" min = "100" type = "number" class = "param-input"><span>人</span></div><div class = "param-num"><label for = "worldSize" class = "num-label">世界の大きさ</label><input name = "worldSize" step = "1" value = "360" min = "10" type = "number" info = "一辺の長さ" class = "param-input"><span>距離単位</span></div><div><div class = "param-title">メッシュ</div><div class = "slider"><span>1 </span><input name = "mesh" type = "range" step = "1" value = "18" min = "1 " max = "999" info = "縦横の各分割数" id = "slider_mesh18" oninput = "sliderValueChanged(this.value,'viewslider_mesh18')"><span>999</span><input type = "number" step = "1" value = "18" class = "slider_value" id = "viewslider_mesh18" oninput = "sliderValueChanged(this.value, 'slider_mesh18')"><span class = "slider_unit">-h</span></div></div><div><div class = "param-title">1日当たりステップ数</div><div class = "slider"><span>1</span><input name = "stepsPerDay" type = "range" step = "1" value = "4" min = "1" max = "999" id = "slider_stepsPerDay4" oninput = "sliderValueChanged(this.value,'viewslider_stepsPerDay4')"><span>999</span><input type = "number" step = "1" value = "4" class = "slider_value" id = "viewslider_stepsPerDay4" oninput = "sliderValueChanged(this.value, 'slider_stepsPerDay4')"><span class = "slider_unit">ステップ</span></div></div><div><div class = "param-title">初期状態での感染者数</div><div class = "slider"><span>1</span><input name = "initialInfected" type = "range" step = "1" value = "4" min = "1" max = "999" id = "slider_initialInfected4" oninput = "sliderValueChanged(this.value,'viewslider_initialInfected4')"><span>999</span><input type = "number" step = "1" value = "4" class = "slider_value" id = "viewslider_initialInfected4" oninput = "sliderValueChanged(this.value, 'slider_initialInfected4')"><span class = "slider_unit">人</span></div></div>
+    <div class = "param-num"><label for = "populationSize" class = "num-label">初期人口</label><input id = "populationSize" step = "1" value = "10000" min = "100" type = "number" class = "param-input"><span>人</span></div><div class = "param-num"><label for = "worldSize" class = "num-label">世界の大きさ</label><input id = "worldSize" step = "1" value = "360" min = "10" type = "number" info = "一辺の長さ" class = "param-input"><span>距離単位</span></div><div><div class = "param-title">メッシュ</div><div class = "slider"><span>1 </span><input id = "mesh" type = "range" step = "1" value = "18" min = "1 " max = "999" info = "縦横の各分割数" oninput = "sliderValueChanged(this.value,'viewmesh')"><span>999</span><input type = "number" step = "1" value = "18" class = "slider_value" id = "viewmesh" oninput = "sliderValueChanged(this.value, 'mesh')"><span class = "slider_unit">-h</span></div></div><div><div class = "param-title">1日当たりステップ数</div><div class = "slider"><span>1</span><input id = "stepsPerDay" type = "range" step = "1" value = "4" min = "1" max = "999" oninput = "sliderValueChanged(this.value,'viewstepsPerDay')"><span>999</span><input type = "number" step = "1" value = "4" class = "slider_value" id = "viewstepsPerDay" oninput = "sliderValueChanged(this.value, 'stepsPerDay')"><span class = "slider_unit">ステップ</span></div></div><div><div class = "param-title">初期状態での感染者数</div><div class = "slider"><span>1</span><input id = "initialInfected" type = "range" step = "1" value = "4" min = "1" max = "999" oninput = "sliderValueChanged(this.value,'viewinitialInfected')"><span>999</span><input type = "number" step = "1" value = "4" class = "slider_value" id = "viewinitialInfected" oninput = "sliderValueChanged(this.value, 'initialInfected')"><span class = "slider_unit">人</span></div></div>
     </div>
  </div>
 
@@ -117,7 +117,7 @@
     <input type="checkbox" id="checkbox-immunity" style="display:none;" checked="checked" title="折りたたみ">
     <label for="checkbox-immunity" title="折りたたみ"> 発症機序 </label>
     <style>
-        #checkbox-immunity ~ label[for="checkbox-immunity"]::before {
+        label[for="checkbox-immunity"]::before {
             content: "▶︎";
             vertical-align: sub;
         }
@@ -133,7 +133,111 @@
         }
     </style>
     <div id="checkbox-immunity-content">
-    <div><div class = "param-title">感染確率</div><div class = "slider"><span>0.0</span><input name = "infectionProberbility" type = "range" step = "0.1" value = "50.0" min = "0.0" max = "100.0" id = "slider_infectionProberbility50.0" oninput = "sliderValueChanged(this.value,'viewslider_infectionProberbility50.0')"><span>100.0</span><input type = "number" step = "0.1" value = "50.0" class = "slider_value" id = "viewslider_infectionProberbility50.0" oninput = "sliderValueChanged(this.value, 'slider_infectionProberbility50.0')"><span class = "slider_unit">%</span></div></div><div><div class = "param-title">感染距離</div><div class = "slider"><span>1.0</span><input name = "infectionDistance" type = "range" step = "0.1" value = "4.0" min = "1.0" max = "20.0" id = "slider_infectionDistance4.0" oninput = "sliderValueChanged(this.value,'viewslider_infectionDistance4.0')"><span>20.0</span><input type = "number" step = "0.1" value = "4.0" class = "slider_value" id = "viewslider_infectionDistance4.0" oninput = "sliderValueChanged(this.value, 'slider_infectionDistance4.0')"><span class = "slider_unit">距離単位</span></div></div><div class = "param_dist"><div class = "param-title">潜伏期間</div><div class = "dist-input"><div class = "dist-item"><div class = "dist-num"><label for = "incubation-min">最小値</label><input name = "incubation" type = "number" step = "0.1" value = "1.0" id = "incubation-min"></input><span>日</span></div></div><div class = "dist-item"><div class = "dist-num"><label for = "incubation-max">最大値</label><input name = "incubation" type = "number" step = "0.1" value = "14.0" id = "incubation-max"></input><span>日</span></div></div><div class = "dist-item"><div class = "dist-num"><label for = "incubation-mode">最頻値</label><input name = "incubation" type = "number" step = "0.1" value = "5.0" id = "incubation-mode"></input><span>日</span></div></div></div></div><div class = "param_dist"><div class = "param-title">発症から死亡まで</div><div class = "dist-input"><div class = "dist-item"><div class = "dist-num"><label for = "fatality-min">最小値</label><input name = "fatality" type = "number" step = "0.1" value = "4.0" id = "fatality-min"></input><span>日</span></div></div><div class = "dist-item"><div class = "dist-num"><label for = "fatality-max">最大値</label><input name = "fatality" type = "number" step = "0.1" value = "20.0" id = "fatality-max"></input><span>日</span></div></div><div class = "dist-item"><div class = "dist-num"><label for = "fatality-mode">最頻値</label><input name = "fatality" type = "number" step = "0.1" value = "16.0" id = "fatality-mode"></input><span>日</span></div></div></div></div><div class = "param_dist"><div class = "param-title">快復開始まで</div><div class = "dist-input"><div class = "dist-item"><div class = "dist-num"><label for = "recovery-min">最小値</label><input name = "recovery" type = "number" step = "0.1" value = "4.0" id = "recovery-min"></input><span>日</span></div></div><div class = "dist-item"><div class = "dist-num"><label for = "recovery-max">最大値</label><input name = "recovery" type = "number" step = "0.1" value = "40.0" id = "recovery-max"></input><span>日</span></div></div><div class = "dist-item"><div class = "dist-num"><label for = "recovery-mode">最頻値</label><input name = "recovery" type = "number" step = "0.1" value = "10.0" id = "recovery-mode"></input><span>日</span></div></div></div></div><div class = "param_dist"><div class = "param-title">免疫有効期間</div><div class = "dist-input"><div class = "dist-item"><div class = "dist-num"><label for = "immunity-min">最小値</label><input name = "immunity" type = "number" step = "0.1" value = "30.0" id = "immunity-min"></input><span>日</span></div></div><div class = "dist-item"><div class = "dist-num"><label for = "immunity-max">最大値</label><input name = "immunity" type = "number" step = "0.1" value = "360.0" id = "immunity-max"></input><span>日</span></div></div><div class = "dist-item"><div class = "dist-num"><label for = "immunity-mode">最頻値</label><input name = "immunity" type = "number" step = "0.1" value = "180.0" id = "immunity-mode"></input><span>日</span></div></div></div></div>
+    <div><div class = "param-title">感染確率</div><div class = "slider"><span>0.0</span><input id = "infectionProberbility" type = "range" step = "0.1" value = "50.0" min = "0.0" max = "100.0" oninput = "sliderValueChanged(this.value,'viewinfectionProberbility')"><span>100.0</span><input type = "number" step = "0.1" value = "50.0" class = "slider_value" id = "viewinfectionProberbility" oninput = "sliderValueChanged(this.value, 'infectionProberbility')"><span class = "slider_unit">%</span></div></div><div><div class = "param-title">感染距離</div><div class = "slider"><span>1.0</span><input id = "infectionDistance" type = "range" step = "0.1" value = "4.0" min = "1.0" max = "20.0" oninput = "sliderValueChanged(this.value,'viewinfectionDistance')"><span>20.0</span><input type = "number" step = "0.1" value = "4.0" class = "slider_value" id = "viewinfectionDistance" oninput = "sliderValueChanged(this.value, 'infectionDistance')"><span class = "slider_unit">距離単位</span></div></div><div class="param_dist">
+    <div class="param-title">潜伏期間</div>
+    <div id="incubation" class="dist-input">
+        <div class="dist-item">
+            <div class="dist-num">
+                <label for="incubation-min">最小値</label>
+                <input type="number" step="0.1" value="1.0" id="incubation-min" name="incubation">
+                <span>日</span>
+            </div>
+        </div>
+        <div class="dist-item">
+            <div class="dist-num">
+                <label for="incubation-max">最大値</label>
+                <input type="number" step="0.1" value="14.0" id="incubation-max" name="incubation">
+                <span>日</span>
+            </div>
+        </div>
+        <div class="dist-item">
+            <div class="dist-num">
+                <label for="incubation-mode">最頻値</label>
+                <input type="number" step="0.1" value="5.0" id="incubation-mode" name="incubation">
+                <span>日</span>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="param_dist">
+    <div class="param-title">発症から死亡まで</div>
+    <div id="fatality" class="dist-input">
+        <div class="dist-item">
+            <div class="dist-num">
+                <label for="fatality-min">最小値</label>
+                <input type="number" step="0.1" value="4.0" id="fatality-min" name="fatality">
+                <span>日</span>
+            </div>
+        </div>
+        <div class="dist-item">
+            <div class="dist-num">
+                <label for="fatality-max">最大値</label>
+                <input type="number" step="0.1" value="20.0" id="fatality-max" name="fatality">
+                <span>日</span>
+            </div>
+        </div>
+        <div class="dist-item">
+            <div class="dist-num">
+                <label for="fatality-mode">最頻値</label>
+                <input type="number" step="0.1" value="16.0" id="fatality-mode" name="fatality">
+                <span>日</span>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="param_dist">
+    <div class="param-title">快復開始まで</div>
+    <div id="recovery" class="dist-input">
+        <div class="dist-item">
+            <div class="dist-num">
+                <label for="recovery-min">最小値</label>
+                <input type="number" step="0.1" value="4.0" id="recovery-min" name="recovery">
+                <span>日</span>
+            </div>
+        </div>
+        <div class="dist-item">
+            <div class="dist-num">
+                <label for="recovery-max">最大値</label>
+                <input type="number" step="0.1" value="40.0" id="recovery-max" name="recovery">
+                <span>日</span>
+            </div>
+        </div>
+        <div class="dist-item">
+            <div class="dist-num">
+                <label for="recovery-mode">最頻値</label>
+                <input type="number" step="0.1" value="10.0" id="recovery-mode" name="recovery">
+                <span>日</span>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="param_dist">
+    <div class="param-title">免疫有効期間</div>
+    <div id="immunity" class="dist-input">
+        <div class="dist-item">
+            <div class="dist-num">
+                <label for="immunity-min">最小値</label>
+                <input type="number" step="0.1" value="30.0" id="immunity-min" name="immunity">
+                <span>日</span>
+            </div>
+        </div>
+        <div class="dist-item">
+            <div class="dist-num">
+                <label for="immunity-max">最大値</label>
+                <input type="number" step="0.1" value="360.0" id="immunity-max" name="immunity">
+                <span>日</span>
+            </div>
+        </div>
+        <div class="dist-item">
+            <div class="dist-num">
+                <label for="immunity-mode">最頻値</label>
+                <input type="number" step="0.1" value="180.0" id="immunity-mode" name="immunity">
+                <span>日</span>
+            </div>
+        </div>
+    </div>
+</div>
+
     </div>
  </div>
 
@@ -143,7 +247,7 @@
     <input type="checkbox" id="checkbox-contactTracing" style="display:none;" checked="checked" title="折りたたみ">
     <label for="checkbox-contactTracing" title="折りたたみ"> 対策 </label>
     <style>
-        #checkbox-contactTracing ~ label[for="checkbox-contactTracing"]::before {
+        label[for="checkbox-contactTracing"]::before {
             content: "▶︎";
             vertical-align: sub;
         }
@@ -159,7 +263,33 @@
         }
     </style>
     <div id="checkbox-contactTracing-content">
-    <div><div class = "param-title">社会的距離の強さ</div><div class = "slider"><span>0.0</span><input name = "distancingStrength" type = "range" step = "0.1" value = "50.0" min = "0.0" max = "100.0" id = "slider_distancingStrength50.0" oninput = "sliderValueChanged(this.value,'viewslider_distancingStrength50.0')"><span>100.0</span><input type = "number" step = "0.1" value = "50.0" class = "slider_value" id = "viewslider_distancingStrength50.0" oninput = "sliderValueChanged(this.value, 'slider_distancingStrength50.0')"><span class = "slider_unit">%</span></div></div><div><div class = "param-title">社会的距離協力率</div><div class = "slider"><span>0.0</span><input name = "distancingObedience" type = "range" step = "0.1" value = "20.0" min = "0.0" max = "100.0" id = "slider_distancingObedience20.0" oninput = "sliderValueChanged(this.value,'viewslider_distancingObedience20.0')"><span>100.0</span><input type = "number" step = "0.1" value = "20.0" class = "slider_value" id = "viewslider_distancingObedience20.0" oninput = "sliderValueChanged(this.value, 'slider_distancingObedience20.0')"><span class = "slider_unit">%</span></div></div><div><div class = "param-title">移動頻度</div><div class = "slider"><span>0.0</span><input name = "mobilityFrequency" type = "range" step = "0.1" value = "50.0" min = "0.0" max = "100.0" id = "slider_mobilityFrequency50.0" oninput = "sliderValueChanged(this.value,'viewslider_mobilityFrequency50.0')"><span>100.0</span><input type = "number" step = "0.1" value = "50.0" class = "slider_value" id = "viewslider_mobilityFrequency50.0" oninput = "sliderValueChanged(this.value, 'slider_mobilityFrequency50.0')"><span class = "slider_unit">%</span></div></div><div class = "param_dist"><div class = "param-title">移動距離</div><div class = "dist-input"><div class = "dist-item"><div class = "dist-num"><label for = "mobilityDistance-min">最小値</label><input name = "mobilityDistance" type = "number" step = "0.1" value = "10.0" info = "世界の大きさとの比" id = "mobilityDistance-min"></input><span>%</span></div></div><div class = "dist-item"><div class = "dist-num"><label for = "mobilityDistance-max">最大値</label><input name = "mobilityDistance" type = "number" step = "0.1" value = "80.0" info = "世界の大きさとの比" id = "mobilityDistance-max"></input><span>%</span></div></div><div class = "dist-item"><div class = "dist-num"><label for = "mobilityDistance-mode">最頻値</label><input name = "mobilityDistance" type = "number" step = "0.1" value = "30.0" info = "世界の大きさとの比" id = "mobilityDistance-mode"></input><span>%</span></div></div></div></div><div><div class = "param-title">接触者追跡</div><div class = "slider"><span>0.0</span><input name = "contactTracing" type = "range" step = "0.1" value = "20.0" min = "0.0" max = "100.0" info = "捕捉率" id = "slider_contactTracing20.0" oninput = "sliderValueChanged(this.value,'viewslider_contactTracing20.0')"><span>100.0</span><input type = "number" step = "0.1" value = "20.0" class = "slider_value" id = "viewslider_contactTracing20.0" oninput = "sliderValueChanged(this.value, 'slider_contactTracing20.0')"><span class = "slider_unit">%</span></div></div>
+    <div><div class = "param-title">社会的距離の強さ</div><div class = "slider"><span>0.0</span><input id = "distancingStrength" type = "range" step = "0.1" value = "50.0" min = "0.0" max = "100.0" oninput = "sliderValueChanged(this.value,'viewdistancingStrength')"><span>100.0</span><input type = "number" step = "0.1" value = "50.0" class = "slider_value" id = "viewdistancingStrength" oninput = "sliderValueChanged(this.value, 'distancingStrength')"><span class = "slider_unit">%</span></div></div><div><div class = "param-title">社会的距離協力率</div><div class = "slider"><span>0.0</span><input id = "distancingObedience" type = "range" step = "0.1" value = "20.0" min = "0.0" max = "100.0" oninput = "sliderValueChanged(this.value,'viewdistancingObedience')"><span>100.0</span><input type = "number" step = "0.1" value = "20.0" class = "slider_value" id = "viewdistancingObedience" oninput = "sliderValueChanged(this.value, 'distancingObedience')"><span class = "slider_unit">%</span></div></div><div><div class = "param-title">移動頻度</div><div class = "slider"><span>0.0</span><input id = "mobilityFrequency" type = "range" step = "0.1" value = "50.0" min = "0.0" max = "100.0" oninput = "sliderValueChanged(this.value,'viewmobilityFrequency')"><span>100.0</span><input type = "number" step = "0.1" value = "50.0" class = "slider_value" id = "viewmobilityFrequency" oninput = "sliderValueChanged(this.value, 'mobilityFrequency')"><span class = "slider_unit">%</span></div></div><div class="param_dist">
+    <div class="param-title">移動距離</div>
+    <div id="mobilityDistance" class="dist-input">
+        <div class="dist-item">
+            <div class="dist-num">
+                <label for="mobilityDistance-min">最小値</label>
+                <input type="number" step="0.1" value="10.0" id="mobilityDistance-min" name="mobilityDistance">
+                <span>%</span>
+            </div>
+        </div>
+        <div class="dist-item">
+            <div class="dist-num">
+                <label for="mobilityDistance-max">最大値</label>
+                <input type="number" step="0.1" value="80.0" id="mobilityDistance-max" name="mobilityDistance">
+                <span>%</span>
+            </div>
+        </div>
+        <div class="dist-item">
+            <div class="dist-num">
+                <label for="mobilityDistance-mode">最頻値</label>
+                <input type="number" step="0.1" value="30.0" id="mobilityDistance-mode" name="mobilityDistance">
+                <span>%</span>
+            </div>
+        </div>
+    </div>
+</div>
+<div><div class = "param-title">接触者追跡</div><div class = "slider"><span>0.0</span><input id = "contactTracing" type = "range" step = "0.1" value = "20.0" min = "0.0" max = "100.0" info = "捕捉率" oninput = "sliderValueChanged(this.value,'viewcontactTracing')"><span>100.0</span><input type = "number" step = "0.1" value = "20.0" class = "slider_value" id = "viewcontactTracing" oninput = "sliderValueChanged(this.value, 'contactTracing')"><span class = "slider_unit">%</span></div></div>
     </div>
  </div>
 
@@ -169,7 +299,7 @@
     <input type="checkbox" id="checkbox-subjectSymptomatic" style="display:none;" checked="checked" title="折りたたみ">
     <label for="checkbox-subjectSymptomatic" title="折りたたみ"> 検査 </label>
     <style>
-        #checkbox-subjectSymptomatic ~ label[for="checkbox-subjectSymptomatic"]::before {
+        label[for="checkbox-subjectSymptomatic"]::before {
             content: "▶︎";
             vertical-align: sub;
         }
@@ -185,111 +315,7 @@
         }
     </style>
     <div id="checkbox-subjectSymptomatic-content">
-    <div><div class = "param-title">検査の遅れ</div><div class = "slider"><span>0.0</span><input name = "testDelay" type = "range" step = "0.1" value = "1.0" min = "0.0" max = "10.0" id = "slider_testDelay1.0" oninput = "sliderValueChanged(this.value,'viewslider_testDelay1.0')"><span>10.0</span><input type = "number" step = "0.1" value = "1.0" class = "slider_value" id = "viewslider_testDelay1.0" oninput = "sliderValueChanged(this.value, 'slider_testDelay1.0')"><span class = "slider_unit">日</span></div></div><div><div class = "param-title">処理期間</div><div class = "slider"><span>0.0</span><input name = "testProcess" type = "range" step = "0.1" value = "1.0" min = "0.0" max = "10.0" info = "検査から判明まで" id = "slider_testProcess1.0" oninput = "sliderValueChanged(this.value,'viewslider_testProcess1.0')"><span>10.0</span><input type = "number" step = "0.1" value = "1.0" class = "slider_value" id = "viewslider_testProcess1.0" oninput = "sliderValueChanged(this.value, 'slider_testProcess1.0')"><span class = "slider_unit">日</span></div></div><div><div class = "param-title">検査間隔</div><div class = "slider"><span>0.0</span><input name = "testInterval" type = "range" step = "0.1" value = "2.0" min = "0.0" max = "10.0" info = "次の検査まで" id = "slider_testInterval2.0" oninput = "sliderValueChanged(this.value,'viewslider_testInterval2.0')"><span>10.0</span><input type = "number" step = "0.1" value = "2.0" class = "slider_value" id = "viewslider_testInterval2.0" oninput = "sliderValueChanged(this.value, 'slider_testInterval2.0')"><span class = "slider_unit">日</span></div></div><div><div class = "param-title">感度</div><div class = "slider"><span>0.0</span><input name = "testSensitivity" type = "range" step = "0.1" value = "70.0" min = "0.0" max = "100.0" id = "slider_testSensitivity70.0" oninput = "sliderValueChanged(this.value,'viewslider_testSensitivity70.0')"><span>100.0</span><input type = "number" step = "0.1" value = "70.0" class = "slider_value" id = "viewslider_testSensitivity70.0" oninput = "sliderValueChanged(this.value, 'slider_testSensitivity70.0')"><span class = "slider_unit">%</span></div></div><div><div class = "param-title">特異度</div><div class = "slider"><span>0.0</span><input name = "testSpecificity" type = "range" step = "0.1" value = "99.8" min = "0.0" max = "100.0" id = "slider_testSpecificity99.8" oninput = "sliderValueChanged(this.value,'viewslider_testSpecificity99.8')"><span>100.0</span><input type = "number" step = "0.1" value = "99.8" class = "slider_value" id = "viewslider_testSpecificity99.8" oninput = "sliderValueChanged(this.value, 'slider_testSpecificity99.8')"><span class = "slider_unit">%</span></div></div><div><div class = "param-title">疑症状検査対象者</div><div class = "slider"><span>0.0</span><input name = "subjectAsymptomatic" type = "range" step = "0.1" value = "1.0" min = "0.0" max = "100.0" id = "slider_subjectAsymptomatic1.0" oninput = "sliderValueChanged(this.value,'viewslider_subjectAsymptomatic1.0')"><span>100.0</span><input type = "number" step = "0.1" value = "1.0" class = "slider_value" id = "viewslider_subjectAsymptomatic1.0" oninput = "sliderValueChanged(this.value, 'slider_subjectAsymptomatic1.0')"><span class = "slider_unit">%</span></div></div><div><div class = "param-title">有症状検査対象者</div><div class = "slider"><span>0.0</span><input name = "subjectSymptomatic" type = "range" step = "0.1" value = "99.0" min = "0.0" max = "100.0" id = "slider_subjectSymptomatic99.0" oninput = "sliderValueChanged(this.value,'viewslider_subjectSymptomatic99.0')"><span>100.0</span><input type = "number" step = "0.1" value = "99.0" class = "slider_value" id = "viewslider_subjectSymptomatic99.0" oninput = "sliderValueChanged(this.value, 'slider_subjectSymptomatic99.0')"><span class = "slider_unit">%</span></div></div>
-    </div>
- </div>
-
-
-
-</div></form><form name = "defaults" style = "display:none;"><div class = "panels"><div class="panel ">
-    <input type="checkbox" id="checkbox-initialInfected" style="display:none;" checked="checked" title="折りたたみ">
-    <label for="checkbox-initialInfected" title="折りたたみ"> 世界 </label>
-    <style>
-        #checkbox-initialInfected ~ label[for="checkbox-initialInfected"]::before {
-            content: "▶︎";
-            vertical-align: sub;
-        }
-        #checkbox-initialInfected:checked ~ label[for="checkbox-initialInfected"]::before {
-            content: "▼";
-            vertical-align: sub;
-        }
-        #checkbox-initialInfected-content {
-            display: none;
-        }
-        #checkbox-initialInfected:checked ~ #checkbox-initialInfected-content {
-            display: block;
-        }
-    </style>
-    <div id="checkbox-initialInfected-content">
-    <div class = "param-num"><label for = "populationSize" class = "num-label">初期人口</label><input name = "populationSize" step = "1" value = "10000" min = "100" type = "number" class = "param-input"><span>人</span></div><div class = "param-num"><label for = "worldSize" class = "num-label">世界の大きさ</label><input name = "worldSize" step = "1" value = "360" min = "10" type = "number" info = "一辺の長さ" class = "param-input"><span>距離単位</span></div><div><div class = "param-title">メッシュ</div><div class = "slider"><span>1 </span><input name = "mesh" type = "range" step = "1" value = "18" min = "1 " max = "999" info = "縦横の各分割数" id = "slider_mesh18" oninput = "sliderValueChanged(this.value,'viewslider_mesh18')"><span>999</span><input type = "number" step = "1" value = "18" class = "slider_value" id = "viewslider_mesh18" oninput = "sliderValueChanged(this.value, 'slider_mesh18')"><span class = "slider_unit">-h</span></div></div><div><div class = "param-title">1日当たりステップ数</div><div class = "slider"><span>1</span><input name = "stepsPerDay" type = "range" step = "1" value = "4" min = "1" max = "999" id = "slider_stepsPerDay4" oninput = "sliderValueChanged(this.value,'viewslider_stepsPerDay4')"><span>999</span><input type = "number" step = "1" value = "4" class = "slider_value" id = "viewslider_stepsPerDay4" oninput = "sliderValueChanged(this.value, 'slider_stepsPerDay4')"><span class = "slider_unit">ステップ</span></div></div><div><div class = "param-title">初期状態での感染者数</div><div class = "slider"><span>1</span><input name = "initialInfected" type = "range" step = "1" value = "4" min = "1" max = "999" id = "slider_initialInfected4" oninput = "sliderValueChanged(this.value,'viewslider_initialInfected4')"><span>999</span><input type = "number" step = "1" value = "4" class = "slider_value" id = "viewslider_initialInfected4" oninput = "sliderValueChanged(this.value, 'slider_initialInfected4')"><span class = "slider_unit">人</span></div></div>
-    </div>
- </div>
-
-
-
-<div class="panel ">
-    <input type="checkbox" id="checkbox-immunity" style="display:none;" checked="checked" title="折りたたみ">
-    <label for="checkbox-immunity" title="折りたたみ"> 発症機序 </label>
-    <style>
-        #checkbox-immunity ~ label[for="checkbox-immunity"]::before {
-            content: "▶︎";
-            vertical-align: sub;
-        }
-        #checkbox-immunity:checked ~ label[for="checkbox-immunity"]::before {
-            content: "▼";
-            vertical-align: sub;
-        }
-        #checkbox-immunity-content {
-            display: none;
-        }
-        #checkbox-immunity:checked ~ #checkbox-immunity-content {
-            display: block;
-        }
-    </style>
-    <div id="checkbox-immunity-content">
-    <div><div class = "param-title">感染確率</div><div class = "slider"><span>0.0</span><input name = "infectionProberbility" type = "range" step = "0.1" value = "50.0" min = "0.0" max = "100.0" id = "slider_infectionProberbility50.0" oninput = "sliderValueChanged(this.value,'viewslider_infectionProberbility50.0')"><span>100.0</span><input type = "number" step = "0.1" value = "50.0" class = "slider_value" id = "viewslider_infectionProberbility50.0" oninput = "sliderValueChanged(this.value, 'slider_infectionProberbility50.0')"><span class = "slider_unit">%</span></div></div><div><div class = "param-title">感染距離</div><div class = "slider"><span>1.0</span><input name = "infectionDistance" type = "range" step = "0.1" value = "4.0" min = "1.0" max = "20.0" id = "slider_infectionDistance4.0" oninput = "sliderValueChanged(this.value,'viewslider_infectionDistance4.0')"><span>20.0</span><input type = "number" step = "0.1" value = "4.0" class = "slider_value" id = "viewslider_infectionDistance4.0" oninput = "sliderValueChanged(this.value, 'slider_infectionDistance4.0')"><span class = "slider_unit">距離単位</span></div></div><div class = "param_dist"><div class = "param-title">潜伏期間</div><div class = "dist-input"><div class = "dist-item"><div class = "dist-num"><label for = "incubation-min">最小値</label><input name = "incubation" type = "number" step = "0.1" value = "1.0" id = "incubation-min"></input><span>日</span></div></div><div class = "dist-item"><div class = "dist-num"><label for = "incubation-max">最大値</label><input name = "incubation" type = "number" step = "0.1" value = "14.0" id = "incubation-max"></input><span>日</span></div></div><div class = "dist-item"><div class = "dist-num"><label for = "incubation-mode">最頻値</label><input name = "incubation" type = "number" step = "0.1" value = "5.0" id = "incubation-mode"></input><span>日</span></div></div></div></div><div class = "param_dist"><div class = "param-title">発症から死亡まで</div><div class = "dist-input"><div class = "dist-item"><div class = "dist-num"><label for = "fatality-min">最小値</label><input name = "fatality" type = "number" step = "0.1" value = "4.0" id = "fatality-min"></input><span>日</span></div></div><div class = "dist-item"><div class = "dist-num"><label for = "fatality-max">最大値</label><input name = "fatality" type = "number" step = "0.1" value = "20.0" id = "fatality-max"></input><span>日</span></div></div><div class = "dist-item"><div class = "dist-num"><label for = "fatality-mode">最頻値</label><input name = "fatality" type = "number" step = "0.1" value = "16.0" id = "fatality-mode"></input><span>日</span></div></div></div></div><div class = "param_dist"><div class = "param-title">快復開始まで</div><div class = "dist-input"><div class = "dist-item"><div class = "dist-num"><label for = "recovery-min">最小値</label><input name = "recovery" type = "number" step = "0.1" value = "4.0" id = "recovery-min"></input><span>日</span></div></div><div class = "dist-item"><div class = "dist-num"><label for = "recovery-max">最大値</label><input name = "recovery" type = "number" step = "0.1" value = "40.0" id = "recovery-max"></input><span>日</span></div></div><div class = "dist-item"><div class = "dist-num"><label for = "recovery-mode">最頻値</label><input name = "recovery" type = "number" step = "0.1" value = "10.0" id = "recovery-mode"></input><span>日</span></div></div></div></div><div class = "param_dist"><div class = "param-title">免疫有効期間</div><div class = "dist-input"><div class = "dist-item"><div class = "dist-num"><label for = "immunity-min">最小値</label><input name = "immunity" type = "number" step = "0.1" value = "30.0" id = "immunity-min"></input><span>日</span></div></div><div class = "dist-item"><div class = "dist-num"><label for = "immunity-max">最大値</label><input name = "immunity" type = "number" step = "0.1" value = "360.0" id = "immunity-max"></input><span>日</span></div></div><div class = "dist-item"><div class = "dist-num"><label for = "immunity-mode">最頻値</label><input name = "immunity" type = "number" step = "0.1" value = "180.0" id = "immunity-mode"></input><span>日</span></div></div></div></div>
-    </div>
- </div>
-
-
-
-<div class="panel ">
-    <input type="checkbox" id="checkbox-contactTracing" style="display:none;" checked="checked" title="折りたたみ">
-    <label for="checkbox-contactTracing" title="折りたたみ"> 対策 </label>
-    <style>
-        #checkbox-contactTracing ~ label[for="checkbox-contactTracing"]::before {
-            content: "▶︎";
-            vertical-align: sub;
-        }
-        #checkbox-contactTracing:checked ~ label[for="checkbox-contactTracing"]::before {
-            content: "▼";
-            vertical-align: sub;
-        }
-        #checkbox-contactTracing-content {
-            display: none;
-        }
-        #checkbox-contactTracing:checked ~ #checkbox-contactTracing-content {
-            display: block;
-        }
-    </style>
-    <div id="checkbox-contactTracing-content">
-    <div><div class = "param-title">社会的距離の強さ</div><div class = "slider"><span>0.0</span><input name = "distancingStrength" type = "range" step = "0.1" value = "50.0" min = "0.0" max = "100.0" id = "slider_distancingStrength50.0" oninput = "sliderValueChanged(this.value,'viewslider_distancingStrength50.0')"><span>100.0</span><input type = "number" step = "0.1" value = "50.0" class = "slider_value" id = "viewslider_distancingStrength50.0" oninput = "sliderValueChanged(this.value, 'slider_distancingStrength50.0')"><span class = "slider_unit">%</span></div></div><div><div class = "param-title">社会的距離協力率</div><div class = "slider"><span>0.0</span><input name = "distancingObedience" type = "range" step = "0.1" value = "20.0" min = "0.0" max = "100.0" id = "slider_distancingObedience20.0" oninput = "sliderValueChanged(this.value,'viewslider_distancingObedience20.0')"><span>100.0</span><input type = "number" step = "0.1" value = "20.0" class = "slider_value" id = "viewslider_distancingObedience20.0" oninput = "sliderValueChanged(this.value, 'slider_distancingObedience20.0')"><span class = "slider_unit">%</span></div></div><div><div class = "param-title">移動頻度</div><div class = "slider"><span>0.0</span><input name = "mobilityFrequency" type = "range" step = "0.1" value = "50.0" min = "0.0" max = "100.0" id = "slider_mobilityFrequency50.0" oninput = "sliderValueChanged(this.value,'viewslider_mobilityFrequency50.0')"><span>100.0</span><input type = "number" step = "0.1" value = "50.0" class = "slider_value" id = "viewslider_mobilityFrequency50.0" oninput = "sliderValueChanged(this.value, 'slider_mobilityFrequency50.0')"><span class = "slider_unit">%</span></div></div><div class = "param_dist"><div class = "param-title">移動距離</div><div class = "dist-input"><div class = "dist-item"><div class = "dist-num"><label for = "mobilityDistance-min">最小値</label><input name = "mobilityDistance" type = "number" step = "0.1" value = "10.0" info = "世界の大きさとの比" id = "mobilityDistance-min"></input><span>%</span></div></div><div class = "dist-item"><div class = "dist-num"><label for = "mobilityDistance-max">最大値</label><input name = "mobilityDistance" type = "number" step = "0.1" value = "80.0" info = "世界の大きさとの比" id = "mobilityDistance-max"></input><span>%</span></div></div><div class = "dist-item"><div class = "dist-num"><label for = "mobilityDistance-mode">最頻値</label><input name = "mobilityDistance" type = "number" step = "0.1" value = "30.0" info = "世界の大きさとの比" id = "mobilityDistance-mode"></input><span>%</span></div></div></div></div><div><div class = "param-title">接触者追跡</div><div class = "slider"><span>0.0</span><input name = "contactTracing" type = "range" step = "0.1" value = "20.0" min = "0.0" max = "100.0" info = "捕捉率" id = "slider_contactTracing20.0" oninput = "sliderValueChanged(this.value,'viewslider_contactTracing20.0')"><span>100.0</span><input type = "number" step = "0.1" value = "20.0" class = "slider_value" id = "viewslider_contactTracing20.0" oninput = "sliderValueChanged(this.value, 'slider_contactTracing20.0')"><span class = "slider_unit">%</span></div></div>
-    </div>
- </div>
-
-
-
-<div class="panel ">
-    <input type="checkbox" id="checkbox-subjectSymptomatic" style="display:none;" checked="checked" title="折りたたみ">
-    <label for="checkbox-subjectSymptomatic" title="折りたたみ"> 検査 </label>
-    <style>
-        #checkbox-subjectSymptomatic ~ label[for="checkbox-subjectSymptomatic"]::before {
-            content: "▶︎";
-            vertical-align: sub;
-        }
-        #checkbox-subjectSymptomatic:checked ~ label[for="checkbox-subjectSymptomatic"]::before {
-            content: "▼";
-            vertical-align: sub;
-        }
-        #checkbox-subjectSymptomatic-content {
-            display: none;
-        }
-        #checkbox-subjectSymptomatic:checked ~ #checkbox-subjectSymptomatic-content {
-            display: block;
-        }
-    </style>
-    <div id="checkbox-subjectSymptomatic-content">
-    <div><div class = "param-title">検査の遅れ</div><div class = "slider"><span>0.0</span><input name = "testDelay" type = "range" step = "0.1" value = "1.0" min = "0.0" max = "10.0" id = "slider_testDelay1.0" oninput = "sliderValueChanged(this.value,'viewslider_testDelay1.0')"><span>10.0</span><input type = "number" step = "0.1" value = "1.0" class = "slider_value" id = "viewslider_testDelay1.0" oninput = "sliderValueChanged(this.value, 'slider_testDelay1.0')"><span class = "slider_unit">日</span></div></div><div><div class = "param-title">処理期間</div><div class = "slider"><span>0.0</span><input name = "testProcess" type = "range" step = "0.1" value = "1.0" min = "0.0" max = "10.0" info = "検査から判明まで" id = "slider_testProcess1.0" oninput = "sliderValueChanged(this.value,'viewslider_testProcess1.0')"><span>10.0</span><input type = "number" step = "0.1" value = "1.0" class = "slider_value" id = "viewslider_testProcess1.0" oninput = "sliderValueChanged(this.value, 'slider_testProcess1.0')"><span class = "slider_unit">日</span></div></div><div><div class = "param-title">検査間隔</div><div class = "slider"><span>0.0</span><input name = "testInterval" type = "range" step = "0.1" value = "2.0" min = "0.0" max = "10.0" info = "次の検査まで" id = "slider_testInterval2.0" oninput = "sliderValueChanged(this.value,'viewslider_testInterval2.0')"><span>10.0</span><input type = "number" step = "0.1" value = "2.0" class = "slider_value" id = "viewslider_testInterval2.0" oninput = "sliderValueChanged(this.value, 'slider_testInterval2.0')"><span class = "slider_unit">日</span></div></div><div><div class = "param-title">感度</div><div class = "slider"><span>0.0</span><input name = "testSensitivity" type = "range" step = "0.1" value = "70.0" min = "0.0" max = "100.0" id = "slider_testSensitivity70.0" oninput = "sliderValueChanged(this.value,'viewslider_testSensitivity70.0')"><span>100.0</span><input type = "number" step = "0.1" value = "70.0" class = "slider_value" id = "viewslider_testSensitivity70.0" oninput = "sliderValueChanged(this.value, 'slider_testSensitivity70.0')"><span class = "slider_unit">%</span></div></div><div><div class = "param-title">特異度</div><div class = "slider"><span>0.0</span><input name = "testSpecificity" type = "range" step = "0.1" value = "99.8" min = "0.0" max = "100.0" id = "slider_testSpecificity99.8" oninput = "sliderValueChanged(this.value,'viewslider_testSpecificity99.8')"><span>100.0</span><input type = "number" step = "0.1" value = "99.8" class = "slider_value" id = "viewslider_testSpecificity99.8" oninput = "sliderValueChanged(this.value, 'slider_testSpecificity99.8')"><span class = "slider_unit">%</span></div></div><div><div class = "param-title">疑症状検査対象者</div><div class = "slider"><span>0.0</span><input name = "subjectAsymptomatic" type = "range" step = "0.1" value = "1.0" min = "0.0" max = "100.0" id = "slider_subjectAsymptomatic1.0" oninput = "sliderValueChanged(this.value,'viewslider_subjectAsymptomatic1.0')"><span>100.0</span><input type = "number" step = "0.1" value = "1.0" class = "slider_value" id = "viewslider_subjectAsymptomatic1.0" oninput = "sliderValueChanged(this.value, 'slider_subjectAsymptomatic1.0')"><span class = "slider_unit">%</span></div></div><div><div class = "param-title">有症状検査対象者</div><div class = "slider"><span>0.0</span><input name = "subjectSymptomatic" type = "range" step = "0.1" value = "99.0" min = "0.0" max = "100.0" id = "slider_subjectSymptomatic99.0" oninput = "sliderValueChanged(this.value,'viewslider_subjectSymptomatic99.0')"><span>100.0</span><input type = "number" step = "0.1" value = "99.0" class = "slider_value" id = "viewslider_subjectSymptomatic99.0" oninput = "sliderValueChanged(this.value, 'slider_subjectSymptomatic99.0')"><span class = "slider_unit">%</span></div></div>
+    <div><div class = "param-title">検査の遅れ</div><div class = "slider"><span>0.0</span><input id = "testDelay" type = "range" step = "0.1" value = "1.0" min = "0.0" max = "10.0" oninput = "sliderValueChanged(this.value,'viewtestDelay')"><span>10.0</span><input type = "number" step = "0.1" value = "1.0" class = "slider_value" id = "viewtestDelay" oninput = "sliderValueChanged(this.value, 'testDelay')"><span class = "slider_unit">日</span></div></div><div><div class = "param-title">処理期間</div><div class = "slider"><span>0.0</span><input id = "testProcess" type = "range" step = "0.1" value = "1.0" min = "0.0" max = "10.0" info = "検査から判明まで" oninput = "sliderValueChanged(this.value,'viewtestProcess')"><span>10.0</span><input type = "number" step = "0.1" value = "1.0" class = "slider_value" id = "viewtestProcess" oninput = "sliderValueChanged(this.value, 'testProcess')"><span class = "slider_unit">日</span></div></div><div><div class = "param-title">検査間隔</div><div class = "slider"><span>0.0</span><input id = "testInterval" type = "range" step = "0.1" value = "2.0" min = "0.0" max = "10.0" info = "次の検査まで" oninput = "sliderValueChanged(this.value,'viewtestInterval')"><span>10.0</span><input type = "number" step = "0.1" value = "2.0" class = "slider_value" id = "viewtestInterval" oninput = "sliderValueChanged(this.value, 'testInterval')"><span class = "slider_unit">日</span></div></div><div><div class = "param-title">感度</div><div class = "slider"><span>0.0</span><input id = "testSensitivity" type = "range" step = "0.1" value = "70.0" min = "0.0" max = "100.0" oninput = "sliderValueChanged(this.value,'viewtestSensitivity')"><span>100.0</span><input type = "number" step = "0.1" value = "70.0" class = "slider_value" id = "viewtestSensitivity" oninput = "sliderValueChanged(this.value, 'testSensitivity')"><span class = "slider_unit">%</span></div></div><div><div class = "param-title">特異度</div><div class = "slider"><span>0.0</span><input id = "testSpecificity" type = "range" step = "0.1" value = "99.8" min = "0.0" max = "100.0" oninput = "sliderValueChanged(this.value,'viewtestSpecificity')"><span>100.0</span><input type = "number" step = "0.1" value = "99.8" class = "slider_value" id = "viewtestSpecificity" oninput = "sliderValueChanged(this.value, 'testSpecificity')"><span class = "slider_unit">%</span></div></div><div><div class = "param-title">疑症状検査対象者</div><div class = "slider"><span>0.0</span><input id = "subjectAsymptomatic" type = "range" step = "0.1" value = "1.0" min = "0.0" max = "100.0" oninput = "sliderValueChanged(this.value,'viewsubjectAsymptomatic')"><span>100.0</span><input type = "number" step = "0.1" value = "1.0" class = "slider_value" id = "viewsubjectAsymptomatic" oninput = "sliderValueChanged(this.value, 'subjectAsymptomatic')"><span class = "slider_unit">%</span></div></div><div><div class = "param-title">有症状検査対象者</div><div class = "slider"><span>0.0</span><input id = "subjectSymptomatic" type = "range" step = "0.1" value = "99.0" min = "0.0" max = "100.0" oninput = "sliderValueChanged(this.value,'viewsubjectSymptomatic')"><span>100.0</span><input type = "number" step = "0.1" value = "99.0" class = "slider_value" id = "viewsubjectSymptomatic" oninput = "sliderValueChanged(this.value, 'subjectSymptomatic')"><span class = "slider_unit">%</span></div></div>
     </div>
  </div>
 
@@ -299,7 +325,7 @@
     <input type="checkbox" id="checkbox-weeklyPositiveRate" style="display:none;" checked="checked" title="折りたたみ">
     <label for="checkbox-weeklyPositiveRate" title="折りたたみ"> 条件として使える統計指標 </label>
     <style>
-        #checkbox-weeklyPositiveRate ~ label[for="checkbox-weeklyPositiveRate"]::before {
+        label[for="checkbox-weeklyPositiveRate"]::before {
             content: "▶︎";
             vertical-align: sub;
         }
@@ -315,7 +341,7 @@
         }
     </style>
     <div id="checkbox-weeklyPositiveRate-content">
-    <div class = "param-num"><label for = "days" class = "num-label">経過日数</label><input name = "days" type = "number" step = "1" class = "param-input"><span>日</span></div><div class = "param-num"><label for = "susceptible" class = "num-label">未感染者数</label><input name = "susceptible" type = "number" info = "現在数" step = "1" class = "param-input"><span>人</span></div><div class = "param-num"><label for = "infected" class = "num-label">感染者数</label><input name = "infected" type = "number" info = "無症状者と発症者の現在数の合計" step = "1" class = "param-input"><span>人</span></div><div class = "param-num"><label for = "symptomatic" class = "num-label">発症者数</label><input name = "symptomatic" type = "number" info = "現在数" step = "1" class = "param-input"><span>人</span></div><div class = "param-num"><label for = "recovered" class = "num-label">快復者数</label><input name = "recovered" type = "number" info = "免疫保持者の現在数" step = "1" class = "param-input"><span>人</span></div><div class = "param-num"><label for = "died" class = "num-label">死亡者数</label><input name = "died" type = "number" info = "現在数＝累積" step = "1" class = "param-input"><span>人</span></div><div class = "param-num"><label for = "quarantine" class = "num-label">隔離数</label><input name = "quarantine" type = "number" info = "現在数" step = "1" class = "param-input"><span>人</span></div><div class = "param-num"><label for = "dailyInfection" class = "num-label">当日の新規感染者数</label><input name = "dailyInfection" type = "number" info = "実数。検査とは無関係" step = "0.1" class = "param-input"><span>人</span></div><div class = "param-num"><label for = "dailySymptomatic" class = "num-label">当日の新規発症者数</label><input name = "dailySymptomatic" type = "number" step = "1" class = "param-input"><span>人</span></div><div class = "param-num"><label for = "dailyRecovery" class = "num-label">当日の新規快復者数</label><input name = "dailyRecovery" type = "number" step = "1" class = "param-input"><span>人</span></div><div class = "param-num"><label for = "dailyDeath" class = "num-label">当日の死亡者数</label><input name = "dailyDeath" type = "number" step = "1" class = "param-input"><span>人</span></div><div class = "param-num"><label for = "weeklyPositive" class = "num-label">週間陽性数</label><input name = "weeklyPositive" type = "number" info = "過去7日間の陽性判明件数の合計" step = "1" class = "param-input"><span>人</span></div><div class = "param-num"><label for = "weeklyPositiveRate" class = "num-label">週間陽性率</label><input name = "weeklyPositiveRate" type = "number" info = "過去7日間の陽性判明数を検査数で割った値" step = "0.1" min = "0.0" max = "1.0" class = "param-input"><span>率 .0〜1.0</span></div>
+    <div class = "param-num"><label for = "days" class = "num-label">経過日数</label><input id = "days" type = "number" step = "1" class = "param-input"><span>日</span></div><div class = "param-num"><label for = "susceptible" class = "num-label">未感染者数</label><input id = "susceptible" type = "number" info = "現在数" step = "1" class = "param-input"><span>人</span></div><div class = "param-num"><label for = "infected" class = "num-label">感染者数</label><input id = "infected" type = "number" info = "無症状者と発症者の現在数の合計" step = "1" class = "param-input"><span>人</span></div><div class = "param-num"><label for = "symptomatic" class = "num-label">発症者数</label><input id = "symptomatic" type = "number" info = "現在数" step = "1" class = "param-input"><span>人</span></div><div class = "param-num"><label for = "recovered" class = "num-label">快復者数</label><input id = "recovered" type = "number" info = "免疫保持者の現在数" step = "1" class = "param-input"><span>人</span></div><div class = "param-num"><label for = "died" class = "num-label">死亡者数</label><input id = "died" type = "number" info = "現在数＝累積" step = "1" class = "param-input"><span>人</span></div><div class = "param-num"><label for = "quarantine" class = "num-label">隔離数</label><input id = "quarantine" type = "number" info = "現在数" step = "1" class = "param-input"><span>人</span></div><div class = "param-num"><label for = "dailyInfection" class = "num-label">当日の新規感染者数</label><input id = "dailyInfection" type = "number" info = "実数。検査とは無関係" step = "0.1" class = "param-input"><span>人</span></div><div class = "param-num"><label for = "dailySymptomatic" class = "num-label">当日の新規発症者数</label><input id = "dailySymptomatic" type = "number" step = "1" class = "param-input"><span>人</span></div><div class = "param-num"><label for = "dailyRecovery" class = "num-label">当日の新規快復者数</label><input id = "dailyRecovery" type = "number" step = "1" class = "param-input"><span>人</span></div><div class = "param-num"><label for = "dailyDeath" class = "num-label">当日の死亡者数</label><input id = "dailyDeath" type = "number" step = "1" class = "param-input"><span>人</span></div><div class = "param-num"><label for = "weeklyPositive" class = "num-label">週間陽性数</label><input id = "weeklyPositive" type = "number" info = "過去7日間の陽性判明件数の合計" step = "1" class = "param-input"><span>人</span></div><div class = "param-num"><label for = "weeklyPositiveRate" class = "num-label">週間陽性率</label><input id = "weeklyPositiveRate" type = "number" info = "過去7日間の陽性判明数を検査数で割った値" step = "0.1" min = "0.0" max = "1.0" class = "param-input"><span>率 .0〜1.0</span></div>
     </div>
  </div>
 

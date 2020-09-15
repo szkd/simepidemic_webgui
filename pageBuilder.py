@@ -41,7 +41,7 @@ def param():
                 'onclick': "saveParams('" + param_formname + "')"},\
             "reset": {\
                 "title": "既定値に戻す",\
-                "onclick": "resetParams();"\
+                "onclick": "resetParams('" + param_formname + "');"\
                 }\
             }
 
@@ -90,7 +90,7 @@ def paramSlider(param):
     return slider(description, param, unit = unit)
 
 def paramNumber(param):
-    for_id = param['name']
+    for_id = param['id']
     label = tag("label", param['description'], {'for': for_id, 'class': 'num-label'})
     unit = tag("span", param['unit'] if 'unit' in param else '')
     del param['description'], param['unit']
@@ -99,26 +99,15 @@ def paramNumber(param):
     return tag("div", label + numbox + unit, {'class': 'param-num'})
 
 def paramDistribution(param):
-    param["type"] = "number"
-    values = param['value']
-    unit = param['unit'] if 'unit' in param else ''
-    title = param['description']
-    del param['description'], param['unit']
-
-    def num(value, labelname, suffix, unit) :
-        param['id'] = param['name'] + suffix
-        param['value'] = value
-        input_str = tag("label", labelname, {'for' : param['id']})\
-                + tag("input", attr=param)+ tag("span", unit) if unit != '' else ''
-        return  tag("div", input_str, {'class': 'dist-num'})
-
-    html_str = tag("div", num(values[0], "最小値", "-min", unit), {'class': 'dist-item'})
-    html_str += tag("div", num(values[1], "最大値", "-max", unit), {'class': 'dist-item'})
-    html_str += tag("div", num(values[2], "最頻値", "-mode", unit), {'class': 'dist-item'})
-    title = tag("div", title, {'class': 'param-title'})
-    html_str = tag("div", html_str, {'class': 'dist-input'})
-
-    return tag("div", title + html_str, {'class': 'param_dist'})
+    rep_dict = {
+            'ID': param["id"],
+            'TITLE': param["description"],
+            'VALUE-MIN': param['value'][0],
+            'VALUE-MAX': param['value'][1],
+            'VALUE-MODE': param['value'][2],
+            'UNIT': tag("span", param['unit']) if 'unit' in param else ""
+            }
+    return rephrase(PARAM_DIR + "distribution.html", rep_dict, 1000)
 
 def panel(id, title, content, myclass='', icon_normal = '"▶︎"', icon_checked = '"▼"'):
     template_html = COMMON_DIR + "panel.html"
@@ -145,10 +134,11 @@ def paramPanels(jsonfile,template_html):
             elif param['type'] == 'number':
                 params += paramNumber(param)
             elif param['type'] == 'distribution':
+                pid = param['id']
                 params += paramDistribution(param)
             else:
                 params += '謎のふぉーむ: ' + param['type']
-        checkbox_id = 'checkbox-' + param['name']
+        checkbox_id = 'checkbox-' + param['id']
         panels += panel(checkbox_id,  panel_title, params)
     return tag("div", panels, {'class': 'panels'})
 
@@ -164,7 +154,7 @@ def head(title, stylesheets=[], scripts=[]):
 def header(jsonfile):
     data = json2dict(jsonfile)
     data["SIGNATURE"] = tag("a", data["SIGNATURE"]["name"],\
-                        {'href' : data["SIGNATURE"]["link"]})
+            {'href' : data["SIGNATURE"]["link"]})
 
     data["DESCRIPTION"] = \
             data["DESCRIPTION"]["description"]\
@@ -215,7 +205,7 @@ def slider( label, attr, unit=''):
     attr['type'] = 'range'
     if 'value' not in attr:
         return 'error'
-    if 'name' not in attr:
+    if 'id' not in attr:
         return 'error'
     if 'step' not in attr:
         return 'error'
@@ -223,8 +213,6 @@ def slider( label, attr, unit=''):
         attr['min'] = '0'
     if 'max' not in attr:
         attr['max'] = '100'
-    if 'id' not in attr:
-        attr['id'] = 'slider_' +  attr['name'] + attr['value']
     prefix='view'
     attr['oninput'] = 'sliderValueChanged(this.value,' + "\'" + prefix + attr['id'] +"\'" + ')'
     html = tag("span", attr['min'])

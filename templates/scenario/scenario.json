@@ -3,87 +3,99 @@
         "name": "条件として使える統計指標",
         "param-list": [
             {
-                "name": "days",
+                "id": "days",
                 "description": "経過日数",
                 "type": "number",
                 "unit": "日",
                 "step": "1"
             },
-            {            "name": "susceptible",
+            {
+                "id": "susceptible",
                 "description": "未感染者数",
                 "type": "number",
                 "unit": "人",
                 "info": "現在数",
                 "step": "1"
             },
-            {    "name": "infected",
+            {
+                "id": "infected",
                 "description": "感染者数",
                 "type": "number",
                 "unit": "人",
                 "info": "無症状者と発症者の現在数の合計",
                 "step": "1"
             },
-            {"name": "symptomatic",
+            {
+                "id": "symptomatic",
                 "description": "発症者数",
                 "type": "number",
                 "unit": "人",
                 "info": "現在数",
                 "step": "1"
             },
-            {                "name": "recovered",
+            {
+                "id": "recovered",
                 "description": "快復者数",
                 "type": "number",
                 "unit": "人",
                 "info": "免疫保持者の現在数",
                 "step": "1"
             },
-            {                "name": "died",
+            {
+                "id": "died",
                 "description": "死亡者数",
                 "type": "number",
                 "unit": "人",
                 "info": "現在数＝累積",
                 "step": "1"
             },
-            {                "name": "quarantine",
+            {
+                "id": "quarantine",
                 "description": "隔離数",
                 "type": "number",
                 "unit": "人",
                 "info": "現在数",
                 "step": "1"
             },
-            {                "name": "dailyInfection",
+            {
+                "id": "dailyInfection",
                 "description": "当日の新規感染者数",
                 "type": "number",
                 "unit": "人",
                 "info": "実数。検査とは無関係",
                 "step": "0.1"
             },
-            {                "name": "dailySymptomatic",
+            {
+                "id": "dailySymptomatic",
                 "description": "当日の新規発症者数",
                 "type": "number",
                 "unit": "人",
                 "step": "1"
             },
-            {                "name": "dailyRecovery",
+            {
+                "id": "dailyRecovery",
                 "description": "当日の新規快復者数",
                 "type": "number",
                 "unit": "人",
                 "step": "1"
             },
-            {                "name": "dailyDeath",
+            {
+                "id": "dailyDeath",
                 "description": "当日の死亡者数",
                 "type": "number",
                 "unit": "人",
                 "step": "1"
             },
-            {                "name": "weeklyPositive",
+            {
+                "id": "weeklyPositive",
                 "description": "週間陽性数",
                 "type": "number",
                 "unit": "人",
                 "info": "過去7日間の陽性判明件数の合計",
                 "step": "1"
             },
-            {                "name": "weeklyPositiveRate",
+            {
+                "id": "weeklyPositiveRate",
                 "description": "週間陽性率",
                 "type": "number",
                 "unit": "率 .0〜1.0",

@@ -3,7 +3,7 @@
         "name": "世界",
         "param-list": [
             {
-                "name": "populationSize",
+                "id": "populationSize",
                 "description":"初期人口",
                 "unit":"人",
                 "step": "1",
@@ -12,7 +12,7 @@
                 "type": "number"
             },
             {
-                "name":"worldSize",
+                "id":"worldSize",
                 "description":"世界の大きさ",
                 "unit":"距離単位",
                 "step": "1",
@@ -22,7 +22,7 @@
                 "info": "一辺の長さ"
             },
             {
-                "name": "mesh",
+                "id": "mesh",
                 "type": "range",
                 "description":"メッシュ",
                 "unit":"-h",
@@ -33,7 +33,7 @@
                 "info": "縦横の各分割数"
             },
             {
-                "name": "stepsPerDay",
+                "id": "stepsPerDay",
                 "type": "range",
                 "description":"1日当たりステップ数",
                 "unit":"ステップ",
@@ -43,7 +43,7 @@
                 "max": "999"
             },
             {
-                "name": "initialInfected",
+                "id": "initialInfected",
                 "type": "range",
                 "description" : "初期状態での感染者数",
                 "unit" : "人",
@@ -58,7 +58,7 @@
         "name": "発症機序",
         "param-list": [
             {
-                "name": "infectionProberbility",
+                "id": "infectionProberbility",
                 "type": "range",
                 "description" : "感染確率",
                 "unit": "%",
@@ -68,7 +68,7 @@
                 "max": "100.0"
             },
             {
-                "name": "infectionDistance",
+                "id": "infectionDistance",
                 "type": "range",
                 "description": "感染距離",
                 "step": "0.1",
@@ -78,7 +78,7 @@
                 "max": "20.0"
             },
             {
-                "name": "incubation",
+                "id": "incubation",
                 "type": "distribution",
                 "description": "潜伏期間",
                 "step": "0.1",
@@ -86,7 +86,7 @@
                 "value": ["1.0","14.0","5.0"]
             },
             {
-                "name": "fatality",
+                "id": "fatality",
                 "type": "distribution",
                 "description": "発症から死亡まで",
                 "step": "0.1",
@@ -94,7 +94,7 @@
                 "value": ["4.0","20.0","16.0"]
             },
             {
-                "name": "recovery",
+                "id": "recovery",
                 "type": "distribution",
                 "description": "快復開始まで",
                 "step": "0.1",
@@ -102,7 +102,7 @@
                 "value": ["4.0","40.0","10.0"]
             },
             {
-                "name": "immunity",
+                "id": "immunity",
                 "type": "distribution",
                 "description": "免疫有効期間",
                 "step": "0.1",
@@ -115,7 +115,7 @@
         "name": "対策",
         "param-list": [
             {
-                "name": "distancingStrength",
+                "id": "distancingStrength",
                 "type": "range",
                 "description": "社会的距離の強さ",
                 "step": "0.1",
@@ -125,7 +125,7 @@
                 "max": "100.0"
             },
             {
-                "name": "distancingObedience",
+                "id": "distancingObedience",
                 "type": "range",
                 "description": "社会的距離協力率",
                 "step": "0.1",
@@ -135,7 +135,7 @@
                 "max": "100.0"
             },
             {
-                "name": "mobilityFrequency",
+                "id": "mobilityFrequency",
                 "type": "range",
                 "description": "移動頻度",
                 "step": "0.1",
@@ -145,7 +145,7 @@
                 "max": "100.0"
             },
             {
-                "name": "mobilityDistance",
+                "id": "mobilityDistance",
                 "type": "distribution",
                 "description": "移動距離",
                 "step": "0.1",
@@ -154,7 +154,7 @@
                 "info": "世界の大きさとの比"
             },
             {
-                "name": "contactTracing",
+                "id": "contactTracing",
                 "type": "range",
                 "description": "接触者追跡",
                 "step": "0.1",
@@ -170,7 +170,7 @@
         "name" : "検査",
         "param-list": [
             {
-                "name": "testDelay",
+                "id": "testDelay",
                 "type": "range",
                 "description": "検査の遅れ",
                 "step" : "0.1",
@@ -180,7 +180,7 @@
                 "max": "10.0"
             },
             {
-                "name": "testProcess",
+                "id": "testProcess",
                 "type": "range",
                 "description": "処理期間",
                 "step": "0.1",
@@ -191,7 +191,7 @@
                 "info": "検査から判明まで"
             },
             {
-                "name":"testInterval", 
+                "id":"testInterval", 
                 "type": "range",
                 "description": "検査間隔",
                 "step": "0.1",
@@ -202,7 +202,7 @@
                 "info": "次の検査まで"
             },
             {
-                "name": "testSensitivity",
+                "id": "testSensitivity",
                 "type": "range",
                 "description": "感度",
                 "step": "0.1",
@@ -212,7 +212,7 @@
                 "max": "100.0"
             },
             {
-                "name": "testSpecificity",
+                "id": "testSpecificity",
                 "type": "range",
                 "description": "特異度",
                 "step": "0.1",
@@ -222,7 +222,7 @@
                 "max": "100.0"
             },
             {
-                "name": "subjectAsymptomatic",
+                "id": "subjectAsymptomatic",
                 "type": "range",
                 "description": "疑症状検査対象者",
                 "step": "0.1",
@@ -232,7 +232,7 @@
                 "max": "100.0"
             },
             {
-                "name": "subjectSymptomatic",
+                "id": "subjectSymptomatic",
                 "type": "range",
                 "description": "有症状検査対象者",
                 "step": "0.1",
