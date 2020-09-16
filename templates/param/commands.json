@@ -1,0 +1,25 @@
+{
+    "info": {
+        "formname": "param-form",
+        "cmd_cls": "command-button",
+        "cmd_list_cls": "cmd-btn-list"
+    },
+    "listener": {
+        "save": "saveParams('param-form');",
+        "reset": "resetParams();",
+        "picker": "loadParamFile(this, target='parampanel');"
+    },
+    "buttons": {
+        "save": "現在の設定を保存",
+        "reset": "既定値に戻す"
+    },
+    "file_picker": {
+        "label": "ファイルから読み込む",
+        "picker": {
+            "type": "file",
+            "style": "display:none;",
+            "id": "param-file-button",
+            "accept": ".json, application/json"
+        }
+    }
+}

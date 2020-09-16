@@ -65,45 +65,14 @@ function saveParams(formname) {
     }
 }
 
-/** 仮置き，サーバーからGETでデフォルト値を設定したJsonFileを読み込む方が良い
- * もしくは当初の予定通りhiddenにしたデフォ値のフォームを複製するか？
- * */
-function getDefaultParams() {
-    /*
-     * var req = new SMLHttpRequest();
-     * req.open('GET', 'contents/defaultparams.json');
-     * req.responseType = 'json';
-     * req.send();
-     * req.onload = function(){
-     *  return req.response;
-     *  }
-     *  */
-    let default_vals = {
-        "populationSize":"10000",
-        "worldSize":"360",
-        "mesh":"18",
-        "stepsPerDay":"4",
-        "initialInfected":"4",
-        "infectionProberbility":"50.0",
-        "infectionDistance":"4.0",
-        "incubation":["1.0", "14.0","5.0"],
-        "fatality":["4.0","20.0","16.0"],
-        "recovery":["4.0","40.0","10.0"],
-        "immunity":["30.0","360.0","180.0"],
-        "distancingStrength":"50.0",
-        "distancingObedience":"20.0",
-        "mobilityFrequency":"50.0",
-        "mobilityDistance":["10.0","80.0","30.0"],
-        "contactTracing":"20.0",
-        "testDelay":"1.0",
-        "testProcess":"1.0",
-        "testInterval":"2.0",
-        "testSensitivity":"70.0",
-        "testSpecificity":"99.8",
-        "subjectAsymptomatic":"1.0",
-        "subjectSymptomatic":"99.0"
-    };
-    return default_vals;
+function resetParams() {
+    var req = new XMLHttpRequest();
+    req.open('GET', 'contents/defaultparams.json');
+    req.responseType = 'json';
+    req.send();
+    req.onload = function(){
+        loadParams(req.response);
+    }
 }
 
 function loadParams(val_dict) {
@@ -117,13 +86,28 @@ function loadParams(val_dict) {
             }
             continue;
         }
-       document.getElementById(element.id + "-min").value = val_dict[key][0]
-       document.getElementById(element.id + "-max").value = val_dict[key][1]
-       document.getElementById(element.id + "-mode").value = val_dict[key][2]
+        document.getElementById(element.id + "-min").value = val_dict[key][0]
+        document.getElementById(element.id + "-max").value = val_dict[key][1]
+        document.getElementById(element.id + "-mode").value = val_dict[key][2]
 
     }
 }
-function resetParams(param_formname) {
-    let val_dict = getDefaultParams();
-    loadParams(val_dict);
+function loadParamFile(file_input, target='') {
+    if(target == 'parampanel') {
+        jsonFile(file_input, loadParams);
+    }
+    else {
+        alert("何しにきたん？");
+    }
+}
+function jsonFile(file_input, callback) {
+    const file = file_input.files[0];
+    const reader = new FileReader();
+    reader.onerror = () => {
+        alert("ファイル読み込みに失敗しました．");
+    }
+    reader.onload = () => {
+        callback(JSON.parse(reader.result));
+    }
+    reader.readAsText(file);
 }

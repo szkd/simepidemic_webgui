@@ -33,29 +33,32 @@ def sim():
 
 """ ********************************* """
 """ ********************************* """
-param_formname = 'param-form'
 def param():
-    commander = {\
-            "save": {\
-                "title": "現在の設定を保存",\
-                'onclick': "saveParams('" + param_formname + "')"},\
-            "reset": {\
-                "title": "既定値に戻す",\
-                "onclick": "resetParams('" + param_formname + "');"\
-                }\
-            }
-
     commands = ""
     params = ""
-    for command in commander:
-        c = commander[command]
-        title = c["title"]
-        del c["title"]
-        c["class"] = 'command-button'
-        commands += tag("button", title, c)
-    commands = tag("div", commands, {'class': 'cmd-btn-list'})
+    template = json2dict(PARAM_DIR + "commands.json")
+    buttons = template['buttons']
+    info = template['info']
+    picker_label = template['file_picker']['label']
+    picker = template['file_picker']['picker']
+    listener = template['listener']
+    for cmd in buttons:
+        commands += tag("button", buttons[cmd], {\
+                "class": info['cmd_cls'],\
+                "onclick": listener[cmd]\
+                })
+    commands += tag("label", picker_label, {\
+            "for": picker['id'],\
+            "class": info['cmd_cls']\
+            })
+    picker['oninput'] = listener['picker']
+    commands += tag("input", attr=picker, end=False)
+
+    commands = tag("div", commands, {\
+            'class': info['cmd_list_cls']\
+            })
     params += paramPanels(PARAM_DIR + 'param.json', COMMON_DIR + 'panel.html')
-    p_form = tag("form", params, {'name': param_formname});
+    p_form = tag("form", params, {'name': info['formname']});
     return commands + p_form
 
 """ ********************************* """
