@@ -16,19 +16,54 @@ SCENARIO_DIR = TEMPLATE_DIR + "scenario/"
 image
 ********************************* """
 settings_icon = "url(\"data:image/svg+xml;charset=UTF-8,<svg width='1em' height='1em' viewBox='0 0 16 16' class='bi bi-gear-fill' fill='white' xmlns='http://www.w3.org/2000/svg'>  <path fill-rule='evenodd' d='M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 0 0-5.86 2.929 2.929 0 0 0 0 5.858z'/></svg>\");"
+
 """ ********************************
 pages
 ******************************** """
+def simSettings():
+    template  = json2dict(SIM_DIR + "sim_settings.json")
+    sections = template['sections']
+    info = template['info']
+    html_str = ""
+    for sec in sections:
+        section = sections[sec]
+        section_label = tag("div", section['label'], {"class": info['title_cls']})
+        input_str = ""
+        options = section['options']
+        idx = -1
+        for opt in section['options']:
+            idx += 1
+            attr = {\
+                "type": section['type'],\
+                "name": section['name'],\
+                "id": sec + str(idx)
+                }
+            if 'checked' in opt:
+                attr['checked'] = "checked"
+
+            option = tag("input", attr=attr,\
+                end = False)
+            label = tag("label", opt['label'], {"for": sec + str(idx)})
+            if 'file' in opt:
+                label += tag("input", attr=info['file-attr'], end=False)
+            input_str += tag("span", option + label, {"class": info['option-cls'], "style": info['option-style']});
+        input_str = tag("div", input_str, {"class": info['option-container']})
+        html_str += tag("div", section_label + input_str)
+    return html_str
+
 def sim():
-    html=""
-    ID = 'sim-settings'
-    command = { "start": "開始", "stop": "停止", "step": "1ステップ進む", "reset": "初期化"}
-    settings = tag("div", panel(ID, "設定", "設定のなかみ",\
+    commands = json2dict(SIM_DIR + "commands.json")
+    buttons = commands['buttons']
+    info = commands['info']
+    listener = commands['listener']
+    html = panel('sim-settings', "設定", simSettings(),\
             icon_normal = settings_icon,\
-            icon_checked = settings_icon))
-    for key in command:
-        html += tag("button",command[key], {'class': 'command-button', 'type': 'submit', 'formaction' : key})
-    html = settings + tag("form", html, {'class': 'cmd-btn-list', 'method': 'get', 'target': 'result'})
+            icon_checked = settings_icon)
+    input_str = ""
+    for key in buttons:
+        input_str += tag("button", buttons[key]['label'], {'class': info['cmd_cls'], 'onclick' : listener[key]})
+
+    html += tag("div", input_str, {'class': info['cmd_list_cls']})
     return html
 
 """ ********************************* """

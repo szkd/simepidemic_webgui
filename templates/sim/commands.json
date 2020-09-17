@@ -1,0 +1,40 @@
+{
+    "info": {
+        "formname": "sim-settings",
+        "cmd_cls": "command-button",
+        "cmd_list_cls": "cmd-btn-list"
+    },
+    "listener": {
+        "start": "startSim();",
+        "stop": "stopSim();",
+        "step": "stepSim();",
+        "reset": "resetSim();"
+    },
+    "buttons": {
+        "start": {
+            "label": "開始",
+            "option": {
+                "stopAt": "",
+                "world": ""
+            }
+        },
+        "stop": {
+            "label": "停止",
+            "option": {
+                "world": ""
+            }
+        },
+        "step": {
+            "label": "1ステップ進む",
+            "option": {
+                "world": ""
+            }
+        },
+        "reset": {
+            "label": "初期化する",
+            "option": {
+                "world": ""
+            }
+        }
+    }
+}

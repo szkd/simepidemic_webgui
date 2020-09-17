@@ -85,6 +85,12 @@ input[type="number"] {
     width: 100%;
 }
 
+.inline-block {
+    display: inline-block;
+}
+.margin-right {
+    margin-right: var(--margin);
+}
 /* *****************************
  * param
  * *****************************/

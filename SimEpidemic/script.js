@@ -100,6 +100,15 @@ function loadParamFile(file_input, target='') {
         alert("何しにきたん？");
     }
 }
+/********************************************
+ * シミュレーション制御
+ ***************************************** */
+function startSim() {
+    confirm("現在の設定でシミュレーションを行います．よろしいですか？");
+}
+/********************************************
+ * 共通
+ ***************************************** */
 function jsonFile(file_input, callback) {
     const file = file_input.files[0];
     const reader = new FileReader();

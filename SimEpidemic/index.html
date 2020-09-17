@@ -61,7 +61,7 @@
     color: var(--my-black);
     border: none;
 }
-</style><input type = "radio" id = "statistics" name = "page_tab" style = "display:none;"><label for = "statistics" class = "tab_item">統計情報</label><div class = "tab_content" id = "sim_content"><div><div class="panel ">
+</style><input type = "radio" id = "statistics" name = "page_tab" style = "display:none;"><label for = "statistics" class = "tab_item">統計情報</label><div class = "tab_content" id = "sim_content"><div class="panel ">
     <input type="checkbox" id="sim-settings" style="display:none;" checked="checked" title="折りたたみ">
     <label for="sim-settings" title="折りたたみ"> 設定 </label>
     <style>
@@ -81,13 +81,13 @@
         }
     </style>
     <div id="sim-settings-content">
-    simSettings
+    <div><div class = "param-title">世界</div><div class = "display: flex; flex-wrap: wrap; margin-top: 10px; justify-content: flex-start"><span class = "inline-block margin-right" style = "flex-grow: 1;"><input type = "radio" name = "sim-world" id = "world0" checked = "checked"><label for = "world0">既定世界</label></span><span class = "inline-block margin-right" style = "flex-grow: 1;"><input type = "radio" name = "sim-world" id = "world1"><label for = "world1">世界の新規生成</label></span></div></div><div><div class = "param-title">パラメータ</div><div class = "display: flex; flex-wrap: wrap; margin-top: 10px; justify-content: flex-start"><span class = "inline-block margin-right" style = "flex-grow: 1;"><input type = "radio" name = "sim-param" id = "param0" checked = "checked"><label for = "param0">現在のパラメータタブの値を使用</label></span><span class = "inline-block margin-right" style = "flex-grow: 1;"><input type = "radio" name = "sim-param" id = "param1"><label for = "param1">ファイルから読み込む</label><input type = "file" accept = ".json, application/json"></span></div></div><div><div class = "param-title">シナリオ</div><div class = "display: flex; flex-wrap: wrap; margin-top: 10px; justify-content: flex-start"><span class = "inline-block margin-right" style = "flex-grow: 1;"><input type = "radio" name = "sim-scenario" id = "scenario0" checked = "checked"><label for = "scenario0">現在のシナリオタブの値を使用</label></span><span class = "inline-block margin-right" style = "flex-grow: 1;"><input type = "radio" name = "sim-scenario" id = "scenario1"><label for = "scenario1">ファイルから読み込む</label><input type = "file" accept = ".json, application/json"></span></div></div>
     </div>
  </div>
 
 
 
-</div><form class = "cmd-btn-list" method = "get" target = "result"><button class = "command-button" type = "submit" formaction = "start">開始</button><button class = "command-button" type = "submit" formaction = "stop">停止</button><button class = "command-button" type = "submit" formaction = "step">1ステップ進む</button><button class = "command-button" type = "submit" formaction = "reset">初期化</button></form></div><div class = "tab_content" id = "param_content"><div class = "cmd-btn-list"><button onclick = "saveParams('param-form')" class = "command-button">現在の設定を保存</button><button onclick = "resetParams('param-form');" class = "command-button">既定値に戻す</button></div><form name = "param-form"><div class = "panels"><div class="panel ">
+<div class = "cmd-btn-list"><button class = "command-button" onclick = "startSim();">開始</button><button class = "command-button" onclick = "stopSim();">停止</button><button class = "command-button" onclick = "stepSim();">1ステップ進む</button><button class = "command-button" onclick = "resetSim();">初期化する</button></div></div><div class = "tab_content" id = "param_content"><div class = "cmd-btn-list"><button class = "command-button" onclick = "saveParams('param-form');">現在の設定を保存</button><button class = "command-button" onclick = "resetParams();">既定値に戻す</button><label for = "param-file-button" class = "command-button">ファイルから読み込む</label><input type = "file" style = "display:none;" id = "param-file-button" accept = ".json, application/json" oninput = "loadParamFile(this, target='parampanel');"></div><form name = "param-form"><div class = "panels"><div class="panel ">
     <input type="checkbox" id="checkbox-initialInfected" style="display:none;" checked="checked" title="折りたたみ">
     <label for="checkbox-initialInfected" title="折りたたみ"> 世界 </label>
     <style>
