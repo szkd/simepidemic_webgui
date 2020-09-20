@@ -18,6 +18,33 @@ image
 settings_icon = "url(\"data:image/svg+xml;charset=UTF-8,<svg width='1em' height='1em' viewBox='0 0 16 16' class='bi bi-gear-fill' fill='white' xmlns='http://www.w3.org/2000/svg'>  <path fill-rule='evenodd' d='M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 0 0-5.86 2.929 2.929 0 0 0 0 5.858z'/></svg>\");"
 
 """ ********************************
+common
+******************************** """
+def buttonGroupFromJson(jsonfile):
+    html_str=""
+    json = json2dict(jsonfile, True)
+    info = json['info']
+    listener = json['listener']
+    buttons = json['buttons']
+    other = json['other'] if 'other' in json else ''
+
+    for cmd in buttons:
+        html_str += tag("button", buttons[cmd], {\
+                "class": info['cmd_cls'],\
+                "onclick": listener[cmd]\
+                })
+    for key in other:
+        cmd = other[key]
+        content = cmd['content'] if 'content' in cmd else ''
+        attr = cmd['attr']
+        html_str += tag(cmd['tag'], content, cmd['attr'], cmd['end'])
+
+    html_str = tag("div", html_str, {\
+            'class': info['cmd_list_cls']\
+            })
+    return html_str
+
+""" ********************************
 pages
 ******************************** """
 def simSettings():
@@ -69,32 +96,12 @@ def sim():
 """ ********************************* """
 """ ********************************* """
 def param():
-    commands = ""
+    commands = buttonGroupFromJson(PARAM_DIR + "commands.json");
+    info = json2dict(PARAM_DIR + "commands.json")['info']
     params = ""
-    template = json2dict(PARAM_DIR + "commands.json")
-    buttons = template['buttons']
-    info = template['info']
-    picker_label = template['file_picker']['label']
-    picker = template['file_picker']['picker']
-    listener = template['listener']
-    for cmd in buttons:
-        commands += tag("button", buttons[cmd], {\
-                "class": info['cmd_cls'],\
-                "onclick": listener[cmd]\
-                })
-    commands += tag("label", picker_label, {\
-            "for": picker['id'],\
-            "class": info['cmd_cls']\
-            })
-    picker['oninput'] = listener['picker']
-    commands += tag("input", attr=picker, end=False)
-
-    commands = tag("div", commands, {\
-            'class': info['cmd_list_cls']\
-            })
     params += paramPanels(PARAM_DIR + 'param.json', COMMON_DIR + 'panel.html')
-    p_form = tag("form", params, {'name': info['formname']});
-    return commands + p_form
+    params = tag("form", params, {"name": info['formname']})
+    return commands + params
 
 """ ********************************* """
 """ ********************************* """

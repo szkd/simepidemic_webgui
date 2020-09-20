@@ -6,20 +6,33 @@
     },
     "listener": {
         "save": "saveParams('param-form');",
-        "reset": "resetParams();",
-        "picker": "loadParamFile(this, target='parampanel');"
+        "reset": "resetParams();"
     },
     "buttons": {
         "save": "現在の設定を保存",
         "reset": "既定値に戻す"
     },
-    "file_picker": {
-        "label": "ファイルから読み込む",
-        "picker": {
-            "type": "file",
-            "style": "display:none;",
-            "id": "param-file-button",
-            "accept": ".json, application/json"
+    "other": {
+        "file-label": {
+            "tag": "label",
+            "content":"ファイルから読み込む",
+            "end": "True",
+            "attr": {
+                "for": "param-title-button",
+                "class": "command-button"
+            }
+        },
+        "file-input": {
+            "tag": "input",
+            "end": "False",
+            "attr": {
+                "type": "file",
+                "id": "param-title-button",
+                "class": "command-button",
+                "style": "display:none;",
+                "accept": ".json, application/json",
+                "onchange": "loadFile(this, target='parampanel');"
+            }
         }
     }
 }
