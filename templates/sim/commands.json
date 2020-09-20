@@ -11,30 +11,9 @@
         "reset": "resetSim();"
     },
     "buttons": {
-        "start": {
-            "label": "開始",
-            "option": {
-                "stopAt": "",
-                "world": ""
-            }
-        },
-        "stop": {
-            "label": "停止",
-            "option": {
-                "world": ""
-            }
-        },
-        "step": {
-            "label": "1ステップ進む",
-            "option": {
-                "world": ""
-            }
-        },
-        "reset": {
-            "label": "初期化する",
-            "option": {
-                "world": ""
-            }
-        }
+        "start": "開始",
+        "stop": "停止",
+        "step": "1ステップ進む",
+        "reset": "初期化する"
     }
 }

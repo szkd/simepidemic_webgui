@@ -6,7 +6,8 @@
         "option-style": "flex-grow: 1;",
         "file-attr": {
             "type": "file",
-            "accept": ".json, application/json"
+            "accept": ".json, application/json",
+            "style": "display:none;"
         }
     },
     "sections": {
@@ -23,7 +24,7 @@
                     "result": "text/plain"
                 },
                 {
-                    "label": "世界の新規生成",
+                    "label": "新規生成",
                     "method": "GET",
                     "action": "newWorld",
                     "result": "text/plain"
@@ -37,11 +38,12 @@
             "options": [
                 {
                     "checked": "checked",
-                    "label": "現在のパラメータタブの値を使用"
+                    "label": "パラメータタブの値を使用"
                 },
                 {
                     "label": "ファイルから読み込む",
-                    "file": "パラメータのJSON"
+                    "file": "JSONファイルを選択",
+                    "onchange": "loadFile(this, 'sim-setting-param');"
                 }
             ]
         },
@@ -51,12 +53,16 @@
             "name": "sim-scenario",
             "options": [
                 {
-                    "checked": "checked",
-                    "label": "現在のシナリオタブの値を使用"
+                    "label": "使用しない",
+                    "checked": "checked"
+                },
+                {
+                    "label": "シナリオタブの値を使用"
                 },
                 {
                     "label": "ファイルから読み込む",
-                    "file": "シナリオのJSON"
+                    "file": "JSONファイルを選択",
+                    "onchange": "loadFile(this, 'sim-setting-scenario');"
                 }
             ]
         }

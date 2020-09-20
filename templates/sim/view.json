@@ -1,0 +1,30 @@
+{
+    "info": {
+        "cmd_cls": "command-button",
+        "cmd_list_cls": "cmd-btn-list"
+    },
+    "listener": {
+    },
+    "buttons": {
+    },
+    "other": {
+        "world_list": {
+            "tag": "button",
+            "content":"世界一覧",
+            "end": "True",
+            "attr": {
+                "class": "list command-button",
+                "onclick": "worldList();"
+            }
+        },
+        "share": {
+            "tag": "button",
+            "content": "既定世界のIDを取得",
+            "end": "True",
+            "attr": {
+                "class": "share command-button",
+                "onclick": "getWorldId();"
+            }
+        }
+    }
+}

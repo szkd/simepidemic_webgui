@@ -68,29 +68,28 @@ def simSettings():
             if 'checked' in opt:
                 attr['checked'] = "checked"
 
-            option = tag("input", attr=attr,\
-                end = False)
-            label = tag("label", opt['label'], {"for": sec + str(idx)})
+            option = tag("input", attr=attr,end = False)
+            label = tag("label", opt['label'], {"for": sec + str(idx), "style": "margin-right:  8px;"})
             if 'file' in opt:
+                f_id = 'file'+ sec + str(idx)
+                info['file-attr']['id'] = f_id
+                info['file-attr']['onchange'] = opt['onchange']
+                label += tag("label", '', {"for": f_id, "class": "file-plus"})
                 label += tag("input", attr=info['file-attr'], end=False)
+                label += tag("span", '', {"id": f_id + "result"})
             input_str += tag("span", option + label, {"class": info['option-cls'], "style": info['option-style']});
         input_str = tag("div", input_str, {"class": info['option-container']})
         html_str += tag("div", section_label + input_str)
     return html_str
 
 def sim():
-    commands = json2dict(SIM_DIR + "commands.json")
-    buttons = commands['buttons']
-    info = commands['info']
-    listener = commands['listener']
+    commands = buttonGroupFromJson(SIM_DIR + "view.json")
+    commands += buttonGroupFromJson(SIM_DIR + "commands.json")
     html = panel('sim-settings', "設定", simSettings(),\
             icon_normal = settings_icon,\
             icon_checked = settings_icon)
-    input_str = ""
-    for key in buttons:
-        input_str += tag("button", buttons[key]['label'], {'class': info['cmd_cls'], 'onclick' : listener[key]})
 
-    html += tag("div", input_str, {'class': info['cmd_list_cls']})
+    html += commands
     return html
 
 """ ********************************* """
