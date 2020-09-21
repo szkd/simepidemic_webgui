@@ -1,0 +1,73 @@
+{
+    "params": [
+        {   "id": "populationSize",
+            "type": "number"
+        },
+        {   "id":"worldSize",
+            "type": "number"
+        },
+        {   "id": "mesh",
+            "type": "range"
+        },
+        {   "id": "stepsPerDay",
+            "type": "range"
+        },
+        {   "id": "initialInfected",
+            "type": "range"
+        },
+        {   "id": "infectionProberbility",
+            "type": "range"
+        },
+        {   "id": "infectionDistance",
+            "type": "range"
+        },
+        {   "id": "incubation",
+            "type": "distribution"
+        },
+        {   "id": "fatality",
+            "type": "distribution"
+        },
+        {   "id": "recovery",
+            "type": "distribution"
+        },
+        {   "id": "immunity",
+            "type": "distribution"
+        },
+        {   "id": "distancingStrength",
+            "type": "range"
+        },
+        {   "id": "distancingObedience",
+            "type": "range"
+        },
+        {   "id": "mobilityFrequency",
+            "type": "range"
+        },
+        {   "id": "mobilityDistance",
+            "type": "distribution"
+        },
+        {   "id": "contactTracing",
+            "type": "range"
+        },
+        {   "id": "testDelay",
+            "type": "range"
+        },
+        {   "id": "testProcess",
+            "type": "range"
+        },
+        {   "id":"testInterval",
+            "type": "range"
+        },
+        {   "id": "testSensitivity",
+            "type": "range"
+        },
+        {   "id": "testSpecificity",
+            "type": "range"
+        },
+        {   "id": "subjectAsymptomatic",
+            "type": "range"
+        },
+        {   "id": "subjectSymptomatic",
+            "type": "range"
+        }
+    ]
+}

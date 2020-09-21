@@ -1,6 +1,8 @@
 ﻿<!DOCTYPE html>
 <html>
-    <head><title>SimEpidemic</title><meta charset = "utf-8"><link rel = "stylesheet" href = "css/common.css"><script src = "script.js"></script></head>
+    <head>
+    <title>SimEpidemic</title><meta charset = "utf-8"><link rel = "icon" href = "favicon.png"><link rel = "stylesheet" href = "css/common.css"><script src = "script.js"></script>
+    </head>
     <body>
         <div id = "wrapper">
             <header>
@@ -87,7 +89,7 @@
 
 
 
-<div class = "cmd-btn-list"><button class = "list command-button" onclick = "worldList();">世界一覧</button><button class = "share command-button" onclick = "getWorldId();">既定世界のIDを取得</button></div><div class = "cmd-btn-list"><button class = "command-button" onclick = "startSim();">開始</button><button class = "command-button" onclick = "stopSim();">停止</button><button class = "command-button" onclick = "stepSim();">1ステップ進む</button><button class = "command-button" onclick = "resetSim();">初期化する</button></div></div><div class = "tab_content" id = "param_content"><div class = "cmd-btn-list"><button class = "command-button" onclick = "saveParams('param-form');">現在の設定を保存</button><button class = "command-button" onclick = "resetParams();">既定値に戻す</button><label for = "param-title-button" class = "command-button">ファイルから読み込む</label><input type = "file" id = "param-title-button" class = "command-button" style = "display:none;" accept = ".json, application/json" onchange = "loadFile(this, target='parampanel');"></input></div><form name = "param-form"><div class = "panels"><div class="panel ">
+<div class = "cmd-btn-list"><button class = "list command-button" onclick = "worldList();">世界一覧</button><button class = "share command-button" onclick = "getWorldId();">既定世界のIDを取得</button></div><div class = "cmd-btn-list"><button class = "command-button" onclick = "startSim('sim-settings');">開始</button><button class = "command-button" onclick = "stopSim();">停止</button><button class = "command-button" onclick = "stepSim();">1ステップ進む</button><button class = "command-button" onclick = "resetSim();">初期化する</button></div></div><div class = "tab_content" id = "param_content"><div class = "cmd-btn-list"><button class = "command-button" onclick = "saveParams('param-form');">現在の設定を保存</button><button class = "command-button" onclick = "resetParams();">既定値に戻す</button><label for = "param-title-button" class = "command-button">ファイルから読み込む</label><input type = "file" id = "param-title-button" class = "command-button" style = "display:none;" accept = ".json, application/json" onchange = "loadFile(this, target='parampanel');"></input></div><form name = "param-form"><div class = "panels"><div class="panel ">
     <input type="checkbox" id="checkbox-initialInfected" style="display:none;" checked="checked" title="折りたたみ">
     <label for="checkbox-initialInfected" title="折りたたみ"> 世界 </label>
     <style>

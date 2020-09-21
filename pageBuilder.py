@@ -188,12 +188,13 @@ def paramPanels(jsonfile,template_html):
 
 def head(title, stylesheets=[], scripts=[]):
     html = tag("title", title)\
-            + tag("meta", attr={'charset': 'utf-8'}, end = False)
+            + tag("meta", attr={'charset': 'utf-8'}, end = False)\
+            + tag("link", attr = {'rel': 'icon', 'href': 'favicon.png'}, end = False)
     for stylesheet in stylesheets:
         html += tag("link", attr={'rel': 'stylesheet', 'href': stylesheet}, end=False)
     for script in scripts:
         html+= tag("script", '', {'src':script})
-    return tag("head", html)
+    return html;
 
 def header(jsonfile):
     data = json2dict(jsonfile)
@@ -208,7 +209,6 @@ def header(jsonfile):
             'target' : '_blank'})
 
     return rephrase(COMMON_DIR + "header.html", data)
-
 
 """ ******************************
 json

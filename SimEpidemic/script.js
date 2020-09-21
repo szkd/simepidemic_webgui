@@ -1,4 +1,7 @@
-﻿/********************************************
+﻿window.onload = function(){
+    resetParams();
+};
+/********************************************
  * パラメータ
  ***************************************** */
 function sliderValueChanged(value, outputid){
@@ -38,24 +41,21 @@ function saveParams(formname) {
         enfocedDownload(fakeurl);
     }
 }
+
 function resetParams() {
-    serverReq(loadParams, "GET",  "contents/defaultparams.json", responseType='json');
+    serverReq(loadParams, "GET",  "/getParams", responseType='json');
 }
 
 function loadParams(val_dict) {
-    for (let key in val_dict) {
-        var element = document.getElementById(key);
-        if(typeof(val_dict[key]) == "string") {
-            element.value = val_dict[key];
-            var view = document.getElementById("view" + key);
-            if(view !== null) {
-                view.value = val_dict[key];
-            }
+    for(let val in val_dict) {
+        if(typeof(val_dict[val]) != "object") {
+            var elem = document.getElementById(val);
+            elem.value = val_dict[val];
             continue;
         }
-        document.getElementById(element.id + "-min").value = val_dict[key][0]
-        document.getElementById(element.id + "-max").value = val_dict[key][1]
-        document.getElementById(element.id + "-mode").value = val_dict[key][2]
+        document.getElementById(val + "-min").value = val_dict[val][0]
+        document.getElementById(val + "-max").value = val_dict[val][1]
+        document.getElementById(val + "-mode").value = val_dict[val][2]
 
     }
 }
@@ -107,7 +107,7 @@ function getWorldId(id = '') {
 function jsonFile(file_input, callback) {
     var file = file_input.files[0];
     var reader = new FileReader();
-    file_input.value = null;
+    file_input.reset;
     reader.onerror = () => {
         alert("ファイル読み込みに失敗しました．");
     }
@@ -117,16 +117,31 @@ function jsonFile(file_input, callback) {
     reader.readAsText(file);
 }
 
-function serverReq(callback, method, _req, responseType ='' ) {
+function syncedServerReq(method, req) {
+    var r = new XMLHttpRequest();
+    r.open(method, req, false);
+    r.send();
+    return r.response;
+}
+
+function serverReq(callback, method, _req, responseType ='', arg = null) {
     var req = new XMLHttpRequest();
-    req.open(method, _req);
-    if(responseType != ''){
-        req.responseType = responseType;
-    }
+    req.open(method, _req, true);
+        req.timeout = 2000;
+        if(responseType != ''){
+            req.responseType = responseType;
+        }
+        req.onload = function(){
+            let response = req.response;
+            if (arg === null)  {
+                callback(response);
+            }
+            else {
+                callback(arg, response);
+            }
+
+        }
     req.send();
-    req.onload = function(){
-        callback(req.response);
-    }
 }
 
 function loadFile(file_input, target='') {
@@ -153,28 +168,28 @@ function dict2formdata(dict) {
 }
 
 function form2paramDict(formname) {
-    let params = document.forms[formname].elements;
-    var param_dict = {};
-    for(let elem in params) {
-        let name = params[elem].name;
-        if(name == '') {
-            continue;
-        }
-        if(param_dict[name] == null) {
-            param_dict[name] = params[elem].value;
-            continue;
-        }
-        if(param_dict[name].constructor.name == "Array"){
-            param_dict[name].push(params[elem].value);
+    var types = getParamTypes();
+    types = JSON.parse(types);
+    var p_dict = {};
+    let p_types = types["params"];
+    let form_ps = document.forms[formname].elements;
 
+    for(let p in p_types) {
+        let type = p_types[p];
+        if (type.type != "distribution") {
+            p_dict[type.id] = form_ps[type.id].value - 0;
             continue;
         }
-        let value = param_dict[name];
-        param_dict[name] = [];
-        param_dict[name].push(value);
-        param_dict[name].push(params[elem].value);
 
+        let radio = form_ps.namedItem(type.id);
+        p_dict[type.id] = new Array();
+        p_dict[type.id].push(radio[0].value - 0);
+        p_dict[type.id].push(radio[1].value - 0);
+        p_dict[type.id].push(radio[2].value - 0);
     }
-    return param_dict;
+    return p_dict;
 }
 
+function getParamTypes() {
+    return syncedServerReq("GET", "/contents/paramtype.json");
+}
