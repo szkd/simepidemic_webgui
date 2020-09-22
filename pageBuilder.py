@@ -48,7 +48,7 @@ def buttonGroupFromJson(jsonfile):
 pages
 ******************************** """
 def simSettings():
-    template  = json2dict(SIM_DIR + "sim_settings.json")
+    template  = json2dict(CONTENTS_DIR + "sim_settings.json")
     sections = template['sections']
     info = template['info']
     html_str = ""
@@ -85,7 +85,9 @@ def simSettings():
 def sim():
     commands = buttonGroupFromJson(SIM_DIR + "view.json")
     commands += buttonGroupFromJson(SIM_DIR + "commands.json")
-    html = panel('sim-settings', "設定", simSettings(),\
+    info = json2dict(CONTENTS_DIR + "sim_settings.json")
+    info = info['info']
+    html = panel(info['formname'], "設定", simSettings(),\
             icon_normal = settings_icon,\
             icon_checked = settings_icon)
 

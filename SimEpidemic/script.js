@@ -63,28 +63,27 @@ function loadParams(val_dict) {
 /********************************************
  * シミュレーション制御
  ***************************************** */
-function startSim() {
-    confirm("現在の設定でシミュレーションを行います．よろしいですか？");
+function startSim(formname) {
+    let result = confirm("現在の設定でシミュレーションを行います．よろしいですか？");
+    if(!result) return;
+
 }
 
 function stopSim() {
-    confirm("実行中の世界を停止しますか?");
+    let result = confirm("実行中の世界を停止しますか?");
+    if(!result) return;
 }
 
 function stepSim() {
-    confirm("実行中の世界を1ステップ進めますか?");
+    let result = confirm("実行中の世界を1ステップ進めますか?");
+    if(!result) return;
 }
 
 function resetSim() {
     confirm("実行中の世界を初期化しますか?");
+    if(!result) return;
 }
 
-function loadSimParam(file_input, dict = {}) {
-    if(dict != {} ) {
-        let form = dict2formdata(dict);
-    }
-    jsonFile(file_input, loadSimParam);
-}
 
 function loadSimScenario(json_dict) {
     alert("loadSimScenario");
@@ -149,7 +148,6 @@ function loadFile(file_input, target='') {
         jsonFile(file_input, loadParams);
     }
     else if (target == "sim-setting-param") {
-        loadSimParam(file_input);
     }
     else if (target == "sim-setting-scenario") {
         jsonFile(file_input, loadSimScenario);
@@ -160,7 +158,7 @@ function loadFile(file_input, target='') {
 }
 
 function dict2formdata(dict) {
-    const fd = new Formdata();
+    var fd = new FormData();
     for (key in dict) {
         fd.append(key, dict[key]);
     }
@@ -168,7 +166,7 @@ function dict2formdata(dict) {
 }
 
 function form2paramDict(formname) {
-    var types = getParamTypes();
+    var types = syncedServerReq("GET", "/contents/paramtype.json");
     types = JSON.parse(types);
     var p_dict = {};
     let p_types = types["params"];
@@ -190,6 +188,3 @@ function form2paramDict(formname) {
     return p_dict;
 }
 
-function getParamTypes() {
-    return syncedServerReq("GET", "/contents/paramtype.json");
-}

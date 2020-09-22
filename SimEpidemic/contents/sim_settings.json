@@ -1,0 +1,78 @@
+{
+    "info": {
+        "formname": "sim-settings",
+        "title_cls": "param-title",
+        "option-container": "display: flex; flex-wrap: wrap; margin-top: 10px; justify-content: flex-start",
+        "option-cls": "inline-block margin-right",
+        "option-style": "flex-grow: 1;",
+        "file-attr": {
+            "type": "file",
+            "accept": ".json, application/json",
+            "style": "display:none;"
+        }
+    },
+    "sections": {
+        "world": {
+            "label": "世界",
+            "type": "radio",
+            "name": "sim-world",
+            "options": [
+                {
+                    "label": "既定世界",
+                    "value": "default",
+                    "checked": "checked",
+                    "method": "GET",
+                    "action": "getWorldID",
+                    "result": "text/plain"
+                },
+                {
+                    "value": "new",
+                    "label": "新規生成",
+                    "method": "GET",
+                    "action": "newWorld",
+                    "result": "text/plain"
+                }
+            ]
+        },
+        "param": {
+            "label": "パラメータ",
+            "type": "radio",
+            "name": "sim-param",
+            "options": [
+                {
+                    "checked": "checked",
+                    "label": "パラメータタブの値を使用",
+                    "value": "tab"
+                },
+                {
+                    "label": "ファイルから読み込む",
+                    "file": "JSONファイルを選択",
+                    "onchange": "loadFile(this, 'sim-setting-param');",
+                    "value": "file"
+                }
+            ]
+        },
+        "scenario": {
+            "label": "シナリオ",
+            "type": "radio",
+            "name": "sim-scenario",
+            "options": [
+                {
+                    "label": "使用しない",
+                    "checked": "checked",
+                    "value": "none"
+                },
+                {
+                    "label": "シナリオタブの値を使用",
+                    "value": "tab"
+                },
+                {
+                    "label": "ファイルから読み込む",
+                    "value": "file",
+                    "file": "JSONファイルを選択",
+                    "onchange": "loadFile(this, 'sim-setting-scenario');"
+                }
+            ]
+        }
+    }
+}
