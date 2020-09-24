@@ -100,15 +100,14 @@ def param():
     commands = buttonGroupFromJson(PARAM_DIR + "commands.json");
     info = json2dict(PARAM_DIR + "commands.json")['info']
     params = ""
-    params += paramPanels(PARAM_DIR + 'param.json', COMMON_DIR + 'panel.html')
+    params += paramPanels(CONTENTS_DIR + "paramtype.json", PARAM_DIR + 'param.json', COMMON_DIR + 'panel.html')
     params = tag("form", params, {"name": info['formname']})
     return commands + params
 
 """ ********************************* """
 """ ********************************* """
 def scenario():
-    panels = paramPanels(SCENARIO_DIR + "scenario.json", COMMON_DIR + 'panel.html')
-    return panels;
+    return rephrase(SCENARIO_DIR + "scenario.html", {});
 """ ********************************* """
 """ ********************************* """
 def statistics():
@@ -166,25 +165,27 @@ def panel(id, title, content, myclass='', icon_normal = '"▶︎"', icon_checked
     attr['ICON-CHECKED'] = icon_checked
     return rephrase(template_html, attr, 1000);
 
-def paramPanels(jsonfile,template_html):
-    categories = json2dict(jsonfile)
+def paramPanels(paramtypefile, paramjsonfile, template_html):
+    categories = json2dict(paramjsonfile)
+    p_types = json2dict(paramtypefile)
     panels =""
     for category in categories:
         c = categories[category]
-        paramlist = c['param-list']
+        p_list = c['param-list']
         panel_title = c['name'] if 'name' in c else 'カテゴリ名前がない!'
         params = ""
-        for param in paramlist:
+        for id in p_list:
+            param = p_types[id]
+            param['id'] = id
             if param['type'] == 'range':
                 params += paramSlider(param)
             elif param['type'] == 'number':
                 params += paramNumber(param)
             elif param['type'] == 'distribution':
-                pid = param['id']
                 params += paramDistribution(param)
             else:
                 params += '謎のふぉーむ: ' + param['type']
-        checkbox_id = 'checkbox-' + param['id']
+        checkbox_id = 'checkbox-' + id
         panels += panel(checkbox_id,  panel_title, params)
     return tag("div", panels, {'class': 'panels'})
 
