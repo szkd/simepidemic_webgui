@@ -19,31 +19,36 @@ function enfocedDownload(url) {
     URL.revokeObjectURL(a.href);
 }
 
+
+function form2paramDict(formname, p_types) {
+    p_types = JSON.parse(p_types);
+    var p_dict = {};
+    let form_ps = document.forms[formname].elements;
+    for(let id in p_types) {
+        let type = p_types[id].type;
+        if (type != "distribution") {
+            p_dict[id] = form_ps[id].value - 0;
+            continue;
+        }
+
+        let radio = form_ps.namedItem(id);
+        p_dict[id] = new Array();
+        p_dict[id].push(radio[0].value - 0);
+        p_dict[id].push(radio[1].value - 0);
+        p_dict[id].push(radio[2].value - 0);
+    }
+    return saveJsonFile(p_dict);
+}
+
+
 //ChromeはJSONを新しいタブで開いても名前をつけてページ保存がで来ないので強制的にダウンロード
 function saveParams(formname) {
-    let param_dict = form2paramDict(formname);
-    let writejson = JSON.stringify(param_dict);
-    let blob = new Blob([writejson], {type: 'application/json'});
-    let fakeurl = URL.createObjectURL(blob);
-
-    var userAgent = window.navigator.userAgent.toLowerCase();
-
-    if(userAgent.indexOf('msie') != -1
-        || userAgent.indexOf('edge') != -1
-        || userAgent.indexOf('chrome') != -1) {
-        enfocedDownload(fakeurl);
-    }
-    else if(userAgent.indexOf('safari') != -1
-        || userAgent.indexOf('firefox') != -1) {
-        alert("新しいタブでJSONファイルを開きます．\nFirefoxをお使いの方は左上の保存ボタン，Safariをお使いの方は右クリック→ページを別名で保存，を使って保存してください．");
-        window.open(fakeurl);
-    } else {
-        enfocedDownload(fakeurl);
-    }
+    var callback = callbackFunc(form2paramDict, formname);
+    serverGetReq(callback, "/contents/paramtype.json");
 }
 
 function resetParams() {
-    serverReq(loadParams, "GET",  "/getParams", responseType='json');
+    serverGetReq(loadParams, "/getParams", responseType='json');
 }
 
 function loadParams(val_dict) {
@@ -98,12 +103,12 @@ function getWorldId(id = '') {
         alert("既定世界のIDは "+ id + " です．");
         return;
     }
-    serverReq(getWorldId, "GET", "/getWorldId");
+    serverGetReq(getWorldId, "/getWorldId");
 }
 /********************************************
  * 共通
  ***************************************** */
-function jsonFile(file_input, callback) {
+function readJsonFile(file_input, callback) {
     var file = file_input.files[0];
     var reader = new FileReader();
     file_input.reset;
@@ -111,46 +116,38 @@ function jsonFile(file_input, callback) {
         alert("ファイル読み込みに失敗しました．");
     }
     reader.onload = function(e) {
-        callback(JSON.parse(reader.result));
+        callback(JSON.parse(reader.result), file);
     }
     reader.readAsText(file);
 }
 
-function syncedServerReq(method, req) {
-    var r = new XMLHttpRequest();
-    r.open(method, req, false);
-    r.send();
-    return r.response;
-}
-
-function serverReq(callback, method, _req, responseType ='', arg = null) {
+function serverGetReq(callback, _req, responseType ='') {
     var req = new XMLHttpRequest();
-    req.open(method, _req, true);
+    req.open("GET", _req);
         req.timeout = 2000;
         if(responseType != ''){
             req.responseType = responseType;
         }
         req.onload = function(){
             let response = req.response;
-            if (arg === null)  {
                 callback(response);
-            }
-            else {
-                callback(arg, response);
-            }
-
         }
     req.send();
 }
 
 function loadFile(file_input, target='') {
     if(target == 'parampanel') {
-        jsonFile(file_input, loadParams);
+        readJsonFile(file_input, loadParams);
     }
-    else if (target == "sim-setting-param") {
+    else if (target == "sim-setting-param" || target == "sim-setting-scenario") {
+        readJsonFile(file_input, function (_, file) {
+            var filename = file_input.previousSibling;
+            filename.innerText = "";
+            filename.innerText = " " + file.name;
+        });
     }
     else if (target == "sim-setting-scenario") {
-        jsonFile(file_input, loadSimScenario);
+        readJsonFile(file_input, loadSimScenario);
     }
     else {
         alert("何しにきたん？");
@@ -165,26 +162,29 @@ function dict2formdata(dict) {
     return fd;
 }
 
-function form2paramDict(formname) {
-    var types = syncedServerReq("GET", "/contents/paramtype.json");
-    types = JSON.parse(types);
-    var p_dict = {};
-    let p_types = types["params"];
-    let form_ps = document.forms[formname].elements;
-
-    for(let p in p_types) {
-        let type = p_types[p];
-        if (type.type != "distribution") {
-            p_dict[type.id] = form_ps[type.id].value - 0;
-            continue;
-        }
-
-        let radio = form_ps.namedItem(type.id);
-        p_dict[type.id] = new Array();
-        p_dict[type.id].push(radio[0].value - 0);
-        p_dict[type.id].push(radio[1].value - 0);
-        p_dict[type.id].push(radio[2].value - 0);
+function callbackFunc(func, arg_arr) {
+    return (value) => {
+        return func(value, ...arg_arr);
     }
-    return p_dict;
 }
 
+function saveJsonFile(dict) {
+    let writejson = JSON.stringify(dict);
+    let blob = new Blob([writejson], {type: 'application/json'});
+    let fakeurl = URL.createObjectURL(blob);
+
+    var userAgent = window.navigator.userAgent.toLowerCase();
+
+    if(userAgent.indexOf('msie') != -1
+        || userAgent.indexOf('edge') != -1
+        || userAgent.indexOf('chrome') != -1) {
+        enfocedDownload(fakeurl);
+    }
+    else if(userAgent.indexOf('safari') != -1
+        || userAgent.indexOf('firefox') != -1) {
+        alert("新しいタブでJSONファイルを開きます．\nFirefoxをお使いの方は左上の保存ボタン，Safariをお使いの方は右クリック→ページを別名で保存，を使って保存してください．");
+        window.open(fakeurl);
+    } else {
+        enfocedDownload(fakeurl);
+    }
+}
