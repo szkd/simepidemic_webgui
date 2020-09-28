@@ -19,11 +19,10 @@ function enfocedDownload(url) {
     URL.revokeObjectURL(a.href);
 }
 
-
 function form2paramDict(formname, p_types) {
-    p_types = JSON.parse(p_types);
     var p_dict = {};
     let form_ps = document.forms[formname].elements;
+    delete p_types['formname'];
     for(let id in p_types) {
         let type = p_types[id].type;
         if (type != "distribution") {
@@ -31,20 +30,18 @@ function form2paramDict(formname, p_types) {
             continue;
         }
 
-        let radio = form_ps.namedItem(id);
+        let numbers = form_ps.namedItem(id);
         p_dict[id] = new Array();
-        p_dict[id].push(radio[0].value - 0);
-        p_dict[id].push(radio[1].value - 0);
-        p_dict[id].push(radio[2].value - 0);
+        p_dict[id].push(numbers[0].value - 0);
+        p_dict[id].push(numbers[1].value - 0);
+        p_dict[id].push(numbers[2].value - 0);
     }
-    return saveJsonFile(p_dict);
+    return p_dict;
 }
 
-
-//ChromeはJSONを新しいタブで開いても名前をつけてページ保存がで来ないので強制的にダウンロード
 function saveParams(formname) {
-    var callback = callbackFunc(form2paramDict, formname);
-    serverGetReq(callback, "/contents/paramtype.json");
+    var callback = callbackFunc(saveJsonFile,['types', formname]);
+    serverGetReq(callback, "/contents/paramtype.json", responseType='json');
 }
 
 function resetParams() {
@@ -64,29 +61,59 @@ function loadParams(val_dict) {
 
     }
 }
-
 /********************************************
  * シミュレーション制御
  ***************************************** */
-function startSim(formname) {
+function simSettings(val, name, form, settingdict) {
+    if(name == 'sim-settings') {
+        settingdict = val['sections'];
+    }
+    if (name == 'paramtype') {
+        let p_dict = form2paramDict('param-form', val);
+            serverPostReq(serverGetReq(function(val) {console.log("start: " + val);}, 'start'),
+            'setParams', 'dict', p_dict);
+        return;
+    }
+    //本来は先にworldのフォームを処理する
+    if (form[settingdict['param']['name']].value == 'tab') {
+        serverGetReq(callbackFunc(simSettings, ['paramtype', form, settingdict]),
+            "contents/paramtype.json", responseType='json');
+            return;
+    } else if (form[settingdict['param']['name']].value == 'file') {
+            serverPostReq(serverGetReq(function(val) {console.log("start: " + val);}, 'start'),
+                'setParams', 'file', document.getElementById(settingdict['param']['file-id']));
+        return;
+    }
+    if(name == 'scenario') {
+        //本来はシナリオを設定する
+    }
+}
+
+function startSim(formname = '', world="default") {
     let result = confirm("現在の設定でシミュレーションを行います．よろしいですか？");
     if(!result) return;
-
+    let form = document.forms[formname];
+    serverGetReq(callbackFunc(simSettings,['sim-settings', form]),
+        "contents/sim_settings.json", responseType='json' );
 }
+
 
 function stopSim() {
     let result = confirm("実行中の世界を停止しますか?");
     if(!result) return;
+    serverGetReq(function(val) {console.log('stop: ' + val);},'stop');
 }
 
 function stepSim() {
     let result = confirm("実行中の世界を1ステップ進めますか?");
     if(!result) return;
+    serverGetReq(function(val) {console.log('step: ' + val);},'step');
 }
 
 function resetSim() {
-    confirm("実行中の世界を初期化しますか?");
+    let result = confirm("実行中の世界を初期化しますか?");
     if(!result) return;
+    serverGetReq(function(val) {console.log('reset: ' + val);},'reset');
 }
 
 
@@ -108,39 +135,12 @@ function getWorldId(id = '') {
 /********************************************
  * 共通
  ***************************************** */
-function readJsonFile(file_input, callback) {
-    var file = file_input.files[0];
-    var reader = new FileReader();
-    file_input.reset;
-    reader.onerror = () => {
-        alert("ファイル読み込みに失敗しました．");
-    }
-    reader.onload = function(e) {
-        callback(JSON.parse(reader.result), file);
-    }
-    reader.readAsText(file);
-}
-
-function serverGetReq(callback, _req, responseType ='') {
-    var req = new XMLHttpRequest();
-    req.open("GET", _req);
-        req.timeout = 2000;
-        if(responseType != ''){
-            req.responseType = responseType;
-        }
-        req.onload = function(){
-            let response = req.response;
-                callback(response);
-        }
-    req.send();
-}
-
 function loadFile(file_input, target='') {
     if(target == 'parampanel') {
         readJsonFile(file_input, loadParams);
     }
     else if (target == "sim-setting-param" || target == "sim-setting-scenario") {
-        readJsonFile(file_input, function (_, file) {
+        readJsonFile(file_input, function (result, file) {
             var filename = file_input.previousSibling;
             filename.innerText = "";
             filename.innerText = " " + file.name;
@@ -161,14 +161,24 @@ function dict2formdata(dict) {
     }
     return fd;
 }
-
-function callbackFunc(func, arg_arr) {
-    return (value) => {
-        return func(value, ...arg_arr);
+//json
+function readJsonFile(file_input, callback) {
+    var file = file_input.files[0];
+    var reader = new FileReader();
+    file_input.reset;
+    reader.onerror = () => {
+        alert("ファイル読み込みに失敗しました．");
     }
+    reader.onload = function(e) {
+        callback(JSON.parse(reader.result), file);
+    }
+    reader.readAsText(file);
 }
 
-function saveJsonFile(dict) {
+function saveJsonFile(dict, process='save', formname) {
+    if(process == 'types') {
+        dict = form2paramDict(formname, dict);
+    }
     let writejson = JSON.stringify(dict);
     let blob = new Blob([writejson], {type: 'application/json'});
     let fakeurl = URL.createObjectURL(blob);
@@ -188,3 +198,60 @@ function saveJsonFile(dict) {
         enfocedDownload(fakeurl);
     }
 }
+
+
+//server
+function callbackFunc(func, arg_arr) {
+    return (value) => {
+        return func(value, ...arg_arr);
+    }
+}
+function serverGetReq(callback, _req, responseType ='') {
+    var req = new XMLHttpRequest();
+    req.open("GET", _req);
+    req.timeout = 2000;
+    if(responseType != ''){
+        req.responseType = responseType;
+    }
+    req.onload = function(){
+        callback(req.response);
+    }
+    req.error = function() {
+        alert("Error:");
+    };
+    req.send();
+}
+
+function serverPostReq(callback, action, type, senddata, name='') {
+    var fd = new FormData();
+    var req = new XMLHttpRequest();
+    req.eroor = function () {
+        alert("ERROR:POST " + action);
+    }
+    req.onload=function() {
+        callback(req.response);
+    }
+    req.open("POST", action);
+
+    if (type == "form") {
+        req.send(new FormData(senddata));
+        return;
+    }
+    if (type == 'dict') {
+        for(var key in senddata) {
+            fd.append(key, senddata[key]);
+        }
+        req.send(fd);
+        return;
+    }
+    if(type=="file" && senddata.files.length > 0) {
+        fd.append(name, senddata.files[0]);
+        req.send(fd);
+        return;
+    }
+    if (type=="file") {
+        alert('ファイルを選択してください');
+        return;
+    }
+}
+
