@@ -1,4 +1,5 @@
 {
+    "formname": "param-form",
     "populationSize": {
         "description": "初期人口",
         "unit":"人",
@@ -200,5 +201,4 @@
         "min": "0.0",
         "max": "100.0"
     }
-
 }

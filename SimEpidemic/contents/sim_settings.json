@@ -20,17 +20,11 @@
                 {
                     "label": "既定世界",
                     "value": "default",
-                    "checked": "checked",
-                    "method": "GET",
-                    "action": "getWorldID",
-                    "result": "text/plain"
+                    "checked": "checked"
                 },
                 {
                     "value": "new",
-                    "label": "新規生成",
-                    "method": "GET",
-                    "action": "newWorld",
-                    "result": "text/plain"
+                    "label": "新規生成"
                 }
             ]
         },
@@ -38,6 +32,7 @@
             "label": "パラメータ",
             "type": "radio",
             "name": "sim-param",
+            "file-id": "sim-param-file",
             "options": [
                 {
                     "checked": "checked",
@@ -56,11 +51,12 @@
             "label": "シナリオ",
             "type": "radio",
             "name": "sim-scenario",
+            "file-id": "sim-scenario-file",
             "options": [
                 {
                     "label": "使用しない",
                     "checked": "checked",
-                    "value": "none"
+                    "value": "disabled"
                 },
                 {
                     "label": "シナリオタブの値を使用",

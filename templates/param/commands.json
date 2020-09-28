@@ -1,6 +1,5 @@
 {
     "info": {
-        "formname": "param-form",
         "cmd_cls": "command-button",
         "cmd_list_cls": "cmd-btn-list"
     },

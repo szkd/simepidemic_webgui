@@ -47,39 +47,52 @@ def buttonGroupFromJson(jsonfile):
 """ ********************************
 pages
 ******************************** """
+def settingSection(sec, key, label_cl, opt_cl, opt_style, file_attr):
+    options = sec['options']
+    result = ""
+    result +=  tag("div", sec['label'], {"class": label_cl})
+    idx = -1
+    for opt in options:
+        idx += 1
+        opt_id = key + str(idx)
+
+        attr = {\
+            "type": sec['type'],\
+            "name": sec['name'],\
+            "id": opt_id,\
+            "class": opt_cl,\
+            "style": opt_style,\
+            "value": opt['value']\
+           }
+        if 'checked' in opt:
+            attr['checked'] = "checked"
+        result += tag("input", attr=attr,end = False)
+        result += tag("label", opt['label'], {"for": opt_id, "style": "margin-right:  8px;"})
+        if 'file' in opt:
+            file_attr['id'] = sec['file-id']
+            file_attr['onchange'] = opt['onchange']
+            result += tag("label", '', {"for": sec['file-id'], "class": "file-plus"})
+            result += tag("input", attr=file_attr, end=False)
+    return result
+
 def simSettings():
     template  = json2dict(CONTENTS_DIR + "sim_settings.json")
     sections = template['sections']
     info = template['info']
     html_str = ""
     for sec in sections:
-        section = sections[sec]
-        section_label = tag("div", section['label'], {"class": info['title_cls']})
-        input_str = ""
-        options = section['options']
-        idx = -1
-        for opt in section['options']:
-            idx += 1
-            attr = {\
-                "type": section['type'],\
-                "name": section['name'],\
-                "id": sec + str(idx)
-                }
-            if 'checked' in opt:
-                attr['checked'] = "checked"
-
-            option = tag("input", attr=attr,end = False)
-            label = tag("label", opt['label'], {"for": sec + str(idx), "style": "margin-right:  8px;"})
-            if 'file' in opt:
-                f_id = 'file'+ sec + str(idx)
-                info['file-attr']['id'] = f_id
-                info['file-attr']['onchange'] = opt['onchange']
-                label += tag("label", '', {"for": f_id, "class": "file-plus"})
-                label += tag("input", attr=info['file-attr'], end=False)
-                label += tag("span", '', {"id": f_id + "result"})
-            input_str += tag("span", option + label, {"class": info['option-cls'], "style": info['option-style']});
-        input_str = tag("div", input_str, {"class": info['option-container']})
-        html_str += tag("div", section_label + input_str)
+        html_str += settingSection(\
+                sections[sec],\
+                sec,\
+                info['title_cls'],\
+                info['option-cls'],\
+                info['option-style'],\
+                info['file-attr']\
+                )
+    html_str = tag("form",\
+        tag("div", html_str,\
+        {"class": info['option-container']}),\
+        {'name': info['formname']})
     return html_str
 
 def sim():
@@ -98,10 +111,12 @@ def sim():
 """ ********************************* """
 def param():
     commands = buttonGroupFromJson(PARAM_DIR + "commands.json");
-    info = json2dict(PARAM_DIR + "commands.json")['info']
+    paramtype = json2dict(CONTENTS_DIR + "paramtype.json")
+    formname = paramtype['formname']
+    del paramtype['formname']
     params = ""
-    params += paramPanels(CONTENTS_DIR + "paramtype.json", PARAM_DIR + 'param.json', COMMON_DIR + 'panel.html')
-    params = tag("form", params, {"name": info['formname']})
+    params += paramPanels(paramtype, PARAM_DIR + 'param.json', COMMON_DIR + 'panel.html')
+    params = tag("form", params, {"name": formname})
     return commands + params
 
 """ ********************************* """
@@ -165,9 +180,8 @@ def panel(id, title, content, myclass='', icon_normal = '"▶︎"', icon_checked
     attr['ICON-CHECKED'] = icon_checked
     return rephrase(template_html, attr, 1000);
 
-def paramPanels(paramtypefile, paramjsonfile, template_html):
+def paramPanels(p_types, paramjsonfile, template_html):
     categories = json2dict(paramjsonfile)
-    p_types = json2dict(paramtypefile)
     panels =""
     for category in categories:
         c = categories[category]
