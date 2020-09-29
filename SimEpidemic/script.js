@@ -1,6 +1,31 @@
 ﻿window.onload = function(){
     resetParams();
-};
+    if (typeof getBrowserId() === 'undefined') {
+        console.log(getBrowserId());
+        console.log(typeof getBrowserId());
+        setBrowserId();
+    }
+    console.log(getBrowserId());
+}
+
+function setBrowserId(storage = localStorage, key = 'simepidemicBrowerID') {
+    try {
+        var id = new Date();
+        id = id.getTime();
+        storage.setItem(key, id);
+    } catch(e) {
+        console.log(e);
+        alert("ブラウザの設定でlocalStorageを利用可能にしてください．");
+    }
+}
+function getBrowserId(storage = localStorage, key = 'simepidemicBrowerID') {
+    try {
+        return storage[key];
+    } catch(e) {
+        console.log(e);
+        alert("ブラウザの設定でlocalStorageを利用可能にしてください．");
+    }
+}
 /********************************************
  * パラメータ
  ***************************************** */
