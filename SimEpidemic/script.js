@@ -1,8 +1,6 @@
 ﻿window.onload = function(){
     resetParams();
     if (typeof getBrowserId() === 'undefined') {
-        console.log(getBrowserId());
-        console.log(typeof getBrowserId());
         setBrowserId();
     }
     console.log(getBrowserId());
@@ -70,7 +68,7 @@ function saveParams(formname) {
 }
 
 function resetParams() {
-    serverGetReq(loadParams, "/getParams", responseType='json');
+    serverGetReq(loadParams, "getParams", responseType='json');
 }
 
 function loadParams(val_dict) {

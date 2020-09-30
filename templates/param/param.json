@@ -9,11 +9,21 @@
             "initialInfected"
         ]
     },
+    "move": {
+        "name": "移動",
+        "param-list": [
+            "mass",
+            "friction",
+            "avoidance"
+        ]
+    },
     "mechanism": {
         "name": "発症機序",
         "param-list": [
             "infectionProberbility",
             "infectionDistance",
+            "contagionDelay",
+            "contagionPeak",
             "incubation",
             "fatality",
             "recovery",
@@ -27,6 +37,10 @@
             "distancingObedience",
             "mobilityFrequency",
             "mobilityDistance",
+            "gatheringFrequency",
+            "gatheringSize",
+            "gatheringDuration",
+            "gatheringStrength",
             "contactTracing"
         ]
     },

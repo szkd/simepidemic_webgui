@@ -200,5 +200,85 @@
         "value": "99.0",
         "min": "0.0",
         "max": "100.0"
+    },
+    "mass": {
+        "type": "range",
+        "description": "質量",
+        "step": "0.1",
+        "unit": "%",
+        "value": "50",
+        "min": "10.0",
+        "max": "100.0",
+        "info": "個体加速度の係数"
+    },
+    "friction": {
+        "type": "range",
+        "description": "摩擦",
+        "step": "0.1",
+        "unit": "%",
+        "value": "50",
+        "min": "0.0",
+        "max": "100.0",
+        "info": "個体加速度の減速係数"
+    },
+    "avoidance": {
+        "type": "range",
+        "description": "衝突回避",
+        "step": "0.1",
+        "unit": "%",
+        "value": "80",
+        "min": "0.0",
+        "max": "100.0",
+        "info": "個体間の斥力"
+    },
+    "contagionDelay": {
+        "type": "range",
+        "description": "感染症の遅れ",
+        "step": "0.1",
+        "unit": "日",
+        "value": "5.0",
+        "min": "0.0",
+        "max": "10.0",
+        "info": "感染からの期間"
+    },
+    "contagionPeak": {
+        "type": "range",
+        "description": "感染症のピーク",
+        "step": "0.1",
+        "unit": "日",
+        "value": "3.0",
+        "min": "0.0",
+        "max": "10.0",
+        "info": "感染からの期間"
+    },
+    "gatheringFrequency":{
+        "type": "range",
+        "description": "集会の頻度",
+        "step": "0.1",
+        "unit": "個/面積/日",
+        "value": "50.0",
+        "min": "0.0",
+        "max": "100.0"
+    },
+    "gatheringSize":{
+        "type": "distribution",
+        "description": "集会の大きさ",
+        "step": "0.1",
+        "unit": "距離単位",
+        "value": ["10.0","100.0","20.0"]
+    },
+    "gatheringDuration":{
+        "type": "distribution",
+        "description": "集会の持続時間",
+        "step": "0.1",
+        "unit": "時間",
+        "value": ["10.0","168.0","24.0"]
+    },
+    "gatheringStrength":{
+        "type": "distribution",
+        "description": "集会の強さ",
+        "step": "0.1",
+        "unit": "%",
+        "value": ["0.0","100.0","50.0"]
     }
 }

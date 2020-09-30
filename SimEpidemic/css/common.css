@@ -103,24 +103,29 @@ input[type="number"] {
 .dist-item {
     flex-grow: 1;
     width: 70px;
+    margin-top: calc(var(--margin)/2);
+    padding-bottom: calc(var(--margin)/2);
 }
 .param-title {
     display: block;
-    margin-left: var(--margin);
+    margin-top: var(--margin);
     margin-bottom: 0;
 }
 .param-num {
-    margin: calc(var(--margin)/2);
-    margin-top: calc(var(--margin)/2);
-    margin-left: var(--margin);
+    margin: var(--margin);
+    margin-right: calc(var(--margin)/2);
 }
 .slider, .param-input {
     margin-left: calc(var(--margin)*2);
 }
-
-.slider_value, .slider_unit {
+.slider_unit {
+    vertical-align: middle;
+}
+.slider_value{
     display: inline-block;
-    margin-left: 8px;
+    vertical-align: middle;
+    margin-left: var(--padding);
+    margin-right: calc(var(--padding)/2);
 }
 
 /* *****************************
