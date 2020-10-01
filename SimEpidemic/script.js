@@ -116,7 +116,6 @@ function settings(type, radio) {
         return;
     }
     if(type == 'param' && radio.value == 'tab') {
-        console.log('param-tab event');
         let p_dict = form2paramDict('param-form', param_types);
         serverPostReq(function(val) {console.log('POST/setParams[tab]: ' + val);},
             'setParams', 'dict', p_dict);
@@ -165,19 +164,26 @@ function stopSim(formname) {
     for(let elem of form.elements) {
         elem.disabled = false;
     }
-    serverGetReq(function(val) {console.log('stop: ' + val);},'stop');
+    serverGetReq(function(val) {console.log('stop: ' + val);},'stop', options=[{"me":getBrowserId()}]);
 }
 
 function stepSim() {
     let result = confirm("実行中の世界を1ステップ進めますか?");
     if(!result) return;
-    serverGetReq(function(val) {console.log('step: ' + val);},'step');
+    serverGetReq(
+        function(val) {console.log('step: ' + val);},
+        'step',
+        options=[{"me":getBrowserId()}]);
 }
 
 function resetSim() {
     let result = confirm("実行中の世界を初期化しますか?");
     if(!result) return;
-    serverGetReq(function(val) {console.log('reset: ' + val);},'reset');
+    serverGetReq(
+        function(val) {console.log('reset: ' + val);},
+        'reset',
+         options = [{"me":getBrowserId()}]
+    );
 }
 
 
@@ -194,7 +200,7 @@ function getWorldId(id = '') {
         alert("既定世界のIDは "+ id + " です．");
         return;
     }
-    serverGetReq(getWorldId, "/getWorldId");
+    serverGetReq(getWorldId, "/getWorldID");
 }
 /********************************************
  * 共通
