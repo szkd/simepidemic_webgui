@@ -37,12 +37,13 @@
                 {
                     "checked": "checked",
                     "label": "パラメータタブの値を使用",
-                    "value": "tab"
+                    "value": "tab",
+                    "onchange": "settings('param', this);"
                 },
                 {
                     "label": "ファイルから読み込む",
                     "file": "JSONファイルを選択",
-                    "onchange": "loadFile(this, 'sim-setting-param');",
+                    "file-onchange": "settings('param-file', this);",
                     "value": "file"
                 }
             ]
@@ -56,17 +57,19 @@
                 {
                     "label": "使用しない",
                     "checked": "checked",
-                    "value": "disabled"
+                    "value": "disabled",
+                    "onchange": "settings('scenario', this);"
                 },
                 {
                     "label": "シナリオタブの値を使用",
-                    "value": "tab"
+                    "value": "tab",
+                    "onchange": "settings('scenario', this);"
                 },
                 {
                     "label": "ファイルから読み込む",
                     "value": "file",
                     "file": "JSONファイルを選択",
-                    "onchange": "loadFile(this, 'sim-setting-scenario');"
+                    "file-onchange": "settings('scenario-file', this);"
                 }
             ]
         }

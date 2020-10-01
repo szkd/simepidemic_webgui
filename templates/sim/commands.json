@@ -6,7 +6,7 @@
     },
     "listener": {
         "start": "startSim('sim-settings');",
-        "stop": "stopSim();",
+        "stop": "stopSim('sim-settings');",
         "step": "stepSim();",
         "reset": "resetSim();"
     },

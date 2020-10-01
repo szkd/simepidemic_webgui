@@ -62,15 +62,19 @@ def settingSection(sec, key, label_cl, opt_cl, opt_style, file_attr):
             "id": opt_id,\
             "class": opt_cl,\
             "style": opt_style,\
-            "value": opt['value']\
+            "value": opt['value']
            }
+        if 'onchange' in opt:
+            print('onchange: ' + opt['onchange'])
+            attr['onchange'] = opt['onchange']
         if 'checked' in opt:
             attr['checked'] = "checked"
         result += tag("input", attr=attr,end = False)
         result += tag("label", opt['label'], {"for": opt_id, "style": "margin-right:  8px;"})
         if 'file' in opt:
+            print('file' + opt['file-onchange'])
             file_attr['id'] = sec['file-id']
-            file_attr['onchange'] = opt['onchange']
+            file_attr['onchange'] = opt['file-onchange']
             result += tag("label", '', {"for": sec['file-id'], "class": "file-plus"})
             result += tag("input", attr=file_attr, end=False)
     return result

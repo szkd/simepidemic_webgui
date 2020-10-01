@@ -1,10 +1,25 @@
-﻿window.onload = function(){
-    resetParams();
+﻿var param_types = {};
+var sim_settings = {};
+
+window.onload = function(){
     if (typeof getBrowserId() === 'undefined') {
         setBrowserId();
     }
-    console.log(getBrowserId());
+    resetParams();
+    serverGetReq(function(dict) { param_types = dict;},
+        "contents/paramtype.json", responseType='json' );
+    serverGetReq(function(dict) {
+        sim_settings = dict;
+        var file_input = document.getElementById(dict['sections']['param']['file-id']);
+        file_input.value = null;
+        file_input = document.getElementById(dict['sections']['scenario']['file-id']);
+        file_input.value = null;
+        settings('param', {"value": "tab"});
+        settings('scenario', {"value": "disable"});
+    },
+        "contents/sim_settings.json", responseType='json');
 }
+
 
 function setBrowserId(storage = localStorage, key = 'simepidemicBrowerID') {
     try {
@@ -87,43 +102,69 @@ function loadParams(val_dict) {
 /********************************************
  * シミュレーション制御
  ***************************************** */
-function simSettings(val, name, form, settingdict) {
-    if(name == 'sim-settings') {
-        settingdict = val['sections'];
+function settings(type, radio) {
+    if(type =='param-file') {
+        loadFile(radio, 'sim-setting-param');
+        serverPostReq(function(val) {console.log('POST/setParams[file]: ' + val);},
+            'setParams', 'file', radio);
+        return;
     }
-    if (name == 'paramtype') {
-        let p_dict = form2paramDict('param-form', val);
-            serverPostReq(serverGetReq(function(val) {console.log("start: " + val);}, 'start'),
+    if(type =='scenario-file') {
+        loadFile(radio, 'sim-setting-scenario');
+        serverPostReq(function(val) {console.log('POST/setScenario[file]: ' + val);},
+            'setScenario', 'file', radio);
+        return;
+    }
+    if(type == 'param' && radio.value == 'tab') {
+        console.log('param-tab event');
+        let p_dict = form2paramDict('param-form', param_types);
+        serverPostReq(function(val) {console.log('POST/setParams[tab]: ' + val);},
             'setParams', 'dict', p_dict);
         return;
     }
-    //本来は先にworldのフォームを処理する
-    if (form[settingdict['param']['name']].value == 'tab') {
-        serverGetReq(callbackFunc(simSettings, ['paramtype', form, settingdict]),
-            "contents/paramtype.json", responseType='json');
-            return;
-    } else if (form[settingdict['param']['name']].value == 'file') {
-            serverPostReq(serverGetReq(function(val) {console.log("start: " + val);}, 'start'),
-                'setParams', 'file', document.getElementById(settingdict['param']['file-id']));
+    if(type == 'scenario' && radio.value == 'disabled') {
+        serverPostReq(function(val) {console.log('POST/setScenario[disabled]: ' + val);},
+            'setScenario', 'dict', [{'scenario': JSON.parse('[]')}]);
         return;
     }
-    if(name == 'scenario') {
-        //本来はシナリオを設定する
+    if(type == 'scenario' && radio.value == 'tab') {
+        alert('シナリオのタブは使えません');
+        return;
     }
 }
 
 function startSim(formname = '', world="default") {
-    let result = confirm("現在の設定でシミュレーションを行います．よろしいですか？");
+    let result = confirm("現在の設定でシミュレーションを行います．シミュレーションの実行中は停止させるまで設定を変更することができません．よろしいですか？");
     if(!result) return;
     let form = document.forms[formname];
-    serverGetReq(callbackFunc(simSettings,['sim-settings', form]),
-        "contents/sim_settings.json", responseType='json' );
+    if(form[sim_settings['sections']['param']['name']].value == 'file') {
+        var file = document.getElementById(sim_settings['sections']['param']['file-id']);
+        if(!(file.files.length > 0)) {
+            alert("パラメータのファイルを選択してください．");
+            return;
+        }
+    }
+    if(form[sim_settings['sections']['scenario']['name']].value == 'file') {
+        var file = document.getElementById(sim_settings['sections']['scenario']['file-id']);
+        if(!(file.files.length > 0)) {
+            alert("シナリオのファイルを選択してください．");
+            return;
+        }
+    }
+    for(let elem of form.elements) {
+        elem.disabled = true;
+    }
+    serverGetReq(function(val) {console.log("start: " + val);}, 'start');
 }
 
 
-function stopSim() {
+function stopSim(formname) {
     let result = confirm("実行中の世界を停止しますか?");
     if(!result) return;
+    let form = document.forms[formname];
+    for(let elem of form.elements) {
+        elem.disabled = false;
+    }
     serverGetReq(function(val) {console.log('stop: ' + val);},'stop');
 }
 
