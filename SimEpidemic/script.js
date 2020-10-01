@@ -225,12 +225,18 @@ function saveJsonFile(dict, process='save', formname) {
 
 //server
 function callbackFunc(func, arg_arr) {
-    return (value) => {
+    return function(value) {
         return func(value, ...arg_arr);
     }
 }
-function serverGetReq(callback, _req, responseType ='') {
+
+function serverGetReq(callback, _req, responseType ='', options = []) {
     var req = new XMLHttpRequest();
+    for (idx = 0; idx < options.length; idx++) {
+        if(idx == 0) _req += '?';
+        if(idx > 0) _req += '&';
+        _req += options[idx][name] + '=' + options[idx][value];
+    }
     req.open("GET", _req);
     req.timeout = 2000;
     if(responseType != ''){
@@ -254,9 +260,9 @@ function serverPostReq(callback, action, type, senddata, name='') {
     req.onload=function() {
         callback(req.response);
     }
-    req.open("POST", action);
+    req.open('POST', action);
 
-    if (type == "form") {
+    if (type == 'form') {
         req.send(new FormData(senddata));
         return;
     }
