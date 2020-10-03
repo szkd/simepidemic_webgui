@@ -91,6 +91,10 @@ function loadParams(val_dict) {
         if(typeof(val_dict[val]) != "object") {
             var elem = document.getElementById(val);
             elem.value = val_dict[val];
+            var viewelem = document.getElementById('view' + val);
+            if(viewelem !== null) {
+                viewelem.value = val_dict[val];
+            }
             continue;
         }
         document.getElementById(val + "-min").value = val_dict[val][0]
