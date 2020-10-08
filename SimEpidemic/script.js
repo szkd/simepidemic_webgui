@@ -1,23 +1,8 @@
-﻿var param_types = {};
-var sim_settings = {};
-
 window.onload = function(){
     if (typeof getBrowserId() === 'undefined') {
         setBrowserId();
     }
-    resetParams();
-    serverGetReq(function(dict) { param_types = dict;},
-        "contents/paramtype.json", responseType='json' );
-    serverGetReq(function(dict) {
-        sim_settings = dict;
-        var file_input = document.getElementById(dict['sections']['param']['file-id']);
-        file_input.value = null;
-        file_input = document.getElementById(dict['sections']['scenario']['file-id']);
-        file_input.value = null;
-        settings('param', {"value": "tab"});
-        settings('scenario', {"value": "disable"});
-    },
-        "contents/sim_settings.json", responseType='json');
+    serverGetReq(setDefaultValues, 'getParams', responseType = 'json');
 }
 
 
@@ -31,6 +16,7 @@ function setBrowserId(storage = localStorage, key = 'simepidemicBrowerID') {
         alert("ブラウザの設定でlocalStorageを利用可能にしてください．");
     }
 }
+
 function getBrowserId(storage = localStorage, key = 'simepidemicBrowerID') {
     try {
         return storage[key];
@@ -39,13 +25,44 @@ function getBrowserId(storage = localStorage, key = 'simepidemicBrowerID') {
         alert("ブラウザの設定でlocalStorageを利用可能にしてください．");
     }
 }
+
+function setDefaultValues(defaults) {
+    let field = document.forms['hidden-field'];
+    for(let name in defaults) {
+        let elem = document.createElement("input");
+        elem.type = "hidden";
+        elem.name = name;
+        elem.value = defaults[name];
+        field.append(elem);
+    }
+}
+
+function resetForm(formname) {
+    let d = document.forms['hidden-field'].children;
+    let form = document.forms[formname];
+    let param_list = document.getElementById(formname + "-plist").innerText.split(',');
+    console.log("resetForm: " + formname);
+    console.log(param_list);
+    for(let p of param_list) {
+        if(d[p].value.split(',').length > 1) {
+            let v = d[p].value.split(',');
+            form[p + "-min"].value = v[0];
+            form[p + "-max"].value = v[1];
+            form[p + "-mode"].value = v[2];
+        }
+        form[p].value = d[p].value;
+        let view = document.getElementById("view" + p);
+        console.log(p);
+        console.log(view);
+        if(view != null) view.value = d[p].value;
+    }
+}
 /********************************************
  * パラメータ
  ***************************************** */
-function sliderValueChanged(value, outputid){
-    var element = document.getElementById(outputid);
-    element.value=value;
-    outputid.value = value;
+function sliderValueChanged(slider, outputid){
+    let element = document.getElementById(outputid);
+    element.value = slider.value;
 }
 
 function enfocedDownload(url) {
@@ -82,27 +99,6 @@ function saveParams(formname) {
     serverGetReq(callback, "/contents/paramtype.json", responseType='json');
 }
 
-function resetParams() {
-    serverGetReq(loadParams, "getParams", responseType='json');
-}
-
-function loadParams(val_dict) {
-    for(let val in val_dict) {
-        if(typeof(val_dict[val]) != "object") {
-            var elem = document.getElementById(val);
-            elem.value = val_dict[val];
-            var viewelem = document.getElementById('view' + val);
-            if(viewelem !== null) {
-                viewelem.value = val_dict[val];
-            }
-            continue;
-        }
-        document.getElementById(val + "-min").value = val_dict[val][0]
-        document.getElementById(val + "-max").value = val_dict[val][1]
-        document.getElementById(val + "-mode").value = val_dict[val][2]
-
-    }
-}
 /********************************************
  * シミュレーション制御
  ***************************************** */
@@ -186,7 +182,7 @@ function resetSim() {
     serverGetReq(
         function(val) {console.log('reset: ' + val);},
         'reset',
-         options = [{"me":getBrowserId()}]
+        options = [{"me":getBrowserId()}]
     );
 }
 
@@ -283,10 +279,12 @@ function callbackFunc(func, arg_arr) {
 
 function serverGetReq(callback, _req, responseType ='', options = []) {
     var req = new XMLHttpRequest();
-    for (idx = 0; idx < options.length; idx++) {
-        if(idx == 0) _req += '?';
-        if(idx > 0) _req += '&';
-        _req += options[idx][name] + '=' + options[idx][value];
+    if (options.length != 0) {
+        for (idx = 0; idx < options.length; idx++) {
+            if(idx == 0) _req += '?';
+            if(idx > 0) _req += '&';
+            _req += options[idx][name] + '=' + options[idx][value];
+        }
     }
     req.open("GET", _req);
     req.timeout = 2000;

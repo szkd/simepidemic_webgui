@@ -74,8 +74,15 @@ input {
 input[type="number"] {
     width: 70px;
 }
-
-
+.inline-block {
+    display: inline-block;
+}
+.margin-right {
+    margin-right: var(--margin);
+}
+/* *****************************
+ * panel
+ * *****************************/
 .panel {
     color: white;
     background-color: var(--my-black);
@@ -84,13 +91,18 @@ input[type="number"] {
     margin-bottom: var(--margin);
     width: 100%;
 }
-
-.inline-block {
-    display: inline-block;
-}
-.margin-right {
+.panel form button {
+    background-color: var(--my-black);
+    color: white;
+    border-radius: 5px;
+    border: solid 1px pink;
     margin-right: var(--margin);
+    padding: 2px 10px;
 }
+.panel form button:hover {
+    color: pink;
+}
+
 /* *****************************
  * param
  * *****************************/

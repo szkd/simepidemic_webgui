@@ -100,25 +100,28 @@ def simSettings():
 def sim():
     commands = buttonGroupFromJson(SIM_DIR + "view.json")
     commands += buttonGroupFromJson(SIM_DIR + "commands.json")
+    worldpanel = ""
+    worldtype = json2dict(CONTENTS_DIR + "paramtype.json")
+    worldpanel += paramPanels(worldtype, SIM_DIR + "world.json", COMMON_DIR + "panel.html")
+    """
     info = json2dict(CONTENTS_DIR + "sim_settings.json")
     info = info['info']
-    html = panel(info['formname'], "設定", simSettings(),\
+    html = pdnel(info['formname'], "設定", simSettings(),\
             icon_normal = settings_icon,\
             icon_checked = settings_icon)
 
     html += commands
     return html
+    """
+    return commands + worldpanel
 
 """ ********************************* """
 """ ********************************* """
 def param():
     commands = buttonGroupFromJson(PARAM_DIR + "commands.json");
     paramtype = json2dict(CONTENTS_DIR + "paramtype.json")
-    formname = paramtype['formname']
-    del paramtype['formname']
     params = ""
     params += paramPanels(paramtype, PARAM_DIR + 'param.json', COMMON_DIR + 'panel.html')
-    params = tag("form", params, {"name": formname})
     return commands + params
 
 """ ********************************* """
@@ -171,28 +174,28 @@ def paramDistribution(param):
             }
     return rephrase(PARAM_DIR + "distribution.html", rep_dict, 1000)
 
-def panel(id, title, content, myclass='', icon_normal = '"▶︎"', icon_checked = '"▼"'):
-    template_html = COMMON_DIR + "panel.html"
+def panel(_id, str_list, title, content, template_file, icon_normal = '"▶︎"', icon_checked = '"▼"'):
     attr = {}
-    attr['ID'] = id
+    attr['ID'] = _id
+    attr['VAL'] = str_list
     attr['PANEL-TITLE'] = title
     attr['PANEL-CONTENT'] = content
-    attr['CLASS'] = myclass
     attr['ICON-NORMAL'] = icon_normal
     attr['ICON-CHECKED'] = icon_checked
-    return rephrase(template_html, attr, 1000);
+    return rephrase(template_file, attr, 1000)
 
-def paramPanels(p_types, paramjsonfile, template_html):
+def paramPanels(p_types, paramjsonfile, template_file):
     categories = json2dict(paramjsonfile)
     panels =""
     for category in categories:
         c = categories[category]
-        p_list = c['param-list']
+        print(c['param-list'])
+        p_list = c['param-list'].split(',')
         panel_title = c['name'] if 'name' in c else 'カテゴリ名前がない!'
         params = ""
         for id in p_list:
             param = p_types[id]
-            param['id'] = id
+            param['id'] = id 
             if param['type'] == 'range':
                 params += paramSlider(param)
             elif param['type'] == 'number':
@@ -201,9 +204,8 @@ def paramPanels(p_types, paramjsonfile, template_html):
                 params += paramDistribution(param)
             else:
                 params += '謎のふぉーむ: ' + param['type']
-        checkbox_id = 'checkbox-' + id
-        panels += panel(checkbox_id,  panel_title, params)
-    return tag("div", panels, {'class': 'panels'})
+        panels += panel(category, c['param-list'], panel_title, params, template_file)
+    return panels
 
 def head(title, stylesheets=[], scripts=[]):
     html = tag("title", title)\
@@ -277,13 +279,13 @@ def slider( label, attr, unit=''):
     if 'max' not in attr:
         attr['max'] = '100'
     prefix='view'
-    attr['oninput'] = 'sliderValueChanged(this.value,' + "\'" + prefix + attr['id'] +"\'" + ')'
+    attr['oninput'] = 'sliderValueChanged(this,' + "\'" + prefix + attr['id'] +"\'" + ')'
     html = tag("span", attr['min'])
     html += tag("input", attr=attr, end=False)
     html += tag("span", attr['max'])
     html += tag("input", attr={'type': 'number', 'step': attr['step'],\
             'value': attr['value'], 'class': 'slider_value', 'id': prefix + attr['id'],\
-            'oninput': 'sliderValueChanged(this.value, ' + "\'" + attr['id'] + "\'" + ')'},\
+            'oninput': 'sliderValueChanged(this, ' + "\'" + attr['id'] + "\'" + ')'},\
             end= False)
     if unit != '':
         html += tag("span", unit, {'class': 'slider_unit'})

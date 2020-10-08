@@ -1,59 +1,18 @@
 {
-    "world": {
-        "name": "世界",
-        "param-list": [
-            "populationSize",
-            "worldSize",
-            "mesh",
-            "stepsPerDay",
-            "initialInfected"
-        ]
-    },
     "move": {
         "name": "移動",
-        "param-list": [
-            "mass",
-            "friction",
-            "avoidance"
-        ]
+        "param-list":"mass,friction,avoidance"
     },
     "mechanism": {
         "name": "発症機序",
-        "param-list": [
-            "infectionProberbility",
-            "infectionDistance",
-            "contagionDelay",
-            "contagionPeak",
-            "incubation",
-            "fatality",
-            "recovery",
-            "immunity"
-        ]
+       "param-list": "infectionProberbility,infectionDistance,contagionDelay,contagionPeak,incubation,fatality,recovery,immunity"
     },
     "measure": {
         "name": "対策",
-        "param-list": [
-            "distancingStrength",
-            "distancingObedience",
-            "mobilityFrequency",
-            "mobilityDistance",
-            "gatheringFrequency",
-            "gatheringSize",
-            "gatheringDuration",
-            "gatheringStrength",
-            "contactTracing"
-        ]
+        "param-list": "distancingStrength,distancingObedience,mobilityFrequency,mobilityDistance,gatheringFrequency,gatheringSize,gatheringDuration,gatheringStrength,contactTracing"
     },
     "tests": {
         "name" : "検査",
-        "param-list": [
-            "testProcess",
-            "testInterval",
-            "testDelay",
-            "testSensitivity",
-            "testSpecificity",
-            "subjectAsymptomatic",
-            "subjectSymptomatic"
-        ]
+        "param-list": "testProcess,testInterval,testDelay,testSensitivity,testSpecificity,subjectAsymptomatic,subjectSymptomatic"
     }
 }

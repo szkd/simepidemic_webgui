@@ -1,11 +1,8 @@
-<div class="panel CLASS">
-    <input type="checkbox" id="ID" style="display:none;" checked="checked" title="折りたたみ">
-    <label for="ID" title="折りたたみ"> PANEL-TITLE </label>
-    <style>
-        label[for="ID"]::before {
-            content: ICON-NORMAL;
-            vertical-align: sub;
-        }
+<style>
+label[for="ID"]::before {
+    content: ICON-NORMAL;
+    vertical-align: sub;
+}
         #ID:checked ~ label[for="ID"]::before {
             content: ICON-CHECKED;
             vertical-align: sub;
@@ -16,11 +13,20 @@
         #ID:checked ~ #ID-content {
             display: block;
         }
-    </style>
-    <div id="ID-content">
-    PANEL-CONTENT
-    </div>
- </div>
+</style>
+
+<div class="panel">
+    <div style="display:none;" id="ID-form-plist">VAL</div>
+    <form name="ID-form">
+        <input type="checkbox" id="ID" style="display:none;" checked="checked" title="折りたたみ">
+        <label for="ID">
+            PANEL-TITLE <button type="button" onclick="resetForm('ID-form');">既定値に戻す</button>
+        </label>
+        <div id="ID-content">
+            PANEL-CONTENT
+        </div>
+    </form>
+</div>
 
 
 
