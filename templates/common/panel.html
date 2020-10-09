@@ -20,7 +20,10 @@ label[for="ID"]::before {
     <form name="ID-form">
         <input type="checkbox" id="ID" style="display:none;" checked="checked" title="折りたたみ">
         <label for="ID">
-            PANEL-TITLE <button type="button" onclick="resetForm('ID-form');">既定値に戻す</button>
+            PANEL-TITLE
+            <button type="button" onclick="resetForm('ID-form');">既定値に戻す</button>
+            <button type="button" onclick="saveForm('ID-form');">現在の設定を保存</button>
+            <button type="button" onclick="loadForm('ID-form');">ファイルから読み込む</button>
         </label>
         <div id="ID-content">
             PANEL-CONTENT

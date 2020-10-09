@@ -189,7 +189,6 @@ def paramPanels(p_types, paramjsonfile, template_file):
     panels =""
     for category in categories:
         c = categories[category]
-        print(c['param-list'])
         p_list = c['param-list'].split(',')
         panel_title = c['name'] if 'name' in c else 'カテゴリ名前がない!'
         params = ""
