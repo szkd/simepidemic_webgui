@@ -2,7 +2,7 @@ window.onload = function(){
     if (typeof getBrowserId() === 'undefined') {
         setBrowserId();
     }
-    serverGetReq(setDefaultValues, 'getParams', responseType = 'json');
+    serverGetReq(setHiddenValues, 'getParams', responseType = 'json');
 }
 
 function setBrowserId(storage = localStorage, key = 'simepidemicBrowerID') {
@@ -25,39 +25,46 @@ function getBrowserId(storage = localStorage, key = 'simepidemicBrowerID') {
     }
 }
 
-function setDefaultValues(defaults) {
-    let field = document.forms['hidden-field'];
-    for(let name in defaults) {
+function setHiddenValues(values, formname = 'default_values') {
+    if(document.forms[formname] != undefined) {
+        document.forms[formname].remove();
+    }
+    let f = document.createElement('form');
+    f.name = formname;
+    f.style = 'display:none;';
+    document.body.append(f);
+    let field = document.forms[formname];
+    for(let name in values) {
         let elem = document.createElement("input");
         elem.type = "hidden";
         elem.name = name;
-        elem.value = defaults[name];
+        elem.value = values[name];
         field.append(elem);
     }
 }
 
-function getDefaultValues() {
-    return document.forms['hidden-field'].children;
+function getHiddenValues(formname = 'default_values') {
+    let d = Array.from(document.forms[formname].children);
+    let dict = {};
+    for (let i in d) {
+        dict[d[i].name] = d[i].value;
+    }
+    return dict;
 }
 
 /********************************************
  * パネル
  ***************************************** */
 function resetForm(formname) {
-    let d = getDefaultValues();
-    let form = document.forms[formname];
-    let param_list = document.getElementById(formname + "-plist").innerText.split(',');
-    for(let p of param_list) {
-        if(d[p].value.split(',').length > 1) {
-            let v = d[p].value.split(',');
-            form[p + "-min"].value = v[0];
-            form[p + "-max"].value = v[1];
-            form[p + "-mode"].value = v[2];
-        }
-        form[p].value = d[p].value;
-        let view = document.getElementById("view" + p);
-        if(view != null) view.value = d[p].value;
-    }
+    let d = getHiddenValues();
+    loadParams(d, formname);
+}
+
+function loadForm(file_input, formname) {
+    readJsonFile(file_input, function(dict, file) {
+        setHiddenValues(dict, 'tmp');
+        loadParams(getHiddenValues('tmp'), formname);
+    });
 }
 
 function saveForm(formname) {
@@ -83,13 +90,31 @@ function saveForm(formname) {
     }
 }
 
+function loadParams(val_dict, formname) {
+    let formdata = form2paramDict(formname);
+    let form = document.forms[formname];
+    let param_list = document.getElementById(formname + "-plist").innerText.split(',');
+    for(let p of param_list) {
+        if(val_dict[p].split(',').length > 1) {
+            let v = val_dict[p].split(',');
+            form[p + "-min"].value = v[0];
+            form[p + "-max"].value = v[1];
+            form[p + "-mode"].value = v[2];
+        }
+        form[p].value = val_dict[p];
+        let view = document.getElementById("view" + p);
+        if(view != null) view.value = val_dict[p];
+    }
+}
+
+
 function form2paramDict(formname) {
     let p_list = document.getElementById(formname + "-plist").innerText.split(',');
-    let d = getDefaultValues();
+    let d = getHiddenValues();
     var p_dict = {};
     let form = document.forms[formname];
     for(let p of p_list) {
-        if(d[p].value.split(',').length > 1) {
+        if(d[p].split(',').length > 1) {
             p_dict[p] = new Array();
             p_dict[p].push(form[p + '-min'].value - 0);
             p_dict[p].push(form[p + '-max'].value - 0);
@@ -287,10 +312,7 @@ function getWorldId(id = '') {
  * 共通
  ***************************************** */
 function loadFile(file_input, target='') {
-    if(target == 'parampanel') {
-        readJsonFile(file_input, loadParams);
-    }
-    else if (target == "sim-setting-param" || target == "sim-setting-scenario") {
+    if (target == "sim-setting-param" || target == "sim-setting-scenario") {
         readJsonFile(file_input, function (result, file) {
             var filename = file_input.previousSibling;
             filename.innerText = "";
@@ -314,8 +336,8 @@ function dict2formdata(dict) {
 }
 //json
 function readJsonFile(file_input, callback) {
-    var file = file_input.files[0];
-    var reader = new FileReader();
+    let file = file_input.files[0];
+    let reader = new FileReader();
     file_input.reset;
     reader.onerror = () => {
         alert("ファイル読み込みに失敗しました．");

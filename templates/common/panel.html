@@ -21,9 +21,10 @@ label[for="ID"]::before {
         <input type="checkbox" id="ID" style="display:none;" checked="checked" title="折りたたみ">
         <label for="ID">
             PANEL-TITLE
-            <button type="button" onclick="resetForm('ID-form');">既定値に戻す</button>
-            <button type="button" onclick="saveForm('ID-form');">現在の設定を保存</button>
-            <button type="button" onclick="loadForm('ID-form');">ファイルから読み込む</button>
+            <button type="button" class='panel-cmd' onclick="resetForm('ID-form');">既定値に戻す</button>
+            <button type="button" class='panel-cmd' onclick="saveForm('ID-form');">現在の設定を保存</button>
+            <label for = "ID-file" class='panel-cmd'>ファイルから読み込む</label>
+            <input type="file" id="ID-file" style="display:none;" accept=".json, application/json" onchange="loadForm(this, 'ID-form');">
         </label>
         <div id="ID-content">
             PANEL-CONTENT
