@@ -67,10 +67,9 @@ function loadForm(file_input, formname) {
     });
 }
 
-function saveForm(formname) {
-    let formdata = form2paramDict(formname);
 
-    let writejson = JSON.stringify(formdata);
+function saveJsonFile(val) {
+    let writejson = JSON.stringify(val);
     let blob = new Blob([writejson], {type: 'application/json'});
     let fakeurl = URL.createObjectURL(blob);
 
@@ -90,11 +89,17 @@ function saveForm(formname) {
     }
 }
 
+function saveForm(formname) {
+    let formdata = form2paramDict(formname);
+    saveJsonFile(formdata);
+}
+
 function loadParams(val_dict, formname) {
     let formdata = form2paramDict(formname);
     let form = document.forms[formname];
     let param_list = document.getElementById(formname + "-plist").innerText.split(',');
     for(let p of param_list) {
+        if(val_dict[p] == null) continue;
         if(val_dict[p].split(',').length > 1) {
             let v = val_dict[p].split(',');
             form[p + "-min"].value = v[0];
@@ -107,9 +112,10 @@ function loadParams(val_dict, formname) {
     }
 }
 
-
 function form2paramDict(formname) {
+    console.log(formname);
     let p_list = document.getElementById(formname + "-plist").innerText.split(',');
+    console.log(p_list);
     let d = getHiddenValues();
     var p_dict = {};
     let form = document.forms[formname];
@@ -192,6 +198,34 @@ function serverPostReq(callback, action, type, senddata, name='') {
 /********************************************
  * パラメータ
  ***************************************** */
+function getParaForms() {
+    let para_forms = document.forms['property']['param_formnames'].value.split(',');
+    return para_forms;
+}
+function resetAll() {
+    let result = confirm("シミュレーションタブの「世界」を含む全てのパラメータをリセットします．");
+    if(!result) return;
+
+    let para_forms = getParaForms();
+    for (let f of para_forms) {
+        resetForm(f);
+    }
+}
+function saveAll() {
+    let para_forms = getParaForms();
+    var p_dict = {};
+    for (let f of para_forms) {
+        let d = form2paramDict(f);
+        p_dict = {...p_dict, ...d};
+    }
+    saveJsonFile(p_dict);
+}
+function loadAll(file_input) {
+    let para_forms = getParaForms();
+    for (let f of para_forms) {
+        loadForm(file_input, f);
+    }
+}
 function sliderValueChanged(slider, outputid){
     let element = document.getElementById(outputid);
     element.value = slider.value;

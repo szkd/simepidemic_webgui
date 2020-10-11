@@ -20,6 +20,19 @@ settings_icon = "url(\"data:image/svg+xml;charset=UTF-8,<svg width='1em' height=
 """ ********************************
 common
 ******************************** """
+my_property = {}
+def addProperty(name, value):
+    if name in my_property:
+        my_property[name] += ',' + str(value)
+        return
+    my_property[name] = str(value)
+
+def convertMyProperty():
+    html_str = ""
+    for name in my_property:
+        html_str += tag("input", attr={"type" : "hidden", "id": name, "value": my_property[name]}, end=False)
+    return html_str
+
 def buttonGroupFromJson(jsonfile):
     html_str=""
     json = json2dict(jsonfile, True)
@@ -174,9 +187,12 @@ def paramDistribution(param):
             }
     return rephrase(PARAM_DIR + "distribution.html", rep_dict, 1000)
 
-def panel(_id, str_list, title, content, template_file, icon_normal = '"▶︎"', icon_checked = '"▼"'):
+def panel(_id, str_list, title, content, template_file, icon_normal = '"▶︎"', icon_checked = '"▼"', add_property = True):
+    if add_property:
+        addProperty('param_formnames', _id + '-form')
     attr = {}
     attr['ID'] = _id
+    attr['FORMNAME'] = _id + "-form"
     attr['VAL'] = str_list
     attr['PANEL-TITLE'] = title
     attr['PANEL-CONTENT'] = content
@@ -184,7 +200,7 @@ def panel(_id, str_list, title, content, template_file, icon_normal = '"▶︎"'
     attr['ICON-CHECKED'] = icon_checked
     return rephrase(template_file, attr, 1000)
 
-def paramPanels(p_types, paramjsonfile, template_file):
+def paramPanels(p_types, paramjsonfile, template_file, add_property = True):
     categories = json2dict(paramjsonfile)
     panels =""
     for category in categories:
@@ -342,5 +358,6 @@ for key in tablist:
     tab_contents += tab['tab_content']
 
 data["MAIN"] = tabItemContainer(tab_items + tab_contents,'tabs')
+data["PROPERTY"] = tag("form", convertMyProperty(), {"style": "display:none;", "name": "property"})
 with open(OUTPUT_DIR + "index.html", mode="w") as f:
     f.write(rephrase(COMMON_DIR + "base.html", data))

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
     <head>
     <title>SimEpidemic</title><meta charset = "utf-8"><link rel = "icon" href = "favicon.png"><link rel = "stylesheet" href = "css/common.css"><script src = "script.js"></script>
@@ -63,105 +63,108 @@
     color: var(--my-black);
     border: none;
 }
-</style><input type = "radio" id = "statistics" name = "page_tab" style = "display:none;"><label for = "statistics" class = "tab_item">統計情報</label><div class = "tab_content" id = "sim_content"><div class="panel ">
-    <input type="checkbox" id="sim-settings" style="display:none;" checked="checked" title="折りたたみ">
-    <label for="sim-settings" title="折りたたみ"> 設定 </label>
-    <style>
-        label[for="sim-settings"]::before {
-            content: url("data:image/svg+xml;charset=UTF-8,<svg width='1em' height='1em' viewBox='0 0 16 16' class='bi bi-gear-fill' fill='white' xmlns='http://www.w3.org/2000/svg'>  <path fill-rule='evenodd' d='M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 0 0-5.86 2.929 2.929 0 0 0 0 5.858z'/></svg>");;
-            vertical-align: sub;
-        }
-        #sim-settings:checked ~ label[for="sim-settings"]::before {
-            content: url("data:image/svg+xml;charset=UTF-8,<svg width='1em' height='1em' viewBox='0 0 16 16' class='bi bi-gear-fill' fill='white' xmlns='http://www.w3.org/2000/svg'>  <path fill-rule='evenodd' d='M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 0 0-5.86 2.929 2.929 0 0 0 0 5.858z'/></svg>");;
-            vertical-align: sub;
-        }
-        #sim-settings-content {
-            display: none;
-        }
-        #sim-settings:checked ~ #sim-settings-content {
-            display: block;
-        }
-    </style>
-    <div id="sim-settings-content">
-    <form name = "sim-settings"><div class = "display: flex; flex-wrap: wrap; margin-top: 10px; justify-content: flex-start"><div class = "param-title">世界</div><input type = "radio" name = "sim-world" id = "world0" class = "inline-block margin-right" style = "flex-grow: 1;" value = "default" checked = "checked"><label for = "world0" style = "margin-right:  8px;">既定世界</label><input type = "radio" name = "sim-world" id = "world1" class = "inline-block margin-right" style = "flex-grow: 1;" value = "new"><label for = "world1" style = "margin-right:  8px;">新規生成</label><div class = "param-title">パラメータ</div><input type = "radio" name = "sim-param" id = "param0" class = "inline-block margin-right" style = "flex-grow: 1;" value = "tab" onchange = "settings('param', this);" checked = "checked"><label for = "param0" style = "margin-right:  8px;">パラメータタブの値を使用</label><input type = "radio" name = "sim-param" id = "param1" class = "inline-block margin-right" style = "flex-grow: 1;" value = "file"><label for = "param1" style = "margin-right:  8px;">ファイルから読み込む</label><label for = "sim-param-file" class = "file-plus"></label><input type = "file" accept = ".json, application/json" style = "display:none;" id = "sim-param-file" onchange = "settings('param-file', this);"><div class = "param-title">シナリオ</div><input type = "radio" name = "sim-scenario" id = "scenario0" class = "inline-block margin-right" style = "flex-grow: 1;" value = "disabled" onchange = "settings('scenario', this);" checked = "checked"><label for = "scenario0" style = "margin-right:  8px;">使用しない</label><input type = "radio" name = "sim-scenario" id = "scenario1" class = "inline-block margin-right" style = "flex-grow: 1;" value = "tab" onchange = "settings('scenario', this);"><label for = "scenario1" style = "margin-right:  8px;">シナリオタブの値を使用</label><input type = "radio" name = "sim-scenario" id = "scenario2" class = "inline-block margin-right" style = "flex-grow: 1;" value = "file"><label for = "scenario2" style = "margin-right:  8px;">ファイルから読み込む</label><label for = "sim-scenario-file" class = "file-plus"></label><input type = "file" accept = ".json, application/json" style = "display:none;" id = "sim-scenario-file" onchange = "settings('scenario-file', this);"></div></form>
-    </div>
- </div>
-
-
-
-<div class = "cmd-btn-list"><button class = "list command-button" onclick = "worldList();">世界一覧</button><button class = "share command-button" onclick = "getWorldId();">既定世界のIDを取得</button></div><div class = "cmd-btn-list"><button class = "command-button" onclick = "startSim('sim-settings');">開始</button><button class = "command-button" onclick = "stopSim('sim-settings');">停止</button><button class = "command-button" onclick = "stepSim();">1ステップ進む</button><button class = "command-button" onclick = "resetSim();">初期化する</button></div></div><div class = "tab_content" id = "param_content"><div class = "cmd-btn-list"><button class = "command-button" onclick = "saveParams('param-form');">現在の設定を保存</button><button class = "command-button" onclick = "resetParams();">既定値に戻す</button><label for = "param-title-button" class = "command-button">ファイルから読み込む</label><input type = "file" id = "param-title-button" class = "command-button" style = "display:none;" accept = ".json, application/json" onchange = "loadFile(this, target='parampanel');"></input></div><form name = "param-form"><div class = "panels"><div class="panel ">
-    <input type="checkbox" id="checkbox-initialInfected" style="display:none;" checked="checked" title="折りたたみ">
-    <label for="checkbox-initialInfected" title="折りたたみ"> 世界 </label>
-    <style>
-        label[for="checkbox-initialInfected"]::before {
-            content: "▶︎";
-            vertical-align: sub;
-        }
-        #checkbox-initialInfected:checked ~ label[for="checkbox-initialInfected"]::before {
+</style><input type = "radio" id = "statistics" name = "page_tab" style = "display:none;"><label for = "statistics" class = "tab_item">統計情報</label><div class = "tab_content" id = "sim_content"><div class = "cmd-btn-list"><button class = "list command-button" onclick = "worldList();">世界一覧</button><button class = "share command-button" onclick = "getWorldId();">既定世界のIDを取得</button></div><div class = "cmd-btn-list"><button class = "command-button" onclick = "startSim('sim-settings');">開始</button><button class = "command-button" onclick = "stopSim('sim-settings');">停止</button><button class = "command-button" onclick = "stepSim();">1ステップ進む</button><button class = "command-button" onclick = "resetSim();">初期化する</button></div><style>
+label[for="world"]::before {
+    content: "▶︎";
+    vertical-align: middle;
+}
+        #world:checked ~ label[for="world"]::before {
             content: "▼";
-            vertical-align: sub;
+            vertical-align: middle;
         }
-        #checkbox-initialInfected-content {
+        #world-content {
             display: none;
         }
-        #checkbox-initialInfected:checked ~ #checkbox-initialInfected-content {
+        #world:checked ~ #world-content {
             display: block;
         }
-    </style>
-    <div id="checkbox-initialInfected-content">
-    <div class = "param-num"><label for = "populationSize" class = "num-label">初期人口</label><input step = "1" value = "10000" min = "100" type = "number" id = "populationSize" class = "param-input"><span>人</span></div><div class = "param-num"><label for = "worldSize" class = "num-label">世界の大きさ</label><input step = "1" value = "360" min = "10" type = "number" info = "一辺の長さ" id = "worldSize" class = "param-input"><span>距離単位</span></div><div><div class = "param-title">メッシュ</div><div class = "slider"><span>1 </span><input type = "range" step = "1" value = "18" min = "1 " max = "999" info = "縦横の各分割数" id = "mesh" oninput = "sliderValueChanged(this.value,'viewmesh')"><span>999</span><input type = "number" step = "1" value = "18" class = "slider_value" id = "viewmesh" oninput = "sliderValueChanged(this.value, 'mesh')"><span class = "slider_unit">-h</span></div></div><div><div class = "param-title">1日当たりステップ数</div><div class = "slider"><span>1</span><input type = "range" step = "1" value = "4" min = "1" max = "999" id = "stepsPerDay" oninput = "sliderValueChanged(this.value,'viewstepsPerDay')"><span>999</span><input type = "number" step = "1" value = "4" class = "slider_value" id = "viewstepsPerDay" oninput = "sliderValueChanged(this.value, 'stepsPerDay')"><span class = "slider_unit">ステップ</span></div></div><div><div class = "param-title">初期状態での感染者数</div><div class = "slider"><span>1</span><input type = "range" step = "1" value = "4" min = "1" max = "999" id = "initialInfected" oninput = "sliderValueChanged(this.value,'viewinitialInfected')"><span>999</span><input type = "number" step = "1" value = "4" class = "slider_value" id = "viewinitialInfected" oninput = "sliderValueChanged(this.value, 'initialInfected')"><span class = "slider_unit">人</span></div></div>
-    </div>
- </div>
+</style>
+
+<div class="panel">
+    <div style="display:none;" id="world-form-plist">populationSize,worldSize,mesh,stepsPerDay,initialInfected</div>
+    <form name="world-form">
+        <input type="checkbox" id="world" style="display:none;" checked="checked" title="折りたたみ">
+        <label for="world">
+            世界
+            <button type="button" class='panel-cmd' onclick="resetForm('world-form');">既定値に戻す</button>
+            <button type="button" class='panel-cmd' onclick="saveForm('world-form');">現在の設定を保存</button>
+            <label for = "world-file" class='panel-cmd'>ファイルから読み込む</label>
+            <input type="file" id="world-file" style="display:none;" accept=".json, application/json" onchange="loadForm(this, 'world-form');">
+        </label>
+        <div id="world-content">
+            <div class = "param-num"><label for = "populationSize" class = "num-label">初期人口</label><input step = "1" value = "10000" min = "100" type = "number" id = "populationSize" class = "param-input"><span>人</span></div><div class = "param-num"><label for = "worldSize" class = "num-label">世界の大きさ</label><input step = "1" value = "360" min = "10" type = "number" info = "一辺の長さ" id = "worldSize" class = "param-input"><span>距離単位</span></div><div><div class = "param-title">メッシュ</div><div class = "slider"><span>1 </span><input type = "range" step = "1" value = "18" min = "1 " max = "999" info = "縦横の各分割数" id = "mesh" oninput = "sliderValueChanged(this,'viewmesh')"><span>999</span><input type = "number" step = "1" value = "18" class = "slider_value" id = "viewmesh" oninput = "sliderValueChanged(this, 'mesh')"><span class = "slider_unit">-h</span></div></div><div><div class = "param-title">1日当たりステップ数</div><div class = "slider"><span>1</span><input type = "range" step = "1" value = "4" min = "1" max = "999" id = "stepsPerDay" oninput = "sliderValueChanged(this,'viewstepsPerDay')"><span>999</span><input type = "number" step = "1" value = "4" class = "slider_value" id = "viewstepsPerDay" oninput = "sliderValueChanged(this, 'stepsPerDay')"><span class = "slider_unit">ステップ</span></div></div><div><div class = "param-title">初期状態での感染者数</div><div class = "slider"><span>1</span><input type = "range" step = "1" value = "4" min = "1" max = "999" id = "initialInfected" oninput = "sliderValueChanged(this,'viewinitialInfected')"><span>999</span><input type = "number" step = "1" value = "4" class = "slider_value" id = "viewinitialInfected" oninput = "sliderValueChanged(this, 'initialInfected')"><span class = "slider_unit">人</span></div></div>
+        </div>
+    </form>
+</div>
 
 
 
-<div class="panel ">
-    <input type="checkbox" id="checkbox-avoidance" style="display:none;" checked="checked" title="折りたたみ">
-    <label for="checkbox-avoidance" title="折りたたみ"> 移動 </label>
-    <style>
-        label[for="checkbox-avoidance"]::before {
-            content: "▶︎";
-            vertical-align: sub;
-        }
-        #checkbox-avoidance:checked ~ label[for="checkbox-avoidance"]::before {
+</div><div class = "tab_content" id = "param_content"><div class = "cmd-btn-list"><button class = "command-button" onclick = "saveAll();">現在の設定を保存</button><button class = "command-button" onclick = "resetAll();">既定値に戻す</button><label for = "param-title-button" class = "command-button">ファイルから読み込む</label><input type = "file" id = "param-title-button" class = "command-button" style = "display:none;" accept = ".json, application/json" onchange = "loadAll(this);"></input></div><style>
+label[for="move"]::before {
+    content: "▶︎";
+    vertical-align: middle;
+}
+        #move:checked ~ label[for="move"]::before {
             content: "▼";
-            vertical-align: sub;
+            vertical-align: middle;
         }
-        #checkbox-avoidance-content {
+        #move-content {
             display: none;
         }
-        #checkbox-avoidance:checked ~ #checkbox-avoidance-content {
+        #move:checked ~ #move-content {
             display: block;
         }
-    </style>
-    <div id="checkbox-avoidance-content">
-    <div><div class = "param-title">質量</div><div class = "slider"><span>10.0</span><input type = "range" step = "0.1" value = "50" min = "10.0" max = "100.0" info = "個体加速度の係数" id = "mass" oninput = "sliderValueChanged(this.value,'viewmass')"><span>100.0</span><input type = "number" step = "0.1" value = "50" class = "slider_value" id = "viewmass" oninput = "sliderValueChanged(this.value, 'mass')"><span class = "slider_unit">%</span></div></div><div><div class = "param-title">摩擦</div><div class = "slider"><span>0.0</span><input type = "range" step = "0.1" value = "50" min = "0.0" max = "100.0" info = "個体加速度の減速係数" id = "friction" oninput = "sliderValueChanged(this.value,'viewfriction')"><span>100.0</span><input type = "number" step = "0.1" value = "50" class = "slider_value" id = "viewfriction" oninput = "sliderValueChanged(this.value, 'friction')"><span class = "slider_unit">%</span></div></div><div><div class = "param-title">衝突回避</div><div class = "slider"><span>0.0</span><input type = "range" step = "0.1" value = "80" min = "0.0" max = "100.0" info = "個体間の斥力" id = "avoidance" oninput = "sliderValueChanged(this.value,'viewavoidance')"><span>100.0</span><input type = "number" step = "0.1" value = "80" class = "slider_value" id = "viewavoidance" oninput = "sliderValueChanged(this.value, 'avoidance')"><span class = "slider_unit">%</span></div></div>
-    </div>
- </div>
+</style>
+
+<div class="panel">
+    <div style="display:none;" id="move-form-plist">mass,friction,avoidance</div>
+    <form name="move-form">
+        <input type="checkbox" id="move" style="display:none;" checked="checked" title="折りたたみ">
+        <label for="move">
+            移動
+            <button type="button" class='panel-cmd' onclick="resetForm('move-form');">既定値に戻す</button>
+            <button type="button" class='panel-cmd' onclick="saveForm('move-form');">現在の設定を保存</button>
+            <label for = "move-file" class='panel-cmd'>ファイルから読み込む</label>
+            <input type="file" id="move-file" style="display:none;" accept=".json, application/json" onchange="loadForm(this, 'move-form');">
+        </label>
+        <div id="move-content">
+            <div><div class = "param-title">質量</div><div class = "slider"><span>10.0</span><input type = "range" step = "0.1" value = "50" min = "10.0" max = "100.0" info = "個体加速度の係数" id = "mass" oninput = "sliderValueChanged(this,'viewmass')"><span>100.0</span><input type = "number" step = "0.1" value = "50" class = "slider_value" id = "viewmass" oninput = "sliderValueChanged(this, 'mass')"><span class = "slider_unit">%</span></div></div><div><div class = "param-title">摩擦</div><div class = "slider"><span>0.0</span><input type = "range" step = "0.1" value = "50" min = "0.0" max = "100.0" info = "個体加速度の減速係数" id = "friction" oninput = "sliderValueChanged(this,'viewfriction')"><span>100.0</span><input type = "number" step = "0.1" value = "50" class = "slider_value" id = "viewfriction" oninput = "sliderValueChanged(this, 'friction')"><span class = "slider_unit">%</span></div></div><div><div class = "param-title">衝突回避</div><div class = "slider"><span>0.0</span><input type = "range" step = "0.1" value = "80" min = "0.0" max = "100.0" info = "個体間の斥力" id = "avoidance" oninput = "sliderValueChanged(this,'viewavoidance')"><span>100.0</span><input type = "number" step = "0.1" value = "80" class = "slider_value" id = "viewavoidance" oninput = "sliderValueChanged(this, 'avoidance')"><span class = "slider_unit">%</span></div></div>
+        </div>
+    </form>
+</div>
 
 
 
-<div class="panel ">
-    <input type="checkbox" id="checkbox-immunity" style="display:none;" checked="checked" title="折りたたみ">
-    <label for="checkbox-immunity" title="折りたたみ"> 発症機序 </label>
-    <style>
-        label[for="checkbox-immunity"]::before {
-            content: "▶︎";
-            vertical-align: sub;
-        }
-        #checkbox-immunity:checked ~ label[for="checkbox-immunity"]::before {
+<style>
+label[for="mechanism"]::before {
+    content: "▶︎";
+    vertical-align: middle;
+}
+        #mechanism:checked ~ label[for="mechanism"]::before {
             content: "▼";
-            vertical-align: sub;
+            vertical-align: middle;
         }
-        #checkbox-immunity-content {
+        #mechanism-content {
             display: none;
         }
-        #checkbox-immunity:checked ~ #checkbox-immunity-content {
+        #mechanism:checked ~ #mechanism-content {
             display: block;
         }
-    </style>
-    <div id="checkbox-immunity-content">
-    <div><div class = "param-title">感染確率</div><div class = "slider"><span>0.0</span><input type = "range" step = "0.1" value = "50.0" min = "0.0" max = "100.0" id = "infectionProberbility" oninput = "sliderValueChanged(this.value,'viewinfectionProberbility')"><span>100.0</span><input type = "number" step = "0.1" value = "50.0" class = "slider_value" id = "viewinfectionProberbility" oninput = "sliderValueChanged(this.value, 'infectionProberbility')"><span class = "slider_unit">%</span></div></div><div><div class = "param-title">感染距離</div><div class = "slider"><span>1.0</span><input type = "range" step = "0.1" value = "4.0" min = "1.0" max = "20.0" id = "infectionDistance" oninput = "sliderValueChanged(this.value,'viewinfectionDistance')"><span>20.0</span><input type = "number" step = "0.1" value = "4.0" class = "slider_value" id = "viewinfectionDistance" oninput = "sliderValueChanged(this.value, 'infectionDistance')"><span class = "slider_unit">距離単位</span></div></div><div><div class = "param-title">感染症の遅れ</div><div class = "slider"><span>0.0</span><input type = "range" step = "0.1" value = "5.0" min = "0.0" max = "10.0" info = "感染からの期間" id = "contagionDelay" oninput = "sliderValueChanged(this.value,'viewcontagionDelay')"><span>10.0</span><input type = "number" step = "0.1" value = "5.0" class = "slider_value" id = "viewcontagionDelay" oninput = "sliderValueChanged(this.value, 'contagionDelay')"><span class = "slider_unit">日</span></div></div><div><div class = "param-title">感染症のピーク</div><div class = "slider"><span>0.0</span><input type = "range" step = "0.1" value = "3.0" min = "0.0" max = "10.0" info = "感染からの期間" id = "contagionPeak" oninput = "sliderValueChanged(this.value,'viewcontagionPeak')"><span>10.0</span><input type = "number" step = "0.1" value = "3.0" class = "slider_value" id = "viewcontagionPeak" oninput = "sliderValueChanged(this.value, 'contagionPeak')"><span class = "slider_unit">日</span></div></div><div class="param_dist">
+</style>
+
+<div class="panel">
+    <div style="display:none;" id="mechanism-form-plist">infectionProberbility,infectionDistance,contagionDelay,contagionPeak,incubation,fatality,recovery,immunity</div>
+    <form name="mechanism-form">
+        <input type="checkbox" id="mechanism" style="display:none;" checked="checked" title="折りたたみ">
+        <label for="mechanism">
+            発症機序
+            <button type="button" class='panel-cmd' onclick="resetForm('mechanism-form');">既定値に戻す</button>
+            <button type="button" class='panel-cmd' onclick="saveForm('mechanism-form');">現在の設定を保存</button>
+            <label for = "mechanism-file" class='panel-cmd'>ファイルから読み込む</label>
+            <input type="file" id="mechanism-file" style="display:none;" accept=".json, application/json" onchange="loadForm(this, 'mechanism-form');">
+        </label>
+        <div id="mechanism-content">
+            <div><div class = "param-title">感染確率</div><div class = "slider"><span>0.0</span><input type = "range" step = "0.1" value = "50.0" min = "0.0" max = "100.0" id = "infectionProberbility" oninput = "sliderValueChanged(this,'viewinfectionProberbility')"><span>100.0</span><input type = "number" step = "0.1" value = "50.0" class = "slider_value" id = "viewinfectionProberbility" oninput = "sliderValueChanged(this, 'infectionProberbility')"><span class = "slider_unit">%</span></div></div><div><div class = "param-title">感染距離</div><div class = "slider"><span>1.0</span><input type = "range" step = "0.1" value = "4.0" min = "1.0" max = "20.0" id = "infectionDistance" oninput = "sliderValueChanged(this,'viewinfectionDistance')"><span>20.0</span><input type = "number" step = "0.1" value = "4.0" class = "slider_value" id = "viewinfectionDistance" oninput = "sliderValueChanged(this, 'infectionDistance')"><span class = "slider_unit">距離単位</span></div></div><div><div class = "param-title">感染症の遅れ</div><div class = "slider"><span>0.0</span><input type = "range" step = "0.1" value = "5.0" min = "0.0" max = "10.0" info = "感染からの期間" id = "contagionDelay" oninput = "sliderValueChanged(this,'viewcontagionDelay')"><span>10.0</span><input type = "number" step = "0.1" value = "5.0" class = "slider_value" id = "viewcontagionDelay" oninput = "sliderValueChanged(this, 'contagionDelay')"><span class = "slider_unit">日</span></div></div><div><div class = "param-title">感染症のピーク</div><div class = "slider"><span>0.0</span><input type = "range" step = "0.1" value = "3.0" min = "0.0" max = "10.0" info = "感染からの期間" id = "contagionPeak" oninput = "sliderValueChanged(this,'viewcontagionPeak')"><span>10.0</span><input type = "number" step = "0.1" value = "3.0" class = "slider_value" id = "viewcontagionPeak" oninput = "sliderValueChanged(this, 'contagionPeak')"><span class = "slider_unit">日</span></div></div><div class="param_dist">
     <div class="param-title">潜伏期間 [ <span>日</span> ]</div>
     <div id="incubation" class="dist-input">
         <div class="dist-item">
@@ -254,32 +257,42 @@
     </div>
 </div>
 
-    </div>
- </div>
+        </div>
+    </form>
+</div>
 
 
 
-<div class="panel ">
-    <input type="checkbox" id="checkbox-contactTracing" style="display:none;" checked="checked" title="折りたたみ">
-    <label for="checkbox-contactTracing" title="折りたたみ"> 対策 </label>
-    <style>
-        label[for="checkbox-contactTracing"]::before {
-            content: "▶︎";
-            vertical-align: sub;
-        }
-        #checkbox-contactTracing:checked ~ label[for="checkbox-contactTracing"]::before {
+<style>
+label[for="measure"]::before {
+    content: "▶︎";
+    vertical-align: middle;
+}
+        #measure:checked ~ label[for="measure"]::before {
             content: "▼";
-            vertical-align: sub;
+            vertical-align: middle;
         }
-        #checkbox-contactTracing-content {
+        #measure-content {
             display: none;
         }
-        #checkbox-contactTracing:checked ~ #checkbox-contactTracing-content {
+        #measure:checked ~ #measure-content {
             display: block;
         }
-    </style>
-    <div id="checkbox-contactTracing-content">
-    <div><div class = "param-title">社会的距離の強さ</div><div class = "slider"><span>0.0</span><input type = "range" step = "0.1" value = "50.0" min = "0.0" max = "100.0" id = "distancingStrength" oninput = "sliderValueChanged(this.value,'viewdistancingStrength')"><span>100.0</span><input type = "number" step = "0.1" value = "50.0" class = "slider_value" id = "viewdistancingStrength" oninput = "sliderValueChanged(this.value, 'distancingStrength')"><span class = "slider_unit">%</span></div></div><div><div class = "param-title">社会的距離協力率</div><div class = "slider"><span>0.0</span><input type = "range" step = "0.1" value = "20.0" min = "0.0" max = "100.0" id = "distancingObedience" oninput = "sliderValueChanged(this.value,'viewdistancingObedience')"><span>100.0</span><input type = "number" step = "0.1" value = "20.0" class = "slider_value" id = "viewdistancingObedience" oninput = "sliderValueChanged(this.value, 'distancingObedience')"><span class = "slider_unit">%</span></div></div><div><div class = "param-title">移動頻度</div><div class = "slider"><span>0.0</span><input type = "range" step = "0.1" value = "50.0" min = "0.0" max = "100.0" id = "mobilityFrequency" oninput = "sliderValueChanged(this.value,'viewmobilityFrequency')"><span>100.0</span><input type = "number" step = "0.1" value = "50.0" class = "slider_value" id = "viewmobilityFrequency" oninput = "sliderValueChanged(this.value, 'mobilityFrequency')"><span class = "slider_unit">%</span></div></div><div class="param_dist">
+</style>
+
+<div class="panel">
+    <div style="display:none;" id="measure-form-plist">distancingStrength,distancingObedience,mobilityFrequency,mobilityDistance,gatheringFrequency,gatheringSize,gatheringDuration,gatheringStrength,contactTracing</div>
+    <form name="measure-form">
+        <input type="checkbox" id="measure" style="display:none;" checked="checked" title="折りたたみ">
+        <label for="measure">
+            対策
+            <button type="button" class='panel-cmd' onclick="resetForm('measure-form');">既定値に戻す</button>
+            <button type="button" class='panel-cmd' onclick="saveForm('measure-form');">現在の設定を保存</button>
+            <label for = "measure-file" class='panel-cmd'>ファイルから読み込む</label>
+            <input type="file" id="measure-file" style="display:none;" accept=".json, application/json" onchange="loadForm(this, 'measure-form');">
+        </label>
+        <div id="measure-content">
+            <div><div class = "param-title">社会的距離の強さ</div><div class = "slider"><span>0.0</span><input type = "range" step = "0.1" value = "50.0" min = "0.0" max = "100.0" id = "distancingStrength" oninput = "sliderValueChanged(this,'viewdistancingStrength')"><span>100.0</span><input type = "number" step = "0.1" value = "50.0" class = "slider_value" id = "viewdistancingStrength" oninput = "sliderValueChanged(this, 'distancingStrength')"><span class = "slider_unit">%</span></div></div><div><div class = "param-title">社会的距離協力率</div><div class = "slider"><span>0.0</span><input type = "range" step = "0.1" value = "20.0" min = "0.0" max = "100.0" id = "distancingObedience" oninput = "sliderValueChanged(this,'viewdistancingObedience')"><span>100.0</span><input type = "number" step = "0.1" value = "20.0" class = "slider_value" id = "viewdistancingObedience" oninput = "sliderValueChanged(this, 'distancingObedience')"><span class = "slider_unit">%</span></div></div><div><div class = "param-title">移動頻度</div><div class = "slider"><span>0.0</span><input type = "range" step = "0.1" value = "50.0" min = "0.0" max = "100.0" id = "mobilityFrequency" oninput = "sliderValueChanged(this,'viewmobilityFrequency')"><span>100.0</span><input type = "number" step = "0.1" value = "50.0" class = "slider_value" id = "viewmobilityFrequency" oninput = "sliderValueChanged(this, 'mobilityFrequency')"><span class = "slider_unit">%</span></div></div><div class="param_dist">
     <div class="param-title">移動距離 [ <span>%</span> ]</div>
     <div id="mobilityDistance" class="dist-input">
         <div class="dist-item">
@@ -302,7 +315,7 @@
         </div>
     </div>
 </div>
-<div><div class = "param-title">集会の頻度</div><div class = "slider"><span>0.0</span><input type = "range" step = "0.1" value = "50.0" min = "0.0" max = "100.0" id = "gatheringFrequency" oninput = "sliderValueChanged(this.value,'viewgatheringFrequency')"><span>100.0</span><input type = "number" step = "0.1" value = "50.0" class = "slider_value" id = "viewgatheringFrequency" oninput = "sliderValueChanged(this.value, 'gatheringFrequency')"><span class = "slider_unit">個/面積/日</span></div></div><div class="param_dist">
+<div><div class = "param-title">集会の頻度</div><div class = "slider"><span>0.0</span><input type = "range" step = "0.1" value = "50.0" min = "0.0" max = "100.0" id = "gatheringFrequency" oninput = "sliderValueChanged(this,'viewgatheringFrequency')"><span>100.0</span><input type = "number" step = "0.1" value = "50.0" class = "slider_value" id = "viewgatheringFrequency" oninput = "sliderValueChanged(this, 'gatheringFrequency')"><span class = "slider_unit">個/面積/日</span></div></div><div class="param_dist">
     <div class="param-title">集会の大きさ [ <span>距離単位</span> ]</div>
     <div id="gatheringSize" class="dist-input">
         <div class="dist-item">
@@ -371,44 +384,56 @@
         </div>
     </div>
 </div>
-<div><div class = "param-title">接触者追跡</div><div class = "slider"><span>0.0</span><input type = "range" step = "0.1" value = "20.0" min = "0.0" max = "100.0" info = "捕捉率" id = "contactTracing" oninput = "sliderValueChanged(this.value,'viewcontactTracing')"><span>100.0</span><input type = "number" step = "0.1" value = "20.0" class = "slider_value" id = "viewcontactTracing" oninput = "sliderValueChanged(this.value, 'contactTracing')"><span class = "slider_unit">%</span></div></div>
-    </div>
- </div>
+<div><div class = "param-title">接触者追跡</div><div class = "slider"><span>0.0</span><input type = "range" step = "0.1" value = "20.0" min = "0.0" max = "100.0" info = "捕捉率" id = "contactTracing" oninput = "sliderValueChanged(this,'viewcontactTracing')"><span>100.0</span><input type = "number" step = "0.1" value = "20.0" class = "slider_value" id = "viewcontactTracing" oninput = "sliderValueChanged(this, 'contactTracing')"><span class = "slider_unit">%</span></div></div>
+        </div>
+    </form>
+</div>
 
 
 
-<div class="panel ">
-    <input type="checkbox" id="checkbox-subjectSymptomatic" style="display:none;" checked="checked" title="折りたたみ">
-    <label for="checkbox-subjectSymptomatic" title="折りたたみ"> 検査 </label>
-    <style>
-        label[for="checkbox-subjectSymptomatic"]::before {
-            content: "▶︎";
-            vertical-align: sub;
-        }
-        #checkbox-subjectSymptomatic:checked ~ label[for="checkbox-subjectSymptomatic"]::before {
+<style>
+label[for="tests"]::before {
+    content: "▶︎";
+    vertical-align: middle;
+}
+        #tests:checked ~ label[for="tests"]::before {
             content: "▼";
-            vertical-align: sub;
+            vertical-align: middle;
         }
-        #checkbox-subjectSymptomatic-content {
+        #tests-content {
             display: none;
         }
-        #checkbox-subjectSymptomatic:checked ~ #checkbox-subjectSymptomatic-content {
+        #tests:checked ~ #tests-content {
             display: block;
         }
-    </style>
-    <div id="checkbox-subjectSymptomatic-content">
-    <div><div class = "param-title">処理期間</div><div class = "slider"><span>0.0</span><input type = "range" step = "0.1" value = "1.0" min = "0.0" max = "10.0" info = "検査から判明まで" id = "testProcess" oninput = "sliderValueChanged(this.value,'viewtestProcess')"><span>10.0</span><input type = "number" step = "0.1" value = "1.0" class = "slider_value" id = "viewtestProcess" oninput = "sliderValueChanged(this.value, 'testProcess')"><span class = "slider_unit">日</span></div></div><div><div class = "param-title">検査間隔</div><div class = "slider"><span>0.0</span><input type = "range" step = "0.1" value = "2.0" min = "0.0" max = "10.0" info = "次の検査まで" id = "testInterval" oninput = "sliderValueChanged(this.value,'viewtestInterval')"><span>10.0</span><input type = "number" step = "0.1" value = "2.0" class = "slider_value" id = "viewtestInterval" oninput = "sliderValueChanged(this.value, 'testInterval')"><span class = "slider_unit">日</span></div></div><div><div class = "param-title">検査の遅れ</div><div class = "slider"><span>0.0</span><input type = "range" step = "0.1" value = "1.0" min = "0.0" max = "10.0" id = "testDelay" oninput = "sliderValueChanged(this.value,'viewtestDelay')"><span>10.0</span><input type = "number" step = "0.1" value = "1.0" class = "slider_value" id = "viewtestDelay" oninput = "sliderValueChanged(this.value, 'testDelay')"><span class = "slider_unit">日</span></div></div><div><div class = "param-title">感度</div><div class = "slider"><span>0.0</span><input type = "range" step = "0.1" value = "70.0" min = "0.0" max = "100.0" id = "testSensitivity" oninput = "sliderValueChanged(this.value,'viewtestSensitivity')"><span>100.0</span><input type = "number" step = "0.1" value = "70.0" class = "slider_value" id = "viewtestSensitivity" oninput = "sliderValueChanged(this.value, 'testSensitivity')"><span class = "slider_unit">%</span></div></div><div><div class = "param-title">特異度</div><div class = "slider"><span>0.0</span><input type = "range" step = "0.1" value = "99.8" min = "0.0" max = "100.0" id = "testSpecificity" oninput = "sliderValueChanged(this.value,'viewtestSpecificity')"><span>100.0</span><input type = "number" step = "0.1" value = "99.8" class = "slider_value" id = "viewtestSpecificity" oninput = "sliderValueChanged(this.value, 'testSpecificity')"><span class = "slider_unit">%</span></div></div><div><div class = "param-title">疑症状検査対象者</div><div class = "slider"><span>0.0</span><input type = "range" step = "0.1" value = "1.0" min = "0.0" max = "100.0" id = "subjectAsymptomatic" oninput = "sliderValueChanged(this.value,'viewsubjectAsymptomatic')"><span>100.0</span><input type = "number" step = "0.1" value = "1.0" class = "slider_value" id = "viewsubjectAsymptomatic" oninput = "sliderValueChanged(this.value, 'subjectAsymptomatic')"><span class = "slider_unit">%</span></div></div><div><div class = "param-title">有症状検査対象者</div><div class = "slider"><span>0.0</span><input type = "range" step = "0.1" value = "99.0" min = "0.0" max = "100.0" id = "subjectSymptomatic" oninput = "sliderValueChanged(this.value,'viewsubjectSymptomatic')"><span>100.0</span><input type = "number" step = "0.1" value = "99.0" class = "slider_value" id = "viewsubjectSymptomatic" oninput = "sliderValueChanged(this.value, 'subjectSymptomatic')"><span class = "slider_unit">%</span></div></div>
-    </div>
- </div>
+</style>
+
+<div class="panel">
+    <div style="display:none;" id="tests-form-plist">testProcess,testInterval,testDelay,testSensitivity,testSpecificity,subjectAsymptomatic,subjectSymptomatic</div>
+    <form name="tests-form">
+        <input type="checkbox" id="tests" style="display:none;" checked="checked" title="折りたたみ">
+        <label for="tests">
+            検査
+            <button type="button" class='panel-cmd' onclick="resetForm('tests-form');">既定値に戻す</button>
+            <button type="button" class='panel-cmd' onclick="saveForm('tests-form');">現在の設定を保存</button>
+            <label for = "tests-file" class='panel-cmd'>ファイルから読み込む</label>
+            <input type="file" id="tests-file" style="display:none;" accept=".json, application/json" onchange="loadForm(this, 'tests-form');">
+        </label>
+        <div id="tests-content">
+            <div><div class = "param-title">処理期間</div><div class = "slider"><span>0.0</span><input type = "range" step = "0.1" value = "1.0" min = "0.0" max = "10.0" info = "検査から判明まで" id = "testProcess" oninput = "sliderValueChanged(this,'viewtestProcess')"><span>10.0</span><input type = "number" step = "0.1" value = "1.0" class = "slider_value" id = "viewtestProcess" oninput = "sliderValueChanged(this, 'testProcess')"><span class = "slider_unit">日</span></div></div><div><div class = "param-title">検査間隔</div><div class = "slider"><span>0.0</span><input type = "range" step = "0.1" value = "2.0" min = "0.0" max = "10.0" info = "次の検査まで" id = "testInterval" oninput = "sliderValueChanged(this,'viewtestInterval')"><span>10.0</span><input type = "number" step = "0.1" value = "2.0" class = "slider_value" id = "viewtestInterval" oninput = "sliderValueChanged(this, 'testInterval')"><span class = "slider_unit">日</span></div></div><div><div class = "param-title">検査の遅れ</div><div class = "slider"><span>0.0</span><input type = "range" step = "0.1" value = "1.0" min = "0.0" max = "10.0" id = "testDelay" oninput = "sliderValueChanged(this,'viewtestDelay')"><span>10.0</span><input type = "number" step = "0.1" value = "1.0" class = "slider_value" id = "viewtestDelay" oninput = "sliderValueChanged(this, 'testDelay')"><span class = "slider_unit">日</span></div></div><div><div class = "param-title">感度</div><div class = "slider"><span>0.0</span><input type = "range" step = "0.1" value = "70.0" min = "0.0" max = "100.0" id = "testSensitivity" oninput = "sliderValueChanged(this,'viewtestSensitivity')"><span>100.0</span><input type = "number" step = "0.1" value = "70.0" class = "slider_value" id = "viewtestSensitivity" oninput = "sliderValueChanged(this, 'testSensitivity')"><span class = "slider_unit">%</span></div></div><div><div class = "param-title">特異度</div><div class = "slider"><span>0.0</span><input type = "range" step = "0.1" value = "99.8" min = "0.0" max = "100.0" id = "testSpecificity" oninput = "sliderValueChanged(this,'viewtestSpecificity')"><span>100.0</span><input type = "number" step = "0.1" value = "99.8" class = "slider_value" id = "viewtestSpecificity" oninput = "sliderValueChanged(this, 'testSpecificity')"><span class = "slider_unit">%</span></div></div><div><div class = "param-title">疑症状検査対象者</div><div class = "slider"><span>0.0</span><input type = "range" step = "0.1" value = "1.0" min = "0.0" max = "100.0" id = "subjectAsymptomatic" oninput = "sliderValueChanged(this,'viewsubjectAsymptomatic')"><span>100.0</span><input type = "number" step = "0.1" value = "1.0" class = "slider_value" id = "viewsubjectAsymptomatic" oninput = "sliderValueChanged(this, 'subjectAsymptomatic')"><span class = "slider_unit">%</span></div></div><div><div class = "param-title">有症状検査対象者</div><div class = "slider"><span>0.0</span><input type = "range" step = "0.1" value = "99.0" min = "0.0" max = "100.0" id = "subjectSymptomatic" oninput = "sliderValueChanged(this,'viewsubjectSymptomatic')"><span>100.0</span><input type = "number" step = "0.1" value = "99.0" class = "slider_value" id = "viewsubjectSymptomatic" oninput = "sliderValueChanged(this, 'subjectSymptomatic')"><span class = "slider_unit">%</span></div></div>
+        </div>
+    </form>
+</div>
 
 
 
-</div></form></div><div class = "tab_content" id = "scenario_content"><div id="scenario-flowChart">
+</div><div class = "tab_content" id = "scenario_content"><div id="scenario-flowChart">
     <div class="panel">Start</div>
     <div class="circleplus"></div>
 </div>
 </div><div class = "tab_content" id = "statistics_content">statistics</div></div>
             </main>
         </div>
+            <form style = "display:none;" name = "property"><input type = "hidden" id = "param_formnames" value = "world-form,move-form,mechanism-form,measure-form,tests-form"></form>
     </body>
 </html>

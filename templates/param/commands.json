@@ -4,8 +4,8 @@
         "cmd_list_cls": "cmd-btn-list"
     },
     "listener": {
-        "save": "saveParams('param-form');",
-        "reset": "resetParams();"
+        "save": "saveAll();",
+        "reset": "resetAll();"
     },
     "buttons": {
         "save": "現在の設定を保存",
@@ -30,7 +30,7 @@
                 "class": "command-button",
                 "style": "display:none;",
                 "accept": ".json, application/json",
-                "onchange": "loadFile(this, target='parampanel');"
+                "onchange": "loadAll(this);"
             }
         }
     }
