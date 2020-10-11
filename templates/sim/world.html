@@ -1,0 +1,36 @@
+<style>
+.world {
+    border-radius: 5px;
+    border: solid 1px var(--hover-color);
+}
+.result-view {
+    width: 100%;
+    height: 300px;
+    background-color: pink;
+}
+.world-name {
+    background-color: var(--hover-color);
+    color: white;
+    padding: calc(var(--padding)/2);
+}
+.world-content {
+    padding: var(--margin);
+    padding-top: calc(var(--margin)/2);
+}
+.world-status {
+    display: inline-block;
+}
+</style>
+<div class="world" id="world-template">
+    <div class="world-name">
+        NAME
+        <span style="display:inline-block;float:right;">___シミュレーションを追加</span>
+        <span style="display:inline-block;float:right;">待機中のシミュレーション数: 数</span>
+    </div>
+    <div class="world-content">
+    WORLDCMD
+    <div class="result-view">
+        実行結果
+    </div>
+    </div>
+</div>

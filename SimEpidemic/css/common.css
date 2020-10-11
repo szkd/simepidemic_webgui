@@ -94,15 +94,17 @@ input[type="number"] {
 .panel-cmd {
     display: inline-block;
     background-color: rgba(0,0,0,0);
-    color: white;
+    color: snow;
     border-radius: 5px;
-    border: solid 1px pink;
+    border: solid 1px snow;
     margin-right: var(--margin);
     padding: 2px 10px;
     float: right;
 }
 .panel-cmd:hover {
-    color: pink;
+    color: white;
+    background-color: var(--hover-color);
+    border-color: var(--hover-color);
 }
 
 /* *****************************
@@ -164,7 +166,9 @@ input[type="number"] {
     justify-content: flex-start;
 
 }
-
+.invisible {
+    display:none;
+}
 /* *****************************
  * tab
  * *****************************/

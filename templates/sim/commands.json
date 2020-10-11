@@ -1,6 +1,5 @@
 {
     "info": {
-        "formname": "sim-settings",
         "cmd_cls": "command-button",
         "cmd_list_cls": "cmd-btn-list"
     },
@@ -8,12 +7,34 @@
         "start": "startSim('sim-settings');",
         "stop": "stopSim('sim-settings');",
         "step": "stepSim();",
-        "reset": "resetSim();"
+        "reset": "resetSim();",
+        "delete": ""
     },
     "buttons": {
-        "start": "開始",
-        "stop": "停止",
+        "start": "▶︎",
+        "stop": "Ⅱ",
         "step": "1ステップ進む",
         "reset": "初期化する"
+    },
+    "other": {
+        "share": {
+            "tag": "button",
+            "content": "共有",
+            "end": "True",
+            "attr": {
+                "class": "share command-button",
+                "onclick": "getWorldId();",
+                "name": "share"
+            }
+        },
+        "deletebutton": {
+            "content": "世界を消去",
+            "attr": {
+                "class": "command-button invisible",
+                "name": "delete"
+            },
+            "tag": "button",
+            "end": "True"
+        }
     }
 }

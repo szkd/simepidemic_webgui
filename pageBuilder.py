@@ -111,22 +111,11 @@ def simSettings():
     return html_str
 
 def sim():
-    commands = buttonGroupFromJson(SIM_DIR + "view.json")
-    commands += buttonGroupFromJson(SIM_DIR + "commands.json")
-    worldpanel = ""
     worldtype = json2dict(CONTENTS_DIR + "paramtype.json")
-    worldpanel += paramPanels(worldtype, SIM_DIR + "world.json", COMMON_DIR + "panel.html")
-    """
-    info = json2dict(CONTENTS_DIR + "sim_settings.json")
-    info = info['info']
-    html = pdnel(info['formname'], "設定", simSettings(),\
-            icon_normal = settings_icon,\
-            icon_checked = settings_icon)
-
-    html += commands
-    return html
-    """
-    return commands + worldpanel
+    worldpanel = paramPanels(worldtype, SIM_DIR + "world.json", COMMON_DIR + "panel.html")
+    cmd = buttonGroupFromJson(SIM_DIR + "world_commands.json")
+    w_cmd = buttonGroupFromJson(SIM_DIR + "commands.json")
+    return worldpanel + cmd + rephrase(SIM_DIR + "world.html", {"NAME": "Default", "WORLDCMD": w_cmd})
 
 """ ********************************* """
 """ ********************************* """
