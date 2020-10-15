@@ -7,14 +7,13 @@
         "start": "startSim('sim-settings');",
         "stop": "stopSim('sim-settings');",
         "step": "stepSim();",
-        "reset": "resetSim();",
-        "delete": ""
+        "reset": "resetSim();"
     },
     "buttons": {
         "start": "▶︎",
         "stop": "Ⅱ",
         "step": "1ステップ進む",
-        "reset": "初期化する"
+        "reset": "初期化"
     },
     "other": {
         "share": {
@@ -22,19 +21,10 @@
             "content": "共有",
             "end": "True",
             "attr": {
-                "class": "share command-button",
-                "onclick": "getWorldId();",
+                "class": "command-button share",
+                "onclick": "shareDefaultId();",
                 "name": "share"
             }
-        },
-        "deletebutton": {
-            "content": "世界を消去",
-            "attr": {
-                "class": "command-button invisible",
-                "name": "delete"
-            },
-            "tag": "button",
-            "end": "True"
         }
     }
 }

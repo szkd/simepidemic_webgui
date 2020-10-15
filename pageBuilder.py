@@ -115,7 +115,7 @@ def sim():
     worldpanel = paramPanels(worldtype, SIM_DIR + "world.json", COMMON_DIR + "panel.html")
     cmd = buttonGroupFromJson(SIM_DIR + "world_commands.json")
     w_cmd = buttonGroupFromJson(SIM_DIR + "commands.json")
-    return worldpanel + cmd + rephrase(SIM_DIR + "world.html", {"NAME": "Default", "WORLDCMD": w_cmd})
+    return worldpanel + rephrase(SIM_DIR + "world.html", {"NAME": "Default", "WORLDCMD": w_cmd}, 1000) + cmd
 
 """ ********************************* """
 """ ********************************* """

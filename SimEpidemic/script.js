@@ -139,17 +139,10 @@ function callbackFunc(func, arg_arr) {
     }
 }
 
-function serverGetReq(callback, _req, responseType ='', options = []) {
-    var req = new XMLHttpRequest();
-    if (options.length != 0) {
-        for (idx = 0; idx < options.length; idx++) {
-            if(idx == 0) _req += '?';
-            if(idx > 0) _req += '&';
-            _req += options[idx][name] + '=' + options[idx][value];
-        }
-    }
+function serverGetReq(callback, _req, responseType ='') {
+    let req = new XMLHttpRequest();
+    req.timeout = 3000;
     req.open("GET", _req);
-    req.timeout = 2000;
     if(responseType != ''){
         req.responseType = responseType;
     }
@@ -304,43 +297,72 @@ function stopSim(formname) {
     for(let elem of form.elements) {
         elem.disabled = false;
     }
-    serverGetReq(function(val) {console.log('stop: ' + val);},'stop', options=[{"me":getBrowserId()}]);
+    serverGetReq(function(val) {
+        console.log('stop: ' + val);
+    },'stop?me=' + getBrowserId());
 }
 
 function stepSim() {
     let result = confirm("実行中の世界を1ステップ進めますか?");
     if(!result) return;
-    serverGetReq(
-        function(val) {console.log('step: ' + val);},
-        'step',
-        options=[{"me":getBrowserId()}]);
+    serverGetReq(function(val) {
+        console.log('step: ' + val);
+    },'step?me=' + getBrowserId());
 }
 
 function resetSim() {
     let result = confirm("実行中の世界を初期化しますか?");
     if(!result) return;
-    serverGetReq(
-        function(val) {console.log('reset: ' + val);},
-        'reset',
-        options = [{"me":getBrowserId()}]
-    );
+    serverGetReq(function(val) {
+        console.log('reset: ' + val);
+    },'reset?me=' + getBrowserId());
 }
 
 function loadSimScenario(json_dict) {
     alert("loadSimScenario");
 }
 
-function worldList() {
-    alert("未実装");
-}
-
-function getWorldId(id = '') {
+function shareDefaultId(id = '') {
     if (id != '') {
-        alert("既定世界のIDは "+ id + " です．");
+        alert("既定世界のIDは "+ id + " です．\nこのIDを共有された人はあなたの既定世界のシミュレーションを閲覧できます．");
         return;
     }
-    serverGetReq(getWorldId, "/getWorldID");
+    serverGetReq(shareDefaultId, "getWorldID");
 }
+
+function addNewWorld(id='') {
+    if(id != '') {
+        let w_name = window.prompt("名前を入力してください", "new world");
+        let world_template = document.getElementById("world-template");
+        let new_world = world_template.cloneNode(true);
+        new_world.querySelector("button[name='share']").remove();
+
+        new_world.id = id;
+        new_world.querySelector('.world-name-container label').innerText = w_name;
+        let add_sim_btn = new_world.querySelector('.world-name-container button');
+        add_sim_btn.setAttribute('onclick', "addSimulation('" + id + "');");
+
+        let close_btn = add_sim_btn.cloneNode();
+        close_btn.setAttribute('onclick', "closeWorld('" + id + "');");
+        close_btn.innerText = "削除";
+
+        add_sim_btn.parentNode.append(close_btn);
+
+        let w_list = document.getElementById("world-list");
+        w_list.append(new_world);
+        return;
+    }
+    serverGetReq(addNewWorld, "newWorld");
+}
+
+function closeWorld(worldID){
+    document.getElementById(worldID).remove();
+    serverGetReq(function (val) {
+        console.log("close world: " + worldID);
+        console.log("close: " + val);
+    }, "closeWorld?world="+worldID);
+}
+
 
 /********************************************
  * 共通
