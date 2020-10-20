@@ -14,10 +14,11 @@
     color: white;
     padding: var(--padding);
 }
-.world-name-container .command-button {
+.world-name-container button {
+    color: var(--hover-color);
     float: right;
 }
-.world-name-container .command-button:hover {
+.world-name-container button:hover {
     background-color: var(--my-blue);
     color: white;
 }
@@ -28,23 +29,37 @@
 .world-status {
     display: inline-block;
 }
+.command-button, .world-name-container button {
+    background-color: white;
+    color: var(--hover-color);
+    border-radius: 5px;
+    border: solid 1px var(--hover-color);
+    margin-right: var(--margin);
+    padding: 2px 10px;
+}
 </style>
 <script>
-function addSimulation(worldID) {
-    alert("シミュレーションの追加（未実装）");
+function showElement(id) {
+    let elem = document.getElementById(id);
+    elem.style.display = "block";
 }
 </script>
 <div id="world-list">
-<div class="world" id = "world-template">
-    <div class="world-name-container">
-        <label>NAME</label>
-        <button class="command-button" onclick="addSimulation('default');">＋シミュレーションを追加</button>
+    <div class="world" id = "world-template">
+        <div class="world-name-container">
+            <label>Default</label>
+
+        </div>
+        <div class="world-content">
+            WORLDCMD
+            <div style="position: relative;">
+                <div id="sim-default" class="setting-panel">
+                    SETTINGS
+                </div>
+            </div>
+            <div class="result-view">
+                実行結果
+            </div>
+        </div>
     </div>
-    <div class="world-content">
-    WORLDCMD
-    <div class="result-view">
-        実行結果
-    </div>
-    </div>
-</div>
 </div>

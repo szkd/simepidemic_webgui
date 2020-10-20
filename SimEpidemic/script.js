@@ -7,7 +7,7 @@ window.onload = function(){
 
 function setBrowserId(storage = localStorage, key = 'simepidemicBrowerID') {
     try {
-        var id = new Date();
+        let id = new Date();
         id = id.getTime();
         storage.setItem(key, id);
     } catch(e) {
@@ -67,7 +67,6 @@ function loadForm(file_input, formname) {
     });
 }
 
-
 function saveJsonFile(val) {
     let writejson = JSON.stringify(val);
     let blob = new Blob([writejson], {type: 'application/json'});
@@ -113,11 +112,9 @@ function loadParams(val_dict, formname) {
 }
 
 function form2paramDict(formname) {
-    console.log(formname);
     let p_list = document.getElementById(formname + "-plist").innerText.split(',');
-    console.log(p_list);
     let d = getHiddenValues();
-    var p_dict = {};
+    let p_dict = {};
     let form = document.forms[formname];
     for(let p of p_list) {
         if(d[p].split(',').length > 1) {
@@ -155,9 +152,9 @@ function serverGetReq(callback, _req, responseType ='') {
     req.send();
 }
 
-function serverPostReq(callback, action, type, senddata, name='') {
-    var fd = new FormData();
-    var req = new XMLHttpRequest();
+function serverPostReq(callback, action, type, senddata, options={}) {
+    let fd = new FormData();
+    let req = new XMLHttpRequest();
     req.eroor = function () {
         alert("ERROR:POST " + action);
     }
@@ -166,19 +163,28 @@ function serverPostReq(callback, action, type, senddata, name='') {
     }
     req.open('POST', action);
 
+    function appendDict(dict) {
+        for(let key in dict) {
+            fd.append(key, dict[key]);
+        }
+        return fd;
+    }
+    if(options != {}) {
+        appendDict(options);
+    }
     if (type == 'form') {
-        req.send(new FormData(senddata));
+        fd.append(senddata);
+        req.send(fd);
         return;
     }
     if (type == 'dict') {
-        for(var key in senddata) {
-            fd.append(key, senddata[key]);
-        }
+        appendDict(senddata);
         req.send(fd);
         return;
     }
     if(type=="file" && senddata.files.length > 0) {
-        fd.append(name, senddata.files[0]);
+        const file = senddata.files[0];
+        fd.append(file.name, file);
         req.send(fd);
         return;
     }
@@ -206,7 +212,7 @@ function resetAll() {
 }
 function saveAll() {
     let para_forms = getParaForms();
-    var p_dict = {};
+    let p_dict = {};
     for (let f of para_forms) {
         let d = form2paramDict(f);
         p_dict = {...p_dict, ...d};
@@ -236,92 +242,86 @@ function enfocedDownload(url) {
 /********************************************
  * シミュレーション制御
  ***************************************** */
-function settings(type, radio) {
-    if(type =='param-file') {
-        loadFile(radio, 'sim-setting-param');
-        serverPostReq(function(val) {console.log('POST/setParams[file]: ' + val);},
-            'setParams', 'file', radio);
-        return;
-    }
-    if(type =='scenario-file') {
-        loadFile(radio, 'sim-setting-scenario');
-        serverPostReq(function(val) {console.log('POST/setScenario[file]: ' + val);},
-            'setScenario', 'file', radio);
-        return;
-    }
-    if(type == 'param' && radio.value == 'tab') {
-        let p_dict = form2paramDict('param-form');
-        serverPostReq(function(val) {console.log('POST/setParams[tab]: ' + val);},
-            'setParams', 'dict', p_dict);
-        return;
-    }
-    if(type == 'scenario' && radio.value == 'disabled') {
-        serverPostReq(function(val) {console.log('POST/setScenario[disabled]: ' + val);},
-            'setScenario', 'dict', [{'scenario': JSON.parse('[]')}]);
-        return;
-    }
-    if(type == 'scenario' && radio.value == 'tab') {
-        alert('シナリオのタブは使えません');
-        return;
-    }
-}
 
-function startSim(formname = '', world="default") {
-    let result = confirm("現在の設定でシミュレーションを行います．シミュレーションの実行中は停止させるまで設定を変更することができません．よろしいですか？");
-    if(!result) return;
-    let form = document.forms[formname];
-    if(form[sim_settings['sections']['param']['name']].value == 'file') {
-        var file = document.getElementById(sim_settings['sections']['param']['file-id']);
+function setParams(formname, world) {
+    const form = document.forms[formname];
+    const option = {'world': world, 'me': getBrowserId()};
+    if(form['sim-param'].value == 'file') {
+        const file = form['sim-param-file'];
         if(!(file.files.length > 0)) {
+            console.log("Error: setParams-NoFile");
+            console.log(file);
             alert("パラメータのファイルを選択してください．");
             return;
         }
+        serverPostReq(function(val) {
+            console.log('POST/setParams[file]: ' + val);
+        }, 'setParams', 'file', file, option);
+        return;
+    } else {
+        const prop = getHiddenValues('property');
+        const forms = prop.param_formnames.split(",");
+        let p_dict = {}
+        for (let p_form of forms) {
+             p_dict = {...p_dict, ...form2paramDict(p_form)};
+        }
+        serverPostReq(function(val) {
+            console.log('POST/setParams[tab]: ' + val);
+        }, 'setParams', 'dict', p_dict, option);
+        return;
     }
-    if(form[sim_settings['sections']['scenario']['name']].value == 'file') {
-        var file = document.getElementById(sim_settings['sections']['scenario']['file-id']);
+    return;
+}
+
+function setScenario(formname, world) {
+    const form = document.forms[formname];
+    const option = {'world': world, 'me': getBrowserId()};
+    if(form['sim-scenario'].value == 'file') {
+        let file = form['sim-scenario-file'];
         if(!(file.files.length > 0)) {
             alert("シナリオのファイルを選択してください．");
             return;
         }
+        serverPostReq(function(val) {
+            console.log('POST/setScenario[file]: ' + val);
+        }, 'setScenario', 'file', file, option);
+        return;
+    } else if(form['sim-scenario'].value == 'disabled') {
+        console.log("シナリオなし");
     }
-    for(let elem of form.elements) {
-        elem.disabled = true;
-    }
-    serverGetReq(function(val) {console.log("start: " + val);}, 'start');
+    return;
 }
 
-function stopSim(formname) {
-    let result = confirm("実行中の世界を停止しますか?");
-    if(!result) return;
-    let form = document.forms[formname];
-    for(let elem of form.elements) {
-        elem.disabled = false;
+function applySettings(formname, world) {
+    setParams(formname, world);
+    setScenario(formname, world);
+}
+function worldControl(command, world) {
+    if(world == 'default') {
+        world += '&me=' + getBrowserId();
     }
-    serverGetReq(function(val) {
-        console.log('stop: ' + val);
-    },'stop?me=' + getBrowserId());
+    const req = command + '?world=' + world;
+    serverGetReq(function (val) {
+        console.log('GET:' + command + ' id: ' + world + ' result:' + val);
+    }, req);
+}
+function startSim(world) {
+    worldControl('start', world);
 }
 
-function stepSim() {
-    let result = confirm("実行中の世界を1ステップ進めますか?");
-    if(!result) return;
-    serverGetReq(function(val) {
-        console.log('step: ' + val);
-    },'step?me=' + getBrowserId());
+function stopSim(world) {
+    worldControl('stop', world);
 }
 
-function resetSim() {
+function stepSim(world) {
+    worldControl('step', world);
+}
+
+function resetSim(world) {
     let result = confirm("実行中の世界を初期化しますか?");
     if(!result) return;
-    serverGetReq(function(val) {
-        console.log('reset: ' + val);
-    },'reset?me=' + getBrowserId());
+    worldControl('reset', world);
 }
-
-function loadSimScenario(json_dict) {
-    alert("loadSimScenario");
-}
-
 function shareDefaultId(id = '') {
     if (id != '') {
         alert("既定世界のIDは "+ id + " です．\nこのIDを共有された人はあなたの既定世界のシミュレーションを閲覧できます．");
@@ -335,19 +335,17 @@ function addNewWorld(id='') {
         let w_name = window.prompt("名前を入力してください", "new world");
         let world_template = document.getElementById("world-template");
         let new_world = world_template.cloneNode(true);
+        new_world.id = id;
         new_world.querySelector("button[name='share']").remove();
 
-        new_world.id = id;
         new_world.querySelector('.world-name-container label').innerText = w_name;
-        let add_sim_btn = new_world.querySelector('.world-name-container button');
-        add_sim_btn.setAttribute('onclick', "addSimulation('" + id + "');");
+        let delete_sim_btn = document.createElement("button");
+        delete_sim_btn.title =  w_name + 'を削除';
+        delete_sim_btn.innerHTML = trash_box;
+        delete_sim_btn.setAttribute("onclick", "closeWorld('" + id + "');");
+        new_world.querySelector('.world-name-container').appendChild(delete_sim_btn);
 
-        let close_btn = add_sim_btn.cloneNode();
-        close_btn.setAttribute('onclick', "closeWorld('" + id + "');");
-        close_btn.innerText = "削除";
-
-        add_sim_btn.parentNode.append(close_btn);
-
+        new_world.innerHTML = new_world.innerHTML.toString().replace(/default/gi, id);
         let w_list = document.getElementById("world-list");
         w_list.append(new_world);
         return;
@@ -355,40 +353,42 @@ function addNewWorld(id='') {
     serverGetReq(addNewWorld, "newWorld");
 }
 
-function closeWorld(worldID){
-    document.getElementById(worldID).remove();
+function closeWorld(world){
+    const DO = confirm("この世界を消去します．");
+    if(!DO) return;
+    document.getElementById(world).remove();
     serverGetReq(function (val) {
-        console.log("close world: " + worldID);
+        console.log("close world: " + world);
         console.log("close: " + val);
-    }, "closeWorld?world="+worldID);
+    }, "closeWorld?world=" + world);
+}
+
+function sharedWorld() {
+    alert("この機能は未実装です");
 }
 
 
 /********************************************
  * 共通
  ***************************************** */
-function loadFile(file_input, target='') {
-    if (target == "sim-setting-param" || target == "sim-setting-scenario") {
-        readJsonFile(file_input, function (result, file) {
-            var filename = file_input.previousSibling;
-            filename.innerText = "";
-            filename.innerText = " " + file.name;
-        });
-    }
-    else if (target == "sim-setting-scenario") {
-        readJsonFile(file_input, loadSimScenario);
-    }
-    else {
-        alert("何しにきたん？");
-    }
+function loadFile(file_input) {
+    readJsonFile(file_input, function (result, file) {
+        let filename = file_input.previousSibling;
+        filename.innerText = "";
+        filename.innerText = " " + file.name;
+    });
 }
 
 function dict2formdata(dict) {
-    var fd = new FormData();
+    let fd = new FormData();
     for (key in dict) {
         fd.append(key, dict[key]);
     }
     return fd;
+}
+
+function hideElement(id) {
+    document.getElementById(id).style.display = 'none';
 }
 //json
 function readJsonFile(file_input, callback) {
@@ -404,3 +404,5 @@ function readJsonFile(file_input, callback) {
     reader.readAsText(file);
 }
 
+//image
+const trash_box = '<svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-trash-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">  <path fill-rule="evenodd" d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5a.5.5 0 0 0-1 0v7a.5.5 0 0 0 1 0v-7z"/></svg>';

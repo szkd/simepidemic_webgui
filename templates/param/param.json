@@ -1,4 +1,8 @@
 {
+    "world": {
+        "name": "世界",
+        "param-list": "populationSize,worldSize,mesh,stepsPerDay,initialInfected"
+    },
     "move": {
         "name": "移動",
         "param-list":"mass,friction,avoidance"

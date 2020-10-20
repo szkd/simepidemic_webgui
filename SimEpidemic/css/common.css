@@ -41,14 +41,27 @@ body {
     padding: var(--margin) 0;
 }
 
+svg {
+    vertical-align: text-bottom;
+    fill: currentColor;
+}
+
 header {
-    height: var(--header-height);
+    color: white;
     margin: 0;
-    margin-bottom: var(--margin);
-    background-color: white;
-    border-radius: 10px;
-    padding: 0 var(--padding);
+    padding: 0;
     position: relative;
+}
+
+header a, header a:visited {
+    display:inline-block;
+    color: white;
+    text-decoration: none;
+    border-bottom: solid 1px pink;
+}
+
+header a:hover {
+    color: pink;
 }
 
 main {
@@ -74,12 +87,7 @@ input {
 input[type="number"] {
     width: 70px;
 }
-.inline-block {
-    display: inline-block;
-}
-.margin-right {
-    margin-right: var(--margin);
-}
+
 /* *****************************
  * panel
  * *****************************/
@@ -91,6 +99,7 @@ input[type="number"] {
     margin-bottom: var(--margin);
     width: 100%;
 }
+
 .panel-cmd {
     display: inline-block;
     background-color: rgba(0,0,0,0);
@@ -101,6 +110,7 @@ input[type="number"] {
     padding: 2px 10px;
     float: right;
 }
+
 .panel-cmd:hover {
     color: white;
     background-color: var(--hover-color);
@@ -147,14 +157,6 @@ input[type="number"] {
 /* *****************************
  * command list
  * *****************************/
-.command-button {
-    background-color: white;
-    color: var(--hover-color);
-    border-radius: 5px;
-    border: solid 1px var(--hover-color);
-    margin-right: var(--margin);
-    padding: 2px 10px;
-}
 .command-button:hover {
     background-color: var(--hover-color);
     color: white;
@@ -204,7 +206,7 @@ input[type="number"] {
     background-color:white;
     padding: var(--padding);
     padding-top: 0;
-    height: calc(100vh - var(--margin)*3 - var(--header-height) - var(--tab-height));
+    height: calc(99vh - var(--margin)*5 - var(--tab-height));
     overflow: scroll;
 }
 /* *****************************
@@ -217,20 +219,54 @@ header h1 {
     display: none;
 }
 
-#info-panel {
+.close-btn, .apply-btn {
+    border-radius: 0;
+    border: none;
+    color: white;
+    margin: 0;
+    background-color: rgba(0,0,0,0);
+    position: relative;
+    top: 0px;
+    border:solid 0.5px white;
+}
+
+.close-btn {
+    font-size: 1.5em;
+    padding: 0 10px;
+}
+
+.apply-btn {
+    padding: 3px, 10px;
+}
+
+.close-btn:hover, .apply-btn:hover {
+    background-color: var(--my-blue);
+}
+
+#info-panel, .setting-panel {
     display: none;
     font-size: small;
-    float: right;
     color: white;
-    width: max(250px, 50%);
     background-color: var(--my-black);
     border-radius: 10px;
-    padding: var(--padding);
+    padding: var(--padding);;
+    padding-top: calc(var(--padding)/2);
     font-weight: lighter;
+    border: solid 0.5px snow;
+    position: absolute;
 }
-#info-panel a {
-    color: inherit;
+
+.setting-panel {
+    top: -20px;
+    left: 10px;
 }
+
+#info-panel {
+    top: 3em;
+    left: 250px;
+    width: max(350px, 46vw);
+}
+
 #info-panel a::after{
     margin-left: 0.5em;
     content: url("data:image/svg+xml;charset=UTF-9,<svg width='1em' height='1em' viewBox='0 0 16 16' class='bi bi-box-arrow-up-right' fill='white' xmlns='http://www.w3.org/2000/svg'>  <path fill-rule='evenodd' d='M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z'/>  <path fill-rule='evenodd' d='M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z'/></svg>");
@@ -241,14 +277,10 @@ header h1 {
 
 #info-checkbox:checked ~ #info-panel {
     display: block;
-    margin: 0;
-    position: absolute;
-    top: 40px;
-    left: 250px;
-    width: max(210px, 42vw);
 }
+
 #info-checkbox:checked ~ .info:after {
-    color: rgb(0, 123, 255);
+    color: skyblue;
     font-size: small;
     content: "閉じる";
 }
@@ -259,10 +291,13 @@ header h1 {
 /* *****************************
  * images
  * *****************************/
+.info {
+    width: 100px;
+}
 .info:before {
-    margin-left: var(--margin);
-    margin-right: 2px;
-    content: url("data:image/svg+xml;charset=UTF-8,<svg width='1em' height='1em' viewBox='0 0 16 16' class='bi bi-info-circle-fill' fill='rgb(0,123,255)' xmlns='http://www.w3.org/2000/svg'>  <path fill-rule='evenodd' d='M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412l-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM8 5.5a1 1 0 1 0 0-2 1 1 0 0 0 0 2z'/></svg>");
+    margin-left: calc(var(--margin)/2);
+    margin-right: var(--margin);
+    content: url("data:image/svg+xml;charset=UTF-8,<svg width='1em' height='1em' viewBox='0 0 16 16' class='bi bi-info-circle-fill' fill='skyblue' xmlns='http://www.w3.org/2000/svg'>  <path fill-rule='evenodd' d='M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412l-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM8 5.5a1 1 0 1 0 0-2 1 1 0 0 0 0 2z'/></svg>");
 }
 
 .file-plus::before {

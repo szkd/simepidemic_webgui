@@ -1,6 +1,2 @@
 {
-    "world": {
-        "name": "世界",
-        "param-list": "populationSize,worldSize,mesh,stepsPerDay,initialInfected"
-    }
 }

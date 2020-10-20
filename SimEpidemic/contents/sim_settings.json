@@ -1,5 +1,6 @@
 {
     "info": {
+        "description": "シミュレーションの進行中に設定を変更した場合，進行中のシミュレーションに反映されます．<br>ただし，「世界」に分類されるパラメータが変更された場合は次に実行するシミュレーションとして予約されます．",
         "formname": "sim-settings",
         "title_cls": "param-title",
         "option-container": "display: flex; flex-wrap: wrap; margin-top: 10px; justify-content: flex-start",
@@ -12,22 +13,6 @@
         }
     },
     "sections": {
-        "world": {
-            "label": "世界",
-            "type": "radio",
-            "name": "sim-world",
-            "options": [
-                {
-                    "label": "既定世界",
-                    "value": "default",
-                    "checked": "checked"
-                },
-                {
-                    "value": "new",
-                    "label": "新規生成"
-                }
-            ]
-        },
         "param": {
             "label": "パラメータ",
             "type": "radio",
@@ -37,13 +22,12 @@
                 {
                     "checked": "checked",
                     "label": "パラメータタブの値を使用",
-                    "value": "tab",
-                    "onchange": "settings('param', this);"
+                    "value": "tab"
                 },
                 {
                     "label": "ファイルから読み込む",
                     "file": "JSONファイルを選択",
-                    "file-onchange": "settings('param-file', this);",
+                    "file-onchange": "loadFile(this);",
                     "value": "file"
                 }
             ]
@@ -57,19 +41,13 @@
                 {
                     "label": "使用しない",
                     "checked": "checked",
-                    "value": "disabled",
-                    "onchange": "settings('scenario', this);"
-                },
-                {
-                    "label": "シナリオタブの値を使用",
-                    "value": "tab",
-                    "onchange": "settings('scenario', this);"
+                    "value": "disabled"
                 },
                 {
                     "label": "ファイルから読み込む",
                     "value": "file",
                     "file": "JSONファイルを選択",
-                    "file-onchange": "settings('scenario-file', this);"
+                    "file-onchange": "loadFile(this);"
                 }
             ]
         }

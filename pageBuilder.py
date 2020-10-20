@@ -2,6 +2,7 @@
 import os
 import shutil
 from collections import OrderedDict
+
 """ ********************************
 const
 ******************************** """
@@ -12,10 +13,6 @@ SIM_DIR = TEMPLATE_DIR + "sim/"
 PARAM_DIR = TEMPLATE_DIR + "param/"
 COMMON_DIR = TEMPLATE_DIR + "common/"
 SCENARIO_DIR = TEMPLATE_DIR + "scenario/"
-""" ******************************
-image
-********************************* """
-settings_icon = "url(\"data:image/svg+xml;charset=UTF-8,<svg width='1em' height='1em' viewBox='0 0 16 16' class='bi bi-gear-fill' fill='white' xmlns='http://www.w3.org/2000/svg'>  <path fill-rule='evenodd' d='M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 0 0-5.86 2.929 2.929 0 0 0 0 5.858z'/></svg>\");"
 
 """ ********************************
 common
@@ -30,7 +27,7 @@ def addProperty(name, value):
 def convertMyProperty():
     html_str = ""
     for name in my_property:
-        html_str += tag("input", attr={"type" : "hidden", "id": name, "value": my_property[name]}, end=False)
+        html_str += tag("input", attr={"type" : "hidden", "name": name, "value": my_property[name]}, end=False)
     return html_str
 
 def buttonGroupFromJson(jsonfile):
@@ -68,6 +65,7 @@ def settingSection(sec, key, label_cl, opt_cl, opt_style, file_attr):
     for opt in options:
         idx += 1
         opt_id = key + str(idx)
+        opt_html = ""
 
         attr = {\
             "type": sec['type'],\
@@ -81,20 +79,34 @@ def settingSection(sec, key, label_cl, opt_cl, opt_style, file_attr):
             attr['onchange'] = opt['onchange']
         if 'checked' in opt:
             attr['checked'] = "checked"
-        result += tag("input", attr=attr,end = False)
-        result += tag("label", opt['label'], {"for": opt_id, "style": "margin-right:  8px;"})
+        opt_html += tag("input", attr=attr,end = False)
+        opt_html += tag("label", opt['label'], {"for": opt_id, "style": "margin-right:  8px;"})
         if 'file' in opt:
             file_attr['id'] = sec['file-id']
             file_attr['onchange'] = opt['file-onchange']
-            result += tag("label", '', {"for": sec['file-id'], "class": "file-plus"})
-            result += tag("input", attr=file_attr, end=False)
+            opt_html += tag("label", '', {"for": sec['file-id'], "class": "file-plus"})
+            opt_html += tag("input", attr=file_attr, end=False)
+        result += tag("div", opt_html)
     return result
 
-def simSettings():
+def simSettings(id):
     template  = json2dict(CONTENTS_DIR + "sim_settings.json")
     sections = template['sections']
     info = template['info']
-    html_str = ""
+    html_str = tag("button", "×",\
+            {
+                "type": "button",
+                "class": "close-btn",
+                "onclick": "hideElement('sim-"+id+"');"
+                })
+    html_str += tag("div", info['description'], {"style": "margin-top: 15px; margin-bottom:20px;"});
+    html_str += tag("button", "適用",\
+            {
+                "type": "button",
+                "class": "apply-btn",
+                "name": "apply-settings",
+                "onclick": "applySettings('sim-" + id +'-form' + "', '" + id + "');"
+            });
     for sec in sections:
         html_str += settingSection(\
                 sections[sec],\
@@ -104,18 +116,21 @@ def simSettings():
                 info['option-style'],\
                 info['file-attr']\
                 )
+
     html_str = tag("form",\
         tag("div", html_str,\
         {"class": info['option-container']}),\
-        {'name': info['formname']})
+        {'name': 'sim-'+id+'-form'})
     return html_str
 
 def sim():
-    worldtype = json2dict(CONTENTS_DIR + "paramtype.json")
-    worldpanel = paramPanels(worldtype, SIM_DIR + "world.json", COMMON_DIR + "panel.html")
     cmd = buttonGroupFromJson(SIM_DIR + "world_commands.json")
     w_cmd = buttonGroupFromJson(SIM_DIR + "commands.json")
-    return worldpanel + rephrase(SIM_DIR + "world.html", {"NAME": "Default", "WORLDCMD": w_cmd}, 1000) + cmd
+    return rephrase(SIM_DIR + "world.html",\
+            {
+                "WORLDCMD": w_cmd,\
+                "SETTINGS": simSettings('default'),\
+            }, 1000) + cmd
 
 """ ********************************* """
 """ ********************************* """
