@@ -1,4 +1,4 @@
-<style>
+﻿<style>
 .world {
     border-radius: 5px;
     border: solid 1px var(--hover-color);
@@ -7,7 +7,8 @@
 .result-view {
     width: 100%;
     height: 300px;
-    background-color: var(--back-color);
+    background-color: white;
+    border: solid 1px var(--my-black);
 }
 .world-name-container {
     background-color: var(--hover-color);
@@ -43,12 +44,12 @@ function showElement(id) {
     let elem = document.getElementById(id);
     elem.style.display = "block";
 }
+
 </script>
 <div id="world-list">
     <div class="world" id = "world-template">
         <div class="world-name-container">
             <label>Default</label>
-
         </div>
         <div class="world-content">
             WORLDCMD
@@ -57,8 +58,8 @@ function showElement(id) {
                     SETTINGS
                 </div>
             </div>
-            <div class="result-view">
-                実行結果
+            <div class="result-view" id='default-canvas'>
+                準備中
             </div>
         </div>
     </div>
