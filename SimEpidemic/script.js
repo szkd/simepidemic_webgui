@@ -1,4 +1,4 @@
-const SEVERNAME = "http://.intlab.soka.ac.jp/";
+const SEVERNAME = "";
 window.onload = function(){
     if (typeof getBrowserId() === 'undefined') {
         setBrowserId();
