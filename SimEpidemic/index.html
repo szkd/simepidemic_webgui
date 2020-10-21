@@ -10,17 +10,15 @@
         <h1>個体ベース感染シミュレーション</h1>
         <input type = 'checkbox' id = 'info-checkbox'>
         <label for = 'info-checkbox' class = 'info' title = 'これは何?'></label>
+        <span class = 'info-item'>
+            ver.1.5</span>
+        <span class = 'info-item'>
+            2020年04月26日</span>
+        <span class = 'info-item'>
+            <a href = "http://www.intlab.soka.ac.jp/~unemi/index-j.html">畝見 達夫</a>
+        </span>
         <div id='info-panel'>
             簡単かつ適当にいうと、個人の行動と感染・発症・隔離・回復・死亡の確率的状態遷移モデルを実装して、ランダム配置された人口3000人の１人が感染者という状況から1日５ステップの想定で状態が変わっていきます。<br>パラメータとして、未感染者と感染者が接近したときの感染確率、潜伏期間の分布、症状の進行速度の分布、回復開始時期の分布、人口、領域の広さ、など、さらに対策としての無症状感染者および発症者の隔離の割合と隔離までの日数、社会距離の推奨距離と協力率、移動制限の度合いを設定できます。<br>って感じですが、詳しいモデルの式などは、ちょっと（かなりかもしれないけど）お待ちください。<a href = "http://www.intlab.soka.ac.jp/~unemi/SimEpidemic1/info/index-ja.html" target = "_blank">プロジェクトのウェブサイトはこちらです</a>
-        </div>
-        <div>
-            <span class = 'info-item'>
-                ver.1.5</span>
-            <span class = 'info-item'>
-                更新日: 2020年04月26日</span>
-            <span class = 'info-item'>
-                <a href = "http://www.intlab.soka.ac.jp/~unemi/index-j.html">畝見 達夫</a>
-            </span>
         </div>
     </div>
 </header>
@@ -45,25 +43,82 @@
     color: var(--my-black);
     border: none;
 }
-</style><input type = "radio" id = "param" name = "page_tab" style = "display:none;"><label for = "param" class = "tab_item">パラメータ</label><style>#scenario_content{display: none;}
-#scenario:checked ~ #scenario_content{
+</style><input type = "radio" id = "param" name = "page_tab" style = "display:none;"><label for = "param" class = "tab_item">パラメータ</label><style>#development_content{display: none;}
+#development:checked ~ #development_content{
     display: block;
 }
-#scenario:checked + .tab_item{
+#development:checked + .tab_item{
     background-color:white;
     color: var(--my-black);
     border: none;
 }
-</style><input type = "radio" id = "scenario" name = "page_tab" style = "display:none;"><label for = "scenario" class = "tab_item">シナリオ</label><style>#statistics_content{display: none;}
-#statistics:checked ~ #statistics_content{
-    display: block;
+</style><input type = "radio" id = "development" name = "page_tab" style = "display:none;"><label for = "development" class = "tab_item">development</label><div class = "tab_content" id = "sim_content">﻿<style>
+.world {
+    border-radius: 5px;
+    border: solid 1px var(--hover-color);
+    margin-bottom: var(--margin);
 }
-#statistics:checked + .tab_item{
-    background-color:white;
-    color: var(--my-black);
-    border: none;
+.result-view {
+    width: 100%;
+    height: 300px;
+    background-color: white;
+    border: solid 1px var(--my-black);
 }
-</style><input type = "radio" id = "statistics" name = "page_tab" style = "display:none;"><label for = "statistics" class = "tab_item">統計情報</label><div class = "tab_content" id = "sim_content"><style>
+.world-name-container {
+    background-color: var(--hover-color);
+    color: white;
+    padding: var(--padding);
+}
+.world-name-container button {
+    color: var(--hover-color);
+    float: right;
+}
+.world-name-container button:hover {
+    background-color: var(--my-blue);
+    color: white;
+}
+.world-content {
+    padding: var(--margin);
+    padding-top: calc(var(--margin)/2);
+}
+.world-status {
+    display: inline-block;
+}
+.command-button, .world-name-container button {
+    background-color: white;
+    color: var(--hover-color);
+    border-radius: 5px;
+    border: solid 1px var(--hover-color);
+    margin-right: var(--margin);
+    padding: 2px 10px;
+}
+</style>
+<script>
+function showElement(id) {
+    let elem = document.getElementById(id);
+    elem.style.display = "block";
+}
+
+</script>
+<div id="world-list">
+    <div class="world" id = "world-template">
+        <div class="world-name-container">
+            <label>Default</label>
+        </div>
+        <div class="world-content">
+            <div class = "cmd-btn-list"><button class = "command-button" onclick = "showElement('sim-default');"><svg width='1em' height='1em' viewBox='0 0 16 16' class='bi bi-gear-fill' fill='currentColor' xmlns='http://www.w3.org/2000/svg'>  <path fill-rule='evenodd' d='M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 0 0-5.86 2.929 2.929 0 0 0 0 5.858z'/></svg></button><button class = "command-button" onclick = "startSim('default');">▶︎</button><button class = "command-button" onclick = "stopSim('default');">Ⅱ</button><button class = "command-button" onclick = "stepSim('default');">1ステップ進む</button><button class = "command-button" onclick = "resetSim('default');">初期化</button><button class = "command-button" onclick = "shareDefaultId();" name = "share"><svg width='1em' height='1em' viewBox='0 0 16 16' class='bi bi-share' fill='currentColor' xmlns='http://www.w3.org/2000/svg'><path fill-rule='evenodd' d='M13.5 1a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5zm-8.5 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm11 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z'/></svg> 共有</button></div>
+            <div style="position: relative;">
+                <div id="sim-default" class="setting-panel">
+                    <form name = "sim-default-form"><div class = "display: flex; flex-wrap: wrap; margin-top: 10px; justify-content: flex-start"><button type = "button" class = "close-btn" onclick = "hideElement('sim-default');">×</button><div style = "margin-top: 15px; margin-bottom:20px;">シミュレーションの進行中に設定を変更した場合，進行中のシミュレーションに反映されます．<br>ただし，「世界」に分類されるパラメータが変更された場合は次に実行するシミュレーションとして予約されます．</div><button type = "button" class = "apply-btn" name = "apply-settings" onclick = "applySettings('sim-default-form', 'default');">適用</button><div class = "param-title">パラメータ</div><div><input type = "radio" name = "sim-param" id = "param0" class = "inline-block margin-right" style = "flex-grow: 1;" value = "tab" checked = "checked"><label for = "param0" style = "margin-right:  8px;">パラメータタブの値を使用</label></div><div><input type = "radio" name = "sim-param" id = "param1" class = "inline-block margin-right" style = "flex-grow: 1;" value = "file"><label for = "param1" style = "margin-right:  8px;">ファイルから読み込む</label><label for = "sim-param-file" class = "file-plus"></label><input type = "file" accept = ".json, application/json" style = "display:none;" id = "sim-param-file" onchange = "loadFile(this);"></div><div class = "param-title">シナリオ</div><div><input type = "radio" name = "sim-scenario" id = "scenario0" class = "inline-block margin-right" style = "flex-grow: 1;" value = "disabled" checked = "checked"><label for = "scenario0" style = "margin-right:  8px;">使用しない</label></div><div><input type = "radio" name = "sim-scenario" id = "scenario1" class = "inline-block margin-right" style = "flex-grow: 1;" value = "file"><label for = "scenario1" style = "margin-right:  8px;">ファイルから読み込む</label><label for = "sim-scenario-file" class = "file-plus"></label><input type = "file" accept = ".json, application/json" style = "display:none;" id = "sim-scenario-file" onchange = "loadFile(this);"></div></div></form>
+                </div>
+            </div>
+            <div class="result-view" id='default-canvas'>
+                準備中
+            </div>
+        </div>
+    </div>
+</div>
+<div class = "cmd-btn-list"><button class = "command-button" onclick = "addNewWorld();">シミュレーション世界を追加</button><button class = "command-button" onclick = "sharedWorld();">共有されたシミュレーション世界を表示</button></div></div><div class = "tab_content" id = "param_content"><div class = "cmd-btn-list"><button class = "command-button" onclick = "saveAll();">現在の設定を保存</button><button class = "command-button" onclick = "resetAll();">既定値に戻す</button><label for = "param-title-button" class = "command-button">ファイルから読み込む</label><input type = "file" id = "param-title-button" class = "command-button" style = "display:none;" accept = ".json, application/json" onchange = "loadAll(this);"></input></div><style>
 label[for="world"]::before {
     content: "▶︎";
     vertical-align: middle;
@@ -100,56 +155,6 @@ label[for="world"]::before {
 
 
 <style>
-.world {
-    border-radius: 5px;
-    border: solid 1px var(--hover-color);
-    margin-bottom: var(--margin);
-}
-.result-view {
-    width: 100%;
-    height: 300px;
-    background-color: var(--back-color);
-}
-.world-name-container {
-    background-color: var(--hover-color);
-    color: white;
-    padding: var(--padding);
-}
-.world-name-container .command-button {
-    float: right;
-}
-.world-name-container .command-button:hover {
-    background-color: var(--my-blue);
-    color: white;
-}
-.world-content {
-    padding: var(--margin);
-    padding-top: calc(var(--margin)/2);
-}
-.world-status {
-    display: inline-block;
-}
-</style>
-<script>
-function addSimulation(worldID) {
-    alert("シミュレーションの追加（未実装）");
-}
-</script>
-<div id="world-list">
-<div class="world" id = "world-template">
-    <div class="world-name-container">
-        <label>Default</label>
-        <button class="command-button" onclick="addSimulation('default');">＋シミュレーションを追加</button>
-    </div>
-    <div class="world-content">
-    <div class = "cmd-btn-list"><button class = "command-button" onclick = "startSim('sim-settings');">▶︎</button><button class = "command-button" onclick = "stopSim('sim-settings');">Ⅱ</button><button class = "command-button" onclick = "stepSim();">1ステップ進む</button><button class = "command-button" onclick = "resetSim();">初期化</button><button class = "command-button share" onclick = "shareDefaultId();" name = "share">共有</button></div>
-    <div class="result-view">
-        実行結果
-    </div>
-    </div>
-</div>
-</div>
-<div class = "cmd-btn-list"><button class = "command-button" onclick = "addNewWorld();">シミュレーション世界を追加</button><button class = "command-button" onclick = "sharedWorld();">共有されたシミュレーション世界を表示</button></div></div><div class = "tab_content" id = "param_content"><div class = "cmd-btn-list"><button class = "command-button" onclick = "saveAll();">現在の設定を保存</button><button class = "command-button" onclick = "resetAll();">既定値に戻す</button><label for = "param-title-button" class = "command-button">ファイルから読み込む</label><input type = "file" id = "param-title-button" class = "command-button" style = "display:none;" accept = ".json, application/json" onchange = "loadAll(this);"></input></div><style>
 label[for="move"]::before {
     content: "▶︎";
     vertical-align: middle;
@@ -477,13 +482,75 @@ label[for="tests"]::before {
 
 
 
-</div><div class = "tab_content" id = "scenario_content"><div id="scenario-flowChart">
-    <div class="panel">Start</div>
-    <div class="circleplus"></div>
-</div>
-</div><div class = "tab_content" id = "statistics_content">statistics</div></div>
+</div><div class = "tab_content" id = "development_content"><h2 style="background-color: var(--hover-color);color:white; padding: 2px 15px;">世界</h2>
+<table style="margin:0 auto; width: 100%;">
+    <tr>
+        <th style="background-color: black; color: white;">メソッド</th>
+        <th style="background-color: black; color: white;">アクション</th>
+        <th style="background-color: black; color: white;">オプション</th>
+        <th style="background-color: black; color: white;">対応状況</th>
+        <th style="background-color: black; color: white;">詳細</th>
+    </tr>
+    <tr style = "background-color: var(--hover-color); color: white;"><td>GET</td><td>getWorldID</td><td colspan = "3">既定値の世界IDの取得</td></tr><tr><td></td><td></td><td>me</td><td>Done</td><td></td></tr><tr style = "background-color: var(--hover-color); color: white;"><td>GET</td><td>newWorld</td><td colspan = "3">世界の生成</td></tr><tr style = "background-color: var(--hover-color); color: white;"><td>GET</td><td>closeWorld</td><td colspan = "3">世界の消去</td></tr><tr><td></td><td></td><td>world</td><td>Done</td><td>消去する世界のID</td></tr>
+</table>
+<h2 style="background-color: var(--hover-color);color:white; padding: 2px 15px;">パラメータ</h2>
+<table style="margin:0 auto; width: 100%;">
+    <tr>
+        <th style="background-color: black; color: white;">メソッド</th>
+        <th style="background-color: black; color: white;">アクション</th>
+        <th style="background-color: black; color: white;">オプション</th>
+        <th style="background-color: black; color: white;">対応状況</th>
+        <th style="background-color: black; color: white;">詳細</th>
+    </tr>
+    <tr style = "background-color: var(--hover-color); color: white;"><td>GET</td><td>getParams</td><td colspan = "3">パラメータ値の取得</td></tr><tr><td></td><td></td><td>save</td><td>対応予定未定</td><td>ファイル名．このオプションが添えられた場合は，ダウンロード形式で応答する。</td></tr><tr><td></td><td></td><td>format</td><td>対応予定未定</td><td>整数，JSONフォーマットオプション</td></tr><tr><td></td><td></td><td>world</td><td>対応予定未定</td><td></td></tr><tr><td></td><td></td><td>me</td><td>対応予定未定</td><td></td></tr><tr style = "background-color: var(--hover-color); color: white;"><td>POST</td><td>setParams</td><td colspan = "3">パラメータ値の設定</td></tr><tr><td></td><td></td><td>name</td><td>Done</td><td>対象の世界ID, 'default'であれば既定値世界を表す</td></tr><tr><td></td><td></td><td>file</td><td>Done</td><td></td></tr><tr style = "background-color: var(--hover-color); color: white;"><td>POST</td><td>setParams</td><td colspan = "3">パラメータ値の設定</td></tr><tr><td></td><td></td><td>パラメーター名</td><td></td><td>パラメータ値を指定</td></tr><tr><td></td><td></td><td>world</td><td>Done</td><td>世界ID</td></tr>
+</table>
+<h2 style="background-color: var(--hover-color);color:white; padding: 2px 15px;">実行の制御</h2>
+<table style="margin:0 auto; width: 100%;">
+    <tr>
+        <th style="background-color: black; color: white;">メソッド</th>
+        <th style="background-color: black; color: white;">アクション</th>
+        <th style="background-color: black; color: white;">オプション</th>
+        <th style="background-color: black; color: white;">対応状況</th>
+        <th style="background-color: black; color: white;">詳細</th>
+    </tr>
+    <tr style = "background-color: var(--hover-color); color: white;"><td>GET</td><td>start</td><td colspan = "3">開始</td></tr><tr><td></td><td></td><td>stopAt</td><td>未実装対応予定</td><td>整数，シミュレーションを止める日数</td></tr><tr><td></td><td></td><td>maxSPS</td><td>未実装,結果描写後に対応予定</td><td></td></tr><tr><td></td><td></td><td>world</td><td>Done</td><td>世界ID</td></tr><tr><td></td><td></td><td>me</td><td>Done</td><td></td></tr><tr style = "background-color: var(--hover-color); color: white;"><td>GET</td><td>stop</td><td colspan = "3">停止</td></tr><tr><td></td><td></td><td>world</td><td>Done</td><td></td></tr><tr><td></td><td></td><td>me</td><td>Done</td><td></td></tr><tr style = "background-color: var(--hover-color); color: white;"><td>GET</td><td>step</td><td colspan = "3">一歩</td></tr><tr><td></td><td></td><td>world</td><td>Done</td><td></td></tr><tr><td></td><td></td><td>me</td><td>Done</td><td></td></tr><tr style = "background-color: var(--hover-color); color: white;"><td>GET</td><td>reset</td><td colspan = "3">初期化</td></tr><tr><td></td><td></td><td>world</td><td>Done</td><td></td></tr><tr><td></td><td></td><td>me</td><td>Done</td><td></td></tr>
+</table>
+<h2 style="background-color: var(--hover-color);color:white; padding: 2px 15px;">実行の監視と結果の取得(未対応）</h2>
+<table style="margin:0 auto; width: 100%;">
+    <tr>
+        <th style="background-color: black; color: white;">メソッド</th>
+        <th style="background-color: black; color: white;">アクション</th>
+        <th style="background-color: black; color: white;">オプション</th>
+        <th style="background-color: black; color: white;">対応状況</th>
+        <th style="background-color: black; color: white;">詳細</th>
+    </tr>
+    <tr style = "background-color: var(--hover-color); color: white;"><td>GET</td><td>getIndexes</td><td colspan = "3">数値情報の取得</td></tr><tr><td></td><td></td><td>names</td><td></td><td>names=[統計指標名1, 統計指標名2,...]または統計指標名=1</td></tr><tr><td></td><td></td><td>fromStep</td><td></td><td>可能であれば指定のステップから現在までの履歴を取得</td></tr><tr><td></td><td></td><td>fromDay</td><td></td><td>fromStepよりも優先される,可能であれば指定の日から現在までの履歴を取得</td></tr><tr><td></td><td></td><td>window</td><td></td><td>日毎の値の移動平均の窓幅の日周．</td></tr><tr><td></td><td></td><td>format</td><td></td><td>JSONフォーマット</td></tr><tr><td></td><td></td><td>world</td><td></td><td></td></tr><tr><td></td><td></td><td>me</td><td></td><td></td></tr><tr style = "background-color: var(--hover-color); color: white;"><td>GET</td><td>getDistribution</td><td colspan = "3">分布情報の取得</td></tr><tr><td></td><td></td><td>names</td><td></td><td>names=[統計指標名1, 統計指標名2,...]または統計指標名=1</td></tr><tr><td></td><td></td><td>format</td><td></td><td>JSONフォーマット</td></tr><tr><td></td><td></td><td>world</td><td></td><td></td></tr><tr><td></td><td></td><td>me</td><td></td><td></td></tr><tr style = "background-color: var(--hover-color); color: white;"><td>GET</td><td>getPopulation</td><td colspan = "3">個体の健康状態の取得</td></tr><tr style = "background-color: var(--hover-color); color: white;"><td>GET</td><td>getPopulation2(ver. 1.2</td><td colspan = "3">個体の健康状態の取得</td></tr>
+</table>
+<h2 style="background-color: var(--hover-color);color:white; padding: 2px 15px;">シナリオ</h2>
+<table style="margin:0 auto; width: 100%;">
+    <tr>
+        <th style="background-color: black; color: white;">メソッド</th>
+        <th style="background-color: black; color: white;">アクション</th>
+        <th style="background-color: black; color: white;">オプション</th>
+        <th style="background-color: black; color: white;">対応状況</th>
+        <th style="background-color: black; color: white;">詳細</th>
+    </tr>
+    <tr style = "background-color: var(--hover-color); color: white;"><td>POST</td><td>setScenario</td><td colspan = "3">シナリオの設定</td></tr><tr><td></td><td></td><td>scenario</td><td></td><td></td></tr><tr><td></td><td></td><td>world</td><td></td><td></td></tr><tr><td></td><td></td><td>me</td><td></td><td></td></tr>
+</table>
+<h2 style="background-color: var(--hover-color);color:white; padding: 2px 15px;">バッチジョブの投入,監視,結果の取得(対応予定未定)</h2>
+<table style="margin:0 auto; width: 100%;">
+    <tr>
+        <th style="background-color: black; color: white;">メソッド</th>
+        <th style="background-color: black; color: white;">アクション</th>
+        <th style="background-color: black; color: white;">オプション</th>
+        <th style="background-color: black; color: white;">対応状況</th>
+        <th style="background-color: black; color: white;">詳細</th>
+    </tr>
+    <tr style = "background-color: var(--hover-color); color: white;"><td>POST</td><td>submitJob</td><td colspan = "3">投入</td></tr><tr><td></td><td></td><td>job</td><td></td><td></td></tr><tr style = "background-color: var(--hover-color); color: white;"><td>GET</td><td>getJobQueueStatus</td><td colspan = "3">待ち行列の監視</td></tr><tr><td></td><td></td><td>job</td><td></td><td></td></tr><tr style = "background-color: var(--hover-color); color: white;"><td>GET</td><td>stopJob</td><td colspan = "3">ジョブの中断</td></tr><tr><td></td><td></td><td>job</td><td></td><td></td></tr><tr style = "background-color: var(--hover-color); color: white;"><td>GET</td><td>getJobResults</td><td colspan = "3">結果の取得</td></tr><tr><td></td><td></td><td>job</td><td></td><td></td></tr><tr><td></td><td></td><td>save</td><td></td><td>ファイル名</td></tr><tr><td></td><td></td><td>sep</td><td></td><td>欄区切り</td></tr><tr><td></td><td></td><td>nl</td><td></td><td>行区切り</td></tr>
+</table>
+</div></div>
             </main>
         </div>
-            <form style = "display:none;" name = "property"><input type = "hidden" id = "param_formnames" value = "world-form,move-form,mechanism-form,measure-form,tests-form"></form>
+            <form style = "display:none;" name = "property"><input type = "hidden" name = "param_formnames" value = "world-form,move-form,mechanism-form,measure-form,tests-form"></form>
     </body>
 </html>

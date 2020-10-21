@@ -6,7 +6,6 @@
     "param" : {
         "tabname": "パラメータ"
     },
-    },
     "development": {
         "tabname": "development"
     }
