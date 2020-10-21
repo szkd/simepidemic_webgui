@@ -13,6 +13,7 @@ SIM_DIR = TEMPLATE_DIR + "sim/"
 PARAM_DIR = TEMPLATE_DIR + "param/"
 COMMON_DIR = TEMPLATE_DIR + "common/"
 SCENARIO_DIR = TEMPLATE_DIR + "scenario/"
+DEVELOP_DIR = TEMPLATE_DIR + "dev/"
 
 """ ********************************
 common
@@ -144,12 +145,34 @@ def param():
 """ ********************************* """
 """ ********************************* """
 def scenario():
-    return rephrase(SCENARIO_DIR + "scenario.html", {});
+    commands = buttonGroupFromJson(SCENARIO_DIR + "commands.json");
+    return rephrase(SCENARIO_DIR + "scenario.html", {"COMMANDS": commands});
 """ ********************************* """
 """ ********************************* """
 def statistics():
     return 'statistics'
 
+""" ********************************* """
+""" ********************************* """
+def development():
+    protocol = json2dict(DEVELOP_DIR + "protocol.json")
+    html_str = ""
+    for section in protocol:
+        rows = ""
+        for p in protocol[section]['protocol']:
+            row = tag("td", p['method'], {})\
+                    + tag("td", p['action'], {})\
+                    + tag("td", p['description'] if 'description' in p else "", {"colspan": str(3)})
+            rows += tag("tr", row, {"style": "background-color: var(--hover-color); color: white;"})
+            if 'names' in p:
+                for opt in p['names']:
+                    row = tag("td", "") + tag("td", "")
+                    row += tag("td", opt['opt'])
+                    row += tag("td", opt['dev'] if 'dev' in opt else '')
+                    row += tag("td", opt['hint'] if 'hint' in opt else '')
+                    rows += tag("tr", row)
+        html_str += rephrase(DEVELOP_DIR + "table.html", {"CATEGORY": protocol[section]['category'], "TABLEROW": rows})
+    return html_str
 """ ****************************** 
 page function
 ********************************* """
@@ -158,6 +181,7 @@ PAGE_FUNC["sim"] = sim
 PAGE_FUNC["param"] = param
 PAGE_FUNC["scenario"] = scenario
 PAGE_FUNC["statistics"] = statistics
+PAGE_FUNC["development"] = development
 """ ****************************** 
 partial
 ********************************* """

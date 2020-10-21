@@ -1,0 +1,416 @@
+{
+    "world": {
+        "category": "世界",
+        "protocol": [
+            {
+                "description": "既定値の世界IDの取得",
+                "method": "GET",
+                "action": "getWorldID",
+                "names": [
+                    {
+                        "opt": "me",
+                        "dev": "Done"
+                    }
+                ],
+                "result": "text/plain"
+            },
+            {
+                "description": "世界の生成",
+                "method": "GET",
+                "action": "newWorld",
+                "result": "text/plain",
+                "dev": "Done"
+            },
+            {
+                "description": "世界の消去",
+                "method": "GET",
+                "action": "closeWorld",
+                "names": [
+                    {
+                        "opt": "world",
+                        "type": "string",
+                        "required": "required",
+                        "hint": "消去する世界のID",
+                        "dev": "Done"
+                    }
+                ]
+            }
+        ]
+    },
+    "param": {
+        "category": "パラメータ",
+        "protocol": [
+            {
+                "description": "パラメータ値の取得",
+                "method": "GET",
+                "action": "getParams",
+                "target": "saveResult",
+                "result": "iframe",
+                "names": [
+                    {
+                        "opt": "save",
+                        "dev": "対応予定未定",
+                        "type": "text",
+                        "hint": "ファイル名．このオプションが添えられた場合は，ダウンロード形式で応答する。"
+                    },
+                    {
+                        "opt": "format",
+                        "dev": "対応予定未定",
+                        "type": "number",
+                        "hint": "整数，JSONフォーマットオプション"
+                    },
+                    {
+                        "opt": "world",
+                        "dev": "対応予定未定",
+                        "type": "text"
+                    },
+                    {
+                        "opt": "me",
+                        "dev": "対応予定未定",
+                        "type": "text"
+                    }
+                ]
+            },
+            {
+                "description": "パラメータ値の設定",
+                "method": "POST",
+                "action": "setParams",
+                "type": "form-data",
+                "target": "loadParamResult",
+                "result": "iframe",
+                "names": [
+                    {
+                        "opt": "name",
+                        "type": "text",
+                        "dev": "Done",
+                        "required": "required",
+                        "hint": "対象の世界ID, 'default'であれば既定値世界を表す"
+                    },
+                    {
+                        "opt": "file",
+                        "dev": "Done"
+                    }
+                ]
+            },
+            {
+                "description": "パラメータ値の設定",
+                "method": "POST",
+                "action": "setParams",
+                "type": "form-data",
+                "target": "loadParamResult",
+                "result": "iframe",
+                "names": [
+                    {
+                        "opt": "パラメーター名",
+                        "type": "text",
+                        "required": "required",
+                        "hint": "パラメータ値を指定"
+                    },
+                    {
+                        "opt": "world",
+                        "type": "text",
+                        "hint": "世界ID",
+                        "dev": "Done"
+                    }
+                ]
+            }
+        ]
+    },
+    "control": {
+        "category": "実行の制御",
+        "protocol": [
+            {
+                "description": "開始",
+                "method": "GET",
+                "action": "start",
+                "target": "result",
+                "result": "iframe",
+                "names": [
+                    {
+                        "opt": "stopAt",
+                        "dev": "未実装対応予定",
+                        "hint": "整数，シミュレーションを止める日数",
+                        "type": "number",
+                        "step": "1"
+                    },
+                    {
+                        "opt": "maxSPS",
+                        "dev": "未実装,結果描写後に対応予定",
+                        "type": "number"
+                    },
+                    {
+                        "opt": "world",
+                        "type": "text",
+                        "hint": "世界ID",
+                        "dev": "Done"
+                    },
+                    {
+                        "opt": "me",
+                        "type": "text",
+                        "dev": "Done"
+                    }
+                ]
+            },
+            {
+                "description": "停止",
+                "method": "GET",
+                "action": "stop",
+                "target": "result",
+                "result": "iframe",
+                "names": [
+                    {
+                        "opt": "world",
+                        "type": "text",
+                        "dev": "Done"
+                    },
+                    {
+                        "opt": "me",
+                        "type": "text",
+                        "dev": "Done"
+                    }
+                ]
+            },
+            {
+                "description": "一歩",
+                "method": "GET",
+                "action": "step",
+                "target": "result",
+                "result": "iframe",
+                "names": [
+                    {
+                        "opt": "world",
+                        "type": "text",
+                        "dev": "Done"
+                    },
+                    {
+                        "opt": "me",
+                        "type": "text",
+                        "dev": "Done"
+                    }
+                ]
+            },
+            {
+                "description": "初期化",
+                "method": "GET",
+                "action": "reset",
+                "target": "result",
+                "result": "iframe",
+                "names": [
+                    {
+                        "opt": "world",
+                        "type": "text",
+                        "dev": "Done"
+                    },
+                    {
+                        "opt": "me",
+                        "type": "text",
+                        "dev": "Done"
+                    }
+                ]
+            }
+        ]
+    },
+    "result": {
+        "category": "実行の監視と結果の取得(未対応）",
+            "protocol": [
+                {
+                    "description": "数値情報の取得",
+                    "method": "GET",
+                    "action": "getIndexes",
+                    "target": "currentIndexes",
+                    "result": "iframe",
+                    "names": [
+                        {
+                            "opt": "names",
+                            "hint": "names=[統計指標名1, 統計指標名2,...]または統計指標名=1",
+                            "type": "text",
+                            "required": "required"
+                        },
+                        {
+                            "opt": "fromStep",
+                            "type": "number",
+                            "hint": "可能であれば指定のステップから現在までの履歴を取得"
+                        },
+                        {
+                            "opt": "fromDay",
+                            "type": "number",
+                            "hint": "fromStepよりも優先される,可能であれば指定の日から現在までの履歴を取得"
+                        },
+                        {
+                            "opt": "window",
+                            "type": "number",
+                            "hint": "日毎の値の移動平均の窓幅の日周．"
+                        },
+                        {
+                            "opt": "format",
+                            "type": "number",
+                            "hint": "JSONフォーマット"
+                        },
+                        {
+                            "opt": "world",
+                            "type": "text"
+                        },
+                        {
+                            "opt": "me",
+                            "type": "text"
+                        }
+                    ]
+                },
+                {
+                    "description": "分布情報の取得",
+                    "method": "GET",
+                    "action": "getDistribution",
+                    "target": "distribution",
+                    "result": "iframe",
+                    "names": [
+                        {
+                            "opt": "names",
+                            "hint": "names=[統計指標名1, 統計指標名2,...]または統計指標名=1",
+                            "type": "text",
+                            "required": "required"
+                        },
+                        {
+                            "opt": "format",
+                            "type": "number",
+                            "hint": "JSONフォーマット"
+                        },
+                        {
+                            "opt": "world",
+                            "type": "text"
+                        },
+                        {
+                            "opt": "me",
+                            "type": "text"
+                        }
+                    ]
+                },
+                {
+                    "description": "個体の健康状態の取得",
+                    "method": "GET",
+                    "action": "getPopulation",
+                    "target": "populationData",
+                    "result": "iframe",
+                    "name": [
+                        {
+                            "opt": "format",
+                            "type": "number",
+                            "hint": "JSONフォーマット"
+                        },
+                        {
+                            "opt": "world",
+                            "type": "text",
+                            "hint": "世界ID"
+                        }
+                    ]
+                },
+                {
+                    "description": "個体の健康状態の取得",
+                    "method": "GET",
+                    "action": "getPopulation2(ver. 1.2",
+                        "target": "populationData",
+                        "result": "iframe"
+                }
+            ]
+    },
+    "scenario": {
+        "category": "シナリオ",
+        "protocol": [
+            {
+                "description": "シナリオの設定",
+                "method": "POST",
+                "action": "setScenario",
+                "target": "loadScenario",
+                "result": "iframe",
+                "type": "form-data",
+                "hint": "JSONデータがから配列[]である場合はシナリオは消去される",
+                "names": [
+                    {
+                        "opt": "scenario",
+                        "type": "text",
+                        "required": "required"
+                    },
+                    {
+                        "opt": "world",
+                        "type": "text"
+                    },
+                    {
+                        "opt": "me",
+                        "type": "text"
+                    }
+                ]
+            }
+        ]
+    },
+    "job": {
+        "category": "バッチジョブの投入,監視,結果の取得(対応予定未定)",
+        "protocol": [
+            {
+                "description": "投入",
+                "method": "POST",
+                "action": "submitJob",
+                "result": "iframe",
+                "type": "text",
+                "hint": "指定されたジョブを投入し，ジョブIDをテキストで返す",
+                "names": [
+                    {
+                        "opt": "job",
+                        "type": "text",
+                        "required": "required"
+                    }
+                ]
+            },
+            {
+                "description": "待ち行列の監視",
+                "method": "GET",
+                "action": "getJobQueueStatus",
+                "result": "iframe",
+                "type": "text",
+                "hint": "jobIDの複数指定可能，省略可能",
+                "names": [
+                    {
+                        "opt": "job",
+                        "required": "required"
+                    }
+                ]
+            },
+            {
+                "description": "ジョブの中断",
+                "method": "GET",
+                "action": "stopJob",
+                "result": "iframe",
+                "type": "text",
+                "names": [
+                    {
+                        "opt": "job",
+                        "required": "required"
+                    }
+                ]
+            },
+            {
+                "description": "結果の取得",
+                "method": "GET",
+                "action": "getJobResults",
+                "result": "iframe",
+                "type": "text",
+                "names": [
+                    {
+                        "opt": "job",
+                        "required": "required"
+                    },
+                    {
+                        "opt": "save",
+                        "hint":"ファイル名"
+                    },
+                    {
+                        "opt": "sep",
+                        "hint": "欄区切り"
+                    },
+                    {
+                        "opt": "nl",
+                        "hint": "行区切り"
+                    }
+                ]
+            }
+        ]
+    }
+}
