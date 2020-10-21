@@ -1,3 +1,4 @@
+const SEVERNAME = "http://.intlab.soka.ac.jp/";
 window.onload = function(){
     if (typeof getBrowserId() === 'undefined') {
         setBrowserId();
@@ -137,6 +138,7 @@ function callbackFunc(func, arg_arr) {
 }
 
 function serverGetReq(callback, _req, responseType ='') {
+    _req = SEVERNAME + _req;
     let req = new XMLHttpRequest();
     req.timeout = 3000;
     req.open("GET", _req);
