@@ -157,13 +157,22 @@ def statistics():
 def development():
     protocol = json2dict(DEVELOP_DIR + "protocol.json")
     html_str = ""
+    th_style = "background-color: grey; color: white;"
+    th_row = ""
+    for elem in ["method", "action", "option", "stage", "hint"]:
+        th_row += tag("td", elem, {"style": th_style})
+    th_row = tag("tr", th_row);
     for section in protocol:
         rows = ""
         for p in protocol[section]['protocol']:
-            row = tag("td", p['method'], {})\
-                    + tag("td", p['action'], {})\
-                    + tag("td", p['description'] if 'description' in p else "", {"colspan": str(3)})
-            rows += tag("tr", row, {"style": "background-color: var(--hover-color); color: white;"})
+            description = p['description'] if 'description' in p else ""
+            rows += tag("tr",\
+                    tag("td", p['method']\
+                    + " [" + p['action']\
+                    + "] " + description,\
+                    {"style": "background-color: var(--hover-color); color: white;", "colspan": "5"})\
+                    )
+            rows += th_row
             if 'names' in p:
                 for opt in p['names']:
                     row = tag("td", "") + tag("td", "")

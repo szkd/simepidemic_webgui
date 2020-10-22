@@ -1,0 +1,14 @@
+{
+    "info": {
+        "cmd_cls": "command-button",
+        "cmd_list_cls": "cmd-btn-list"
+    },
+    "listener": {
+        "load": "loadScenario();",
+        "save": "saveScenario();"
+    },
+    "buttons": {
+        "load": "ファイルから読み込む",
+        "save": "ファイルに保存"
+    }
+}

@@ -6,7 +6,10 @@
     "param" : {
         "tabname": "パラメータ"
     },
+    "scenario": {
+        "tabname": "Scenario"
+    },
     "development": {
-        "tabname": "development"
+        "tabname": "Development"
     }
 }
