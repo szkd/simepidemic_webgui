@@ -157,6 +157,7 @@ def statistics():
 def development():
     protocol = json2dict(DEVELOP_DIR + "protocol.json")
     html_str = ""
+    html_str += job();
     th_style = "background-color: grey; color: white;"
     th_row = ""
     for elem in ["method", "action", "option", "stage", "hint"]:
@@ -181,6 +182,16 @@ def development():
                     row += tag("td", opt['hint'] if 'hint' in opt else '')
                     rows += tag("tr", row)
         html_str += rephrase(DEVELOP_DIR + "table.html", {"CATEGORY": protocol[section]['category'], "TABLEROW": rows})
+    return html_str
+""" ********************************* """
+""" ********************************* """
+def job():
+    html_str = ""
+    html_str += tag("button", "ジョブの待ち行列の監視",{\
+            "type": "button",\
+            "onclick": "getJobQueueStatus('job_queue');"
+            })
+    html_str += tag("span", '', {"id": "job_queue"})
     return html_str
 """ ****************************** 
 page function

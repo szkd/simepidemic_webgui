@@ -369,6 +369,16 @@ function sharedWorld() {
     alert("この機能は未実装です");
 }
 
+/********************************************
+ * ジョブ監視
+ ***************************************** */
+function getJobQueueStatus(result_view) {
+    serverGetReq(function (val) {
+        const result = document.getElementById(result_view);
+        result.innerText = val;
+    }, "getJobQueueStatus");
+}
+
 
 /********************************************
  * 共通

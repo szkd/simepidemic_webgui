@@ -9,7 +9,7 @@
                 "names": [
                     {
                         "opt": "me",
-                        "dev": "Done"
+                        "dev": "対応済"
                     }
                 ],
                 "result": "text/plain"
@@ -19,7 +19,7 @@
                 "method": "GET",
                 "action": "newWorld",
                 "result": "text/plain",
-                "dev": "Done"
+                "dev": "対応済"
             },
             {
                 "description": "世界の消去",
@@ -31,7 +31,7 @@
                         "type": "string",
                         "required": "required",
                         "hint": "消去する世界のID",
-                        "dev": "Done"
+                        "dev": "対応済"
                     }
                 ]
             }
@@ -82,13 +82,13 @@
                     {
                         "opt": "name",
                         "type": "text",
-                        "dev": "Done",
+                        "dev": "対応済",
                         "required": "required",
                         "hint": "対象の世界ID, 'default'であれば既定値世界を表す"
                     },
                     {
                         "opt": "file",
-                        "dev": "Done"
+                        "dev": "対応済"
                     }
                 ]
             },
@@ -110,7 +110,7 @@
                         "opt": "world",
                         "type": "text",
                         "hint": "世界ID",
-                        "dev": "Done"
+                        "dev": "対応済"
                     }
                 ]
             }
@@ -142,12 +142,12 @@
                         "opt": "world",
                         "type": "text",
                         "hint": "世界ID",
-                        "dev": "Done"
+                        "dev": "対応済"
                     },
                     {
                         "opt": "me",
                         "type": "text",
-                        "dev": "Done"
+                        "dev": "対応済"
                     }
                 ]
             },
@@ -161,12 +161,12 @@
                     {
                         "opt": "world",
                         "type": "text",
-                        "dev": "Done"
+                        "dev": "対応済"
                     },
                     {
                         "opt": "me",
                         "type": "text",
-                        "dev": "Done"
+                        "dev": "対応済"
                     }
                 ]
             },
@@ -180,12 +180,12 @@
                     {
                         "opt": "world",
                         "type": "text",
-                        "dev": "Done"
+                        "dev": "対応済"
                     },
                     {
                         "opt": "me",
                         "type": "text",
-                        "dev": "Done"
+                        "dev": "対応済"
                     }
                 ]
             },
@@ -199,12 +199,12 @@
                     {
                         "opt": "world",
                         "type": "text",
-                        "dev": "Done"
+                        "dev": "対応済"
                     },
                     {
                         "opt": "me",
                         "type": "text",
-                        "dev": "Done"
+                        "dev": "対応済"
                     }
                 ]
             }
@@ -355,7 +355,8 @@
                     {
                         "opt": "job",
                         "type": "text",
-                        "required": "required"
+                        "required": "required",
+                        "dev": "保留"
                     }
                 ]
             },
@@ -368,6 +369,25 @@
                 "hint": "jobIDの複数指定可能，省略可能",
                 "names": [
                     {
+                        "opt": "job"
+                    },
+                    {
+                        "opt": "省略",
+                        "dev": "対応した?",
+                        "hint": "ジョブを投入しないと意味なしだったのでこのタブの一番上にボタンを設置して結果を表示させた"
+                    }
+                ]
+            },
+            {
+                "description": "ジョブの監視",
+                "method": "GET",
+                "action": "getJobStatus",
+                "result": "iframe",
+                "type": "text",
+                "hint": "jobIDの複数指定可能，省略可能",
+                "names": [
+                    {
+                        "dev": "投入に対応するなら対応可能",
                         "opt": "job",
                         "required": "required"
                     }
@@ -381,6 +401,7 @@
                 "type": "text",
                 "names": [
                     {
+                        "dev": "投入に対応するなら対応可能",
                         "opt": "job",
                         "required": "required"
                     }
@@ -394,6 +415,7 @@
                 "type": "text",
                 "names": [
                     {
+                        "dev": "投入に対応するなら対応可能",
                         "opt": "job",
                         "required": "required"
                     },
@@ -403,11 +425,11 @@
                     },
                     {
                         "opt": "sep",
-                        "hint": "欄区切り"
+                        "hint": "欄区切り(省略可）, saveが指定された場合"
                     },
                     {
                         "opt": "nl",
-                        "hint": "行区切り"
+                        "hint": "行区切り(省略可）, saveが指定された場合"
                     }
                 ]
             }
