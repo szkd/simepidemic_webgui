@@ -157,6 +157,14 @@ input[type="number"] {
 /* *****************************
  * command list
  * *****************************/
+.command-button {
+    background-color: white;
+    color: var(--hover-color);
+    border-radius: 5px;
+    border: solid 1px var(--hover-color);
+    margin-right: var(--margin);
+    padding: 2px 10px;
+}
 .command-button:hover {
     background-color: var(--hover-color);
     color: white;
@@ -167,9 +175,6 @@ input[type="number"] {
     margin-bottom: calc(var(--margin)/2);
     justify-content: flex-start;
 
-}
-.invisible {
-    display:none;
 }
 /* *****************************
  * tab
@@ -287,6 +292,38 @@ header h1 {
 .info-item {
     display: inline-block;
     margin-right: 10px;
+}
+/* *****************************
+ * world
+ * *****************************/
+#world-list {
+}
+.world {
+    border-radius: 5px;
+    border: solid 1px var(--hover-color);
+    margin-bottom: var(--margin);
+}
+.result-view {
+}
+.world-name-container {
+    background-color: var(--hover-color);
+    color: white;
+    padding: var(--padding);
+}
+.world-name-container button {
+    color: var(--hover-color);
+    float: right;
+}
+.world-name-container button:hover {
+    background-color: var(--my-blue);
+    color: white;
+}
+.world-content {
+    padding: var(--margin);
+    padding-top: calc(var(--margin)/2);
+}
+.world-status {
+    display: inline-block;
 }
 /* *****************************
  * images

@@ -127,11 +127,23 @@ def simSettings(id):
 def sim():
     cmd = buttonGroupFromJson(SIM_DIR + "world_commands.json")
     w_cmd = buttonGroupFromJson(SIM_DIR + "commands.json")
-    return rephrase(SIM_DIR + "world.html",\
+    world_template = rephrase(SIM_DIR + "world.html",\
             {
                 "WORLDCMD": w_cmd,\
                 "SETTINGS": simSettings('default'),\
-            }, 1000) + cmd
+                "ID": 'world-template style="display:none;"'\
+            }, 1000)
+
+    return tag("div",\
+            rephrase(SIM_DIR + "world.html",\
+            {
+                "WORLDCMD": w_cmd,\
+                "ID": 'default',\
+                "SETTINGS": simSettings('default')\
+            }, 1000),\
+            {"id": "world-list"})\
+            + cmd\
+            + world_template
 
 """ ********************************* """
 """ ********************************* """
@@ -394,7 +406,13 @@ def addTab(tabname, id, name, c_func, checked=False):
 build
 ******************************** """
 data = {}
-data["HEAD"] = head("SimEpidemic", stylesheets=["css/common.css"], scripts=["script.js"])
+data["HEAD"] = head("SimEpidemic",\
+        stylesheets=["css/common.css"],\
+        scripts=[\
+            "https://cdnjs.cloudflare.com/ajax/libs/pixi.js/5.3.3/pixi.min.js",\
+            "windowPanel.js",\
+            "script.js"\
+            ])
 data["HEADER"] = header(CONTENTS_DIR + "info.json")
 tablist = json2dict(COMMON_DIR + "tabs.json", ordered = True)
 tab_items = ""

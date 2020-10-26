@@ -1,8 +1,17 @@
+/********************************************
+ * グローバル
+ ***************************************** */
 const SEVERNAME = "";
+const WORLDLIST = {};
+
+/********************************************
+ * 初期化
+ ***************************************** */
 window.onload = function(){
     if (typeof getBrowserId() === 'undefined') {
         setBrowserId();
     }
+    addCanvas('default');
     serverGetReq(setHiddenValues, 'getParams', responseType = 'json');
 }
 
@@ -11,15 +20,6 @@ function setBrowserId(storage = localStorage, key = 'simepidemicBrowerID') {
         let id = new Date();
         id = id.getTime();
         storage.setItem(key, id);
-    } catch(e) {
-        console.log(e);
-        alert("ブラウザの設定でlocalStorageを利用可能にしてください．");
-    }
-}
-
-function getBrowserId(storage = localStorage, key = 'simepidemicBrowerID') {
-    try {
-        return storage[key];
     } catch(e) {
         console.log(e);
         alert("ブラウザの設定でlocalStorageを利用可能にしてください．");
@@ -41,6 +41,15 @@ function setHiddenValues(values, formname = 'default_values') {
         elem.name = name;
         elem.value = values[name];
         field.append(elem);
+    }
+}
+
+function getBrowserId(storage = localStorage, key = 'simepidemicBrowerID') {
+    try {
+        return storage[key];
+    } catch(e) {
+        console.log(e);
+        alert("ブラウザの設定でlocalStorageを利用可能にしてください．");
     }
 }
 
@@ -68,12 +77,15 @@ function loadForm(file_input, formname) {
     });
 }
 
-function saveJsonFile(val) {
-    let writejson = JSON.stringify(val);
-    let blob = new Blob([writejson], {type: 'application/json'});
-    let fakeurl = URL.createObjectURL(blob);
+function convertDict2FakeURL(dict) {
+    const writejson = JSON.stringify(dict);
+    const blob = new Blob([writejson], {type: 'application/json'});
+    return URL.createObjectURL(blob);
+}
 
-    let userAgent = window.navigator.userAgent.toLowerCase();
+function saveJsonFile(val) {
+    const userAgent = window.navigator.userAgent.toLowerCase();
+    const fakeurl = convertDict2FakeURL(val);
 
     if(userAgent.indexOf('msie') != -1
         || userAgent.indexOf('edge') != -1
@@ -298,31 +310,9 @@ function applySettings(formname, world) {
     setParams(formname, world);
     setScenario(formname, world);
 }
-function worldControl(command, world) {
-    if(world == 'default') {
-        world += '&me=' + getBrowserId();
-    }
-    const req = command + '?world=' + world;
-    serverGetReq(function (val) {
-        console.log('GET:' + command + ' id: ' + world + ' result:' + val);
-    }, req);
-}
-function startSim(world) {
-    worldControl('start', world);
-}
 
-function stopSim(world) {
-    worldControl('stop', world);
-}
-
-function stepSim(world) {
-    worldControl('step', world);
-}
-
-function resetSim(world) {
-    let result = confirm("実行中の世界を初期化しますか?");
-    if(!result) return;
-    worldControl('reset', world);
+function takeSnap(world) {
+    alert("現在のシミュレーション結果をダウンロード[未実装]");
 }
 function shareDefaultId(id = '') {
     if (id != '') {
@@ -332,37 +322,89 @@ function shareDefaultId(id = '') {
     serverGetReq(shareDefaultId, "getWorldID");
 }
 
-function addNewWorld(id='') {
-    if(id != '') {
-        let w_name = window.prompt("名前を入力してください", "new world");
-        let world_template = document.getElementById("world-template");
-        let new_world = world_template.cloneNode(true);
-        new_world.id = id;
-        new_world.querySelector("button[name='share']").remove();
+function worldControl(command, world) {
+    if(world == 'default') {
+        world += '&me=' + getBrowserId();
+    }
+    const req = command + '?world=' + world;
+    serverGetReq(function (val) {
+        console.log('GET:' + command + ' id: ' + world + ' result:' + val);
+    }, req);
+}
 
+function addCanvas(world_id) {
+    const canvas_id = world_id + '-canvas';
+    const canvas = document.getElementById(canvas_id);
+    const width = document.querySelector("#"+world_id+" .cmd-btn-list").offsetWidth;
+    WORLDLIST[world_id] = new WindowPanel(canvas, world_id, width, width * 0.75);//4:3
+    WORLDLIST[world_id].initialize();
+}
+
+function deleteCanvas(world_id) {
+    WORLDLIST[world_id].finalize();
+    delete WORLDLIST[world_id];
+}
+
+
+function pauseOrResume(world, button) {
+    if(button.innerText == "▶︎") {
+        worldControl('start', world);
+        button.innerText = "Ⅱ";
+    } else {
+        worldControl('stop', world);
+        button.innerText = "▶︎";
+    }
+    WORLDLIST[world].pauseOrResume();
+}
+
+function stepSim(world) {
+    worldControl('step', world);
+    WORLDLIST[world].step();
+}
+
+function resetSim(world) {
+    let result = confirm("実行中の世界を初期化しますか?");
+    if(!result) return;
+    worldControl('reset', world);
+    WORLDLIST[world].reset();
+}
+
+function addNewWorld(world_id='') {
+    if(world_id != '') {
+        console.log("GET/addNewWorld: " + world_id);
+        const w_name = window.prompt("名前を入力してください", "new world");
+
+        const new_world = document.getElementById('world-template').cloneNode(true);
+        new_world.style = '';
+        new_world.id = world_id;
+        new_world.querySelector("button[name='share']").remove();
         new_world.querySelector('.world-name-container label').innerText = w_name;
-        let delete_sim_btn = document.createElement("button");
+
+        const delete_sim_btn = document.createElement("button");
         delete_sim_btn.title =  w_name + 'を削除';
         delete_sim_btn.innerHTML = trash_box;
-        delete_sim_btn.setAttribute("onclick", "closeWorld('" + id + "');");
-        new_world.querySelector('.world-name-container').appendChild(delete_sim_btn);
+        delete_sim_btn.setAttribute("onclick", "closeWorld('" + world_id + "');");
+        delete_sim_btn.setAttribute("class", "command-button");
 
-        new_world.innerHTML = new_world.innerHTML.toString().replace(/default/gi, id);
-        let w_list = document.getElementById("world-list");
+        new_world.querySelector('.world-name-container').appendChild(delete_sim_btn);
+        new_world.innerHTML = new_world.innerHTML.toString().replace(/default/gi, world_id);
+
+        const w_list = document.getElementById("world-list");
         w_list.append(new_world);
+
+        addCanvas(world_id);
         return;
     }
     serverGetReq(addNewWorld, "newWorld");
 }
 
-function closeWorld(world){
+function closeWorld(world_id){
     const DO = confirm("この世界を消去します．");
     if(!DO) return;
-    document.getElementById(world).remove();
-    serverGetReq(function (val) {
-        console.log("close world: " + world);
-        console.log("close: " + val);
-    }, "closeWorld?world=" + world);
+
+    document.getElementById(world_id).remove();
+    deleteCanvas(world_id)
+    worldControl('closeWorld', world_id);
 }
 
 function sharedWorld() {
@@ -397,6 +439,10 @@ function dict2formdata(dict) {
         fd.append(key, dict[key]);
     }
     return fd;
+}
+
+function showElement(id) {
+    document.getElementById(id).style.display = "block";
 }
 
 function hideElement(id) {
