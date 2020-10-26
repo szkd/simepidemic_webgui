@@ -127,6 +127,13 @@ def simSettings(id):
 def sim():
     cmd = buttonGroupFromJson(SIM_DIR + "world_commands.json")
     w_cmd = buttonGroupFromJson(SIM_DIR + "commands.json")
+    indicator_type = json2dict(COMMON_DIR + "indicator_type.json")
+    dist_type = json2dict(COMMON_DIR + "distribution_type.json")
+    for name in indicator_type:
+        if indicator_type[name]['now']:
+            addProperty('current_step_indicator', name)
+        elif indicator_type[name]['accumulation']:
+            addProperty('accumulation_indicator', name)
     world_template = rephrase(SIM_DIR + "world.html",\
             {
                 "WORLDCMD": w_cmd,\

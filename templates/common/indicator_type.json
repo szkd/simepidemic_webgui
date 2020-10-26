@@ -1,0 +1,172 @@
+{
+    "isRunning": {
+        "name": "実行中",
+        "type": "真偽値",
+        "range": "true/false",
+        "unit": "-",
+        "hist": false,
+        "perday": false,
+        "now": true,
+        "accumulation": false
+    },
+    "step": {
+        "name": "ステップ数",
+        "type": "整数",
+        "unit": "-",
+        "range": "&gt; 0",
+        "hist": false,
+        "perday": false,
+        "now": true,
+        "accumulation": false
+    },
+    "days": {
+        "name": "経過日数",
+        "type": "実数",
+        "unit": "日",
+        "range": "&gt; 0",
+        "hist": false,
+        "perday": false,
+        "now": true,
+        "accumulation": false
+    },
+    "susceptible": {
+        "name": "未感染者数",
+        "type": "整数",
+        "unit": "人",
+        "range": "&lt; 初期人口",
+        "hist": true,
+        "perday": true,
+        "now": true,
+        "accumulation": false
+    },
+    "asymptomatic": {
+        "name": "無症状感染者数",
+        "type": "整数",
+        "unit": "人",
+        "range": "&lt; 初期人口",
+        "hist": true,
+        "perday": true,
+        "now": true,
+        "accumulation": false
+    },
+    "symptomatic": {
+        "name": "発症感染者数",
+        "type": "整数",
+        "unit": "人",
+        "range": "&lt; 初期人口",
+        "hist": true,
+        "perday": true,
+        "now": true,
+        "accumulation": false
+    },
+    "recovered": {
+        "name": "快復者数",
+        "type": "整数",
+        "unit": "人",
+        "range": "&lt; 初期人口",
+        "hist": true,
+        "perday": true,
+        "now": true,
+        "accumulation": false
+    },
+    "died": {
+        "name": "死亡者数",
+        "type": "整数",
+        "unit": "人",
+        "range": "&lt; 初期人口",
+        "hist": true,
+        "perday": true,
+        "now": true,
+        "accumulation": false
+    },
+    "quarantineAsymptomatic": {
+        "name": "無症状隔離数",
+        "type": "整数",
+        "unit": "人",
+        "range": "&lt; 初期人口",
+        "hist": true,
+        "perday": true,
+        "now": true,
+        "accumulation": false
+    },
+    "quarantineSymptomatic": {
+        "name": "有症状隔離数",
+        "type": "整数",
+        "unit": "人",
+        "range": "&lt; 初期人口",
+        "hist": true,
+        "perday": true,
+        "now": true,
+        "accumulation": false
+    },
+    "tests": {
+        "name": "検査数",
+        "type": "整数",
+        "unit": "人",
+        "range": "&lt; 初期人口",
+        "hist": true,
+        "perday": true,
+        "now": false,
+        "accumulation": true
+    },
+    "testAsSymptom": {
+        "name": "発症者検査数",
+        "type": "整数",
+        "unit": "人",
+        "range": "&lt; 初期人口",
+        "hist": true,
+        "perday": true,
+        "now": false,
+        "accumulation": true
+    },
+    "testAsContact": {
+        "name": "接触者検査数",
+        "type": "整数",
+        "unit": "人",
+        "range": "&lt; 初期人口",
+        "hist": true,
+        "perday": true,
+        "now": false,
+        "accumulation": true
+    },
+    "testAsSuspected": {
+        "name": "擬症状者検査数",
+        "type": "整数",
+        "unit": "人",
+        "range": "&lt; 初期人口",
+        "hist": true,
+        "perday": true,
+        "now": false,
+        "accumulation": true
+    },
+    "testPositive": {
+        "name": "陽性者数",
+        "type": "整数",
+        "unit": "人",
+        "range": "&lt; 初期人口",
+        "hist": true,
+        "perday": true,
+        "now": false,
+        "accumulation": true
+    },
+    "testNegative": {
+        "name": "陰性者数",
+        "type": "整数",
+        "unit": "人",
+        "range": "&lt; 初期人口",
+        "hist": true,
+        "perday": true,
+        "now": false,
+        "accumulation": true
+    },
+    "testPositiveRate": {
+        "name": "陽性率",
+        "type": "実数",
+        "unit": "%",
+        "range": "0 - 100",
+        "hist": true,
+        "perday": true,
+        "now": false,
+        "accumulation": false
+    }
+}

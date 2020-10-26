@@ -1,0 +1,32 @@
+{
+    "incubasionPeriod":{
+        "name": "潜伏期間",
+        "unit1": "日",
+        "unit2": "人",
+        "hint": "発症者の内，感染から発症まで"
+    },
+    "recoveryPeriod":{
+        "name": "快復期間",
+        "unit": "日",
+        "unit2": "人",
+        "hint": "発症から快復まで"
+    },
+    "fatalPeriod":{
+        "name": "生存期間",
+        "unit1": "日",
+        "unit2": "人",
+        "hint": "発症から死亡まで"
+    },
+    "infects":{
+        "name": "伝染数",
+        "unit1": "人",
+        "unit2": "人 ",
+        "hint": "感染させた人数"
+    },
+    "contacts":{
+        "name": "接触者",
+        "unit1": "人日",
+        "unit2": "人",
+        "hint": "未実装"
+    }
+}
