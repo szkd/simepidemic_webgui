@@ -375,7 +375,7 @@ function addNewWorld(world_id='') {
         const w_name = window.prompt("名前を入力してください", "new world");
 
         const new_world = document.getElementById('world-template').cloneNode(true);
-        new_world.style = '';
+        new_world.style = 'display:block;';
         new_world.id = world_id;
         new_world.querySelector("button[name='share']").remove();
         new_world.querySelector('.world-name-container label').innerText = w_name;
