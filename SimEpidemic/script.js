@@ -151,7 +151,7 @@ function callbackFunc(func, arg_arr) {
 
 function serverGetReq(callback, _req, responseType ='') {
     _req = SEVERNAME + _req;
-    let req = new XMLHttpRequest();
+    const req = new XMLHttpRequest();
     req.timeout = 3000;
     req.open("GET", _req);
     if(responseType != ''){
@@ -244,8 +244,10 @@ function sliderValueChanged(slider, outputid){
     element.value = slider.value;
 }
 
-function enfocedDownload(url) {
-    let filename = window.prompt("ファイル名を入力してください．", "my.json");
+function enfocedDownload(url, filename = '') {
+    if(filename == '') {
+        filename = window.prompt("ファイル名を入力してください．", "my.json");
+    }
     let a = document.createElement("a");
     a.href = url
     a.download = filename;
@@ -277,7 +279,7 @@ function setParams(formname, world) {
         const forms = prop.param_formnames.split(",");
         let p_dict = {}
         for (let p_form of forms) {
-             p_dict = {...p_dict, ...form2paramDict(p_form)};
+            p_dict = {...p_dict, ...form2paramDict(p_form)};
         }
         serverPostReq(function(val) {
             console.log('POST/setParams[tab]: ' + val);
@@ -312,8 +314,66 @@ function applySettings(formname, world) {
 }
 
 function takeSnap(world) {
-    alert("現在のシミュレーション結果をダウンロード[未実装]");
+    const date_time = new Date().getTime();
+    const strArray2getURI = (str) =>  {
+        const array = str.split(',');
+        let uri = "";
+        array.forEach(elem => {
+            uri += elem + "=1&";
+        });
+        return uri;
+    }
+    const filename = (name) => {
+        return name + '-' + date_time + '.json';
+    }
+    const take_snap = (v, name) => {
+        return enfocedDownload(
+            convertDict2FakeURL(v), filename(name)
+        );
+    }
+
+    //getPopulation
+    serverGetReq(
+        callbackFunc(take_snap, ['population']),
+        'getPopulation?world=' + world + '&me=' + getBrowserId(),
+        responseType = 'json'
+    );
+    serverGetReq(
+        callbackFunc(take_snap, ['population2']),
+        'getPopulation2?world=' + world + '&me=' + getBrowserId(),
+        responseType = 'json'
+    );
+    //getIndexes
+    const indicator_names = strArray2getURI(
+        document.forms['property']['current_step_indicator'].value);
+    serverGetReq(
+        callbackFunc(take_snap, ['indicators']),
+        'getIndexes?' + indicator_names + 'world=' + world + '&me=' + getBrowserId(),
+        responseType = 'json'
+    );
+    const accumulation_indicators = strArray2getURI(
+        document.forms['property']['accumulation_indicator'].value);
+    serverGetReq(
+        callbackFunc(take_snap, ['accum_indicators']),
+        'getIndexes?' + accumulation_indicators + 'world=' + world + '&me=' + getBrowserId(),
+        responseType = 'json'
+    );
+    //getDistribution
+    const distribution_indicator = strArray2getURI(
+        document.forms['property']['distribution_indicators'].value);
+    serverGetReq(
+        callbackFunc(take_snap, ['distribution_indicators']),
+        'getDistribution?' + distribution_indicator + 'fromStep=0&world=' + world + '&me=' + getBrowserId(),
+        responseType = 'json'
+    );
+    //getParams -world
+    serverGetReq(
+        callbackFunc(take_snap, ['params-' + 'world-' + world]),
+        'getParams?world=' + world + '&me=' + getBrowserId(),
+        responseType = 'json'
+    );
 }
+
 function shareDefaultId(id = '') {
     if (id != '') {
         alert("既定世界のIDは "+ id + " です．\nこのIDを共有された人はあなたの既定世界のシミュレーションを閲覧できます．");

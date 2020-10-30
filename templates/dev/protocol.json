@@ -19,7 +19,12 @@
                 "method": "GET",
                 "action": "newWorld",
                 "result": "text/plain",
-                "dev": "対応済"
+                "names": [
+                    {
+                        "opt": "",
+                        "dev": "対応済"
+                    }
+                ]
             },
             {
                 "description": "世界の消去",
@@ -49,9 +54,9 @@
                 "names": [
                     {
                         "opt": "save",
-                        "dev": "対応予定未定",
+                        "dev": "対応予定なし",
                         "type": "text",
-                        "hint": "ファイル名．このオプションが添えられた場合は，ダウンロード形式で応答する。"
+                        "hint": "スナップショットにてファイル保存可能．あえてsaveを使うほどではなかったので代替．ファイル名．このオプションが添えられた場合は，ダウンロード形式で応答する。"
                     },
                     {
                         "opt": "format",
@@ -61,13 +66,19 @@
                     },
                     {
                         "opt": "world",
-                        "dev": "対応予定未定",
-                        "type": "text"
+                        "dev": "対応済",
+                        "type": "text",
+                        "hint": "スナップショットにて"
                     },
                     {
                         "opt": "me",
-                        "dev": "対応予定未定",
+                        "dev": "対応予定なし",
                         "type": "text"
+                    },
+                    {
+                        "opt": "パラメータなし",
+                        "dev": "対応済",
+                        "hint": "規定値取得のため"
                     }
                 ]
             },
@@ -211,7 +222,7 @@
         ]
     },
     "result": {
-        "category": "実行の監視と結果の取得(未対応）",
+        "category": "実行の監視と結果の取得",
             "protocol": [
                 {
                     "description": "数値情報の取得",
@@ -224,12 +235,20 @@
                             "opt": "names",
                             "hint": "names=[統計指標名1, 統計指標名2,...]または統計指標名=1",
                             "type": "text",
-                            "required": "required"
+                            "required": "required",
+                            "dev": "対応予定なし",
+                            "hint": "[]の字がダメで配列風にリクエストを送るのは諦めた"
+                        },
+                        {
+                            "opt": "統計指標名1=1&統計指標名2=1...",
+                            "dev": "一部対応",
+                            "hint": "個別に問い合わす事はできないがスナップショットとして全ての値を得ることができる"
                         },
                         {
                             "opt": "fromStep",
                             "type": "number",
-                            "hint": "可能であれば指定のステップから現在までの履歴を取得"
+                            "dev": "一部対応",
+                            "hint": "可能であれば指定のステップから現在までの履歴を取得．累積で取る必要がある統計指標のみスナップショットでfromStep=0を指定"
                         },
                         {
                             "opt": "fromDay",
@@ -248,11 +267,15 @@
                         },
                         {
                             "opt": "world",
-                            "type": "text"
+                            "type": "text",
+                            "dev": "対応済",
+                            "hint": "スナップショットにて"
                         },
                         {
                             "opt": "me",
-                            "type": "text"
+                            "type": "text",
+                            "dev": "対応済",
+                            "hint": "スナップショットにて"
                         }
                     ]
                 },
@@ -267,7 +290,14 @@
                             "opt": "names",
                             "hint": "names=[統計指標名1, 統計指標名2,...]または統計指標名=1",
                             "type": "text",
-                            "required": "required"
+                            "required": "required",
+                            "dev": "対応予定なし",
+                            "hint": "[]の字がダメで配列風にリクエストを送るのは諦めた"
+                        },
+                        {
+                            "opt": "統計指標名1=1&統計指標名2=1...",
+                            "dev": "一部対応",
+                            "hint": "個別に問い合わす事はできないがスナップショットとして全ての値を得ることができる"
                         },
                         {
                             "opt": "format",
@@ -276,10 +306,14 @@
                         },
                         {
                             "opt": "world",
+                            "hint": "スナップショットにて",
+                            "dev": "対応済",
                             "type": "text"
                         },
                         {
                             "opt": "me",
+                            "hint": "スナップショットにて",
+                            "dev": "対応済",
                             "type": "text"
                         }
                     ]
@@ -290,7 +324,7 @@
                     "action": "getPopulation",
                     "target": "populationData",
                     "result": "iframe",
-                    "name": [
+                    "names": [
                         {
                             "opt": "format",
                             "type": "number",
@@ -299,16 +333,24 @@
                         {
                             "opt": "world",
                             "type": "text",
-                            "hint": "世界ID"
+                            "dev": "対応済",
+                            "hint": "スナップショットにて"
                         }
                     ]
                 },
                 {
                     "description": "個体の健康状態の取得",
                     "method": "GET",
-                    "action": "getPopulation2(ver. 1.2",
-                        "target": "populationData",
-                        "result": "iframe"
+                    "action": "getPopulation2(ver. 1.2)",
+                    "names": [
+                        {
+                            "opt": "world",
+                            "target": "populationData",
+                            "dev": "対応済",
+                            "hint": "スナップショットにて",
+                            "result": "iframe"
+                        }
+                    ]
                 }
             ]
     },

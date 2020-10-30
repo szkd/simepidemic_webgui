@@ -134,6 +134,8 @@ def sim():
             addProperty('current_step_indicator', name)
         elif indicator_type[name]['accumulation']:
             addProperty('accumulation_indicator', name)
+    for name in dist_type:
+        addProperty('distribution_indicators', name)
     world_template = rephrase(SIM_DIR + "world.html",\
             {
                 "WORLDCMD": w_cmd,\
