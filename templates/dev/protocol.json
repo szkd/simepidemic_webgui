@@ -354,6 +354,103 @@
                 }
             ]
     },
+    "report": {
+        "category": "実行状況の定期的取得(ver.1.1)",
+        "protocol": [
+            {
+                "description": "定期的取得の開始",
+                "method": "GET",
+                "action": "periodicReport",
+                "result": "iframe",
+                "type": "form-data",
+                "names": [
+                    {
+                        "opt": "report",
+                        "type": "array",
+                        "hint": "[item_1, item_2...] itemは指標名"
+                    },
+                    {
+                        "opt": "daily..",
+                        "hint": "dailyの後に日毎に取得可能な統計指標名を指定すると日ごとのデータを返す"
+                    },
+                    {
+                        "opt": "interval",
+                        "type": "正の実数",
+                        "unit": "秒",
+                        "hint": "正の実数，省略した場合1秒"
+                    },
+                    {
+                        "opt": "popFormat",
+                        "type": "number",
+                        "unit": "なし",
+                        "hint": "getPopulationを使うかgetPopulation2を使うか"
+                    }
+                ]
+            },
+            {
+                "description": "定期的取得の廃止",
+                "method": "GET",
+                "action": "quitReport",
+                "result": "iframe",
+                "names": [
+                    {
+                        "opt": "process",
+                        "type": "",
+                        "required": "required",
+                        "hint": ""
+                    },
+                    {
+                        "opt": "report",
+                        "type": "array",
+                        "hint": "[item_1, item_2...] itemは指標名"
+                    },
+                    {
+                        "opt": "interval",
+                        "type": "正の実数",
+                        "unit": "秒",
+                        "hint": "正の実数，省略した場合1秒"
+                    },
+                    {
+                        "opt": "popFormat",
+                        "type": "number",
+                        "unit": "なし",
+                        "hint": "getPopulationを使うかgetPopulation2を使うか"
+                    }
+                ]
+            },
+            {
+                "description": "定期的取得指標の変更",
+                "method": "GET",
+                "action": "changeReport",
+                "result": "iframe",
+                "names": [
+                    {
+                        "opt": "process",
+                        "type": "",
+                        "required": "required",
+                        "hint": "[item_1, item_2...] itemは指標名"
+                    },
+                    {
+                        "opt": "report",
+                        "type": "array",
+                        "hint": "[item_1, item_2...] itemは指標名"
+                    },
+                    {
+                        "opt": "interval",
+                        "type": "正の実数",
+                        "unit": "秒",
+                        "hint": "正の実数，省略した場合1秒"
+                    },
+                    {
+                        "opt": "popFormat",
+                        "type": "number",
+                        "unit": "なし",
+                        "hint": "getPopulationを使うかgetPopulation2を使うか"
+                    }
+                ]
+            }
+        ]
+    },
     "scenario": {
         "category": "シナリオ",
         "protocol": [
