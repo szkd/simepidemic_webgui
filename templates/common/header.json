@@ -24,5 +24,13 @@
     "HINT": {
         "JA": "これは何?",
         "EN": "What is this?"
+    },
+    "LINKNAME": {
+        "JA": "English",
+        "EN": "日本語"
+    },
+    "LINK": {
+        "JA": "http://localhost:1234/en/index.html",
+        "EN": "http://localhost:1234/ja/index.html"
     }
 }

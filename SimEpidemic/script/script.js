@@ -509,6 +509,7 @@ function showElement(id) {
 function hideElement(id) {
     document.getElementById(id).style.display = 'none';
 }
+
 //json
 function readJsonFile(file_input, callback) {
     let file = file_input.files[0];

@@ -330,6 +330,8 @@ def header(jsonfile, lang):
             {'href' : data["DESCRIPTION"]["project-link"],\
             'target' : '_blank'})
     data["HINT"] = data["HINT"][lang]
+    data["LINK"] = data["LINK"][lang]
+    data["LINKNAME"] = data["LINKNAME"][lang]
 
     return rephrase(COMMON_DIR + "header.html", data)
 """ ******************************
@@ -453,8 +455,19 @@ def buildPage(lang):
     with open(OUTPUT_FILE[lang], mode="w") as f:
         f.write(rephrase(COMMON_DIR + "base.html", data))
 
+def langSwitchPage():
+    data = {}
+    data['PROPERTY'] = ""
+    data['HEAD'] = head('SimEpidemic', stylesheets=[STYLES + 'common.css'])
+    data['HEADER'] = ''
+    with open(COMMON_DIR + 'toppage.html') as f:
+        data['MAIN'] = f.read()
+    with open(OUTPUT_DIR + 'index.html', mode="w") as f:
+        f.write(rephrase(COMMON_DIR + "base.html", data))
+
 """ ******************************
 main
 ******************************** """
 buildPage("JA")
 buildPage("EN")
+langSwitchPage();
