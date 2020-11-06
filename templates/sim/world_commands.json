@@ -1,4 +1,3 @@
-
 {
     "info": {
         "cmd_cls": "command-button",
@@ -9,9 +8,14 @@
         "shared": "sharedWorld();"
     },
     "buttons": {
-        "newworld": "シミュレーション世界を追加",
-        "shared": "共有されたシミュレーション世界を表示"
+        "newworld": {
+            "JA": "新しい世界を追加",
+            "EN": "Add new world"
+        },
+        "shared": {
+            "JA": "共有された世界を表示",
+            "EN": "Show shared world"
+        }
+
     }
 }
-
-

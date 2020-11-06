@@ -1,15 +1,27 @@
 {
     "sim" : {
-        "tabname": "シミュレーション",
+        "tabname": {
+            "JA": "シミュレーション",
+            "EN": "Simulation"
+        },
         "checked": "checked"
     },
     "param" : {
-        "tabname": "パラメータ"
+        "tabname": {
+            "JA": "パラメータ",
+            "EN": "Parameter"
+        }
     },
     "scenario": {
-        "tabname": "Scenario"
+        "tabname": {
+            "JA": "シナリオ",
+            "EN": "Scenario"
+        }
     },
     "development": {
-        "tabname": "Development"
+        "tabname": {
+            "JA": "開発",
+            "EN": "Development"
+        }
     }
 }

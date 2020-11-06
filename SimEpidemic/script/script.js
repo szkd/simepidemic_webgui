@@ -1,7 +1,7 @@
 /********************************************
  * グローバル
  ***************************************** */
-const SEVERNAME = "";
+const SEVERNAME = "http://localhost:1234/";
 const WORLDLIST = {};
 
 /********************************************
@@ -395,7 +395,7 @@ function worldControl(command, world) {
 function addCanvas(world_id) {
     const canvas_id = world_id + '-canvas';
     const canvas = document.getElementById(canvas_id);
-    const width = document.querySelector("#default .cmd-btn-list").offsetWidth;
+    const width = document.querySelector("#world-template .cmd-btn-list").offsetWidth;
     WORLDLIST[world_id] = new WindowPanel(canvas, world_id, width, width * 0.75);//4:3
     WORLDLIST[world_id].initialize();
 }
@@ -455,6 +455,7 @@ function addNewWorld(world_id='') {
         addCanvas(world_id);
         return;
     }
+    console.log("func: addNewWorld");
     serverGetReq(addNewWorld, "newWorld");
 }
 

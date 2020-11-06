@@ -1,11 +1,11 @@
 {
     "info": {
-        "cmd_cls": "command-button",
-        "cmd_list_cls": "cmd-btn-list"
+        "cmd_cls": "panel-cmd",
+        "cmd_list_cls": "pnel-cmd-list"
     },
     "listener": {
-        "save": "saveAll();",
-        "reset": "resetAll();"
+        "save": "saveForm('ID-form');",
+        "reset": "resetForm('ID-form');"
     },
     "buttons": {
         "save": {
@@ -26,8 +26,8 @@
             },
             "end": "True",
             "attr": {
-                "for": "param-title-button",
-                "class": "command-button"
+                "for": "ID-file",
+                "class": "panel-cmd"
             }
         },
         "file-input": {
@@ -35,11 +35,10 @@
             "end": "False",
             "attr": {
                 "type": "file",
-                "id": "param-title-button",
-                "class": "command-button",
+                "id": "ID-file",
                 "style": "display:none;",
                 "accept": ".json, application/json",
-                "onchange": "loadAll(this);"
+                "onchange": "loadForm(this, 'ID-form');"
             }
         }
     }
