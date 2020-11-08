@@ -234,33 +234,36 @@ PAGE_FUNC["development"] = development
 """ ****************************** 
 partial
 ********************************* """
-def paramSlider(param):
+def paramSlider(lang, param):
     param['min'] = param['min'] if 'min' in param else '0'
     param['max'] = param['max'] if 'max' in param else '100'
     param['value'] = param['value'] if 'value' in param else '50'
-    unit = param['unit'] if 'unit' in param else ''
-    description = param['description'] if 'description' in param else '謎のパラメータ'
+    unit = param['unit'][lang] if 'unit' in param else ''
+    description = param['description'][lang] if 'description' in param else '謎のパラメータ'
     description = tag("div", description, {"class": 'param-title'})
     del param['unit'],  param['description']
     return slider(description, param, unit = unit)
 
-def paramNumber(param):
+def paramNumber(lang, param):
     for_id = param['id']
-    label = tag("label", param['description'], {'for': for_id, 'class': 'num-label'})
-    unit = tag("span", param['unit'] if 'unit' in param else '')
+    label = tag("label", param['description'][lang], {'for': for_id, 'class': 'num-label'})
+    unit = tag("span", param['unit'][lang] if 'unit' in param else '')
     del param['description'], param['unit']
     param['class'] = "param-input"
     numbox = tag("input", attr=param, end=False)
     return tag("div", label + numbox + unit, {'class': 'param-num'})
 
-def paramDistribution(param):
+def paramDistribution(lang, param):
     rep_dict = {
             'ID': param["id"],
-            'TITLE': param["description"],
+            'TITLE': param["description"][lang],
             'VALUE-MIN': param['value'][0],
             'VALUE-MAX': param['value'][1],
             'VALUE-MODE': param['value'][2],
-            'UNIT': tag("span", param['unit']) if 'unit' in param else ""
+            'UNIT': tag("span", param['unit'][lang]) if 'unit' in param else "",
+            'MINIMUM': 'Minimum' if lang == 'EN' else '最小値',
+            'MAXIMUM': 'Maximum' if lang == 'EN' else '最大値',
+            'MODE': 'Mode' if lang == 'EN' else '最頻値'
             }
     return rephrase(PARAM_DIR + "distribution.html", rep_dict, 1000)
 
@@ -290,17 +293,17 @@ def paramPanels(lang, p_types, paramjsonfile, template_file, add_property = True
     for category in categories:
         c = categories[category]
         p_list = c['param-list'].split(',')
-        panel_title = c['name'] if 'name' in c else 'カテゴリ名前がない!'
+        panel_title = c['name'][lang] if 'name' in c else 'カテゴリ名前がない!'
         params = ""
         for id in p_list:
             param = p_types[id]
-            param['id'] = id 
+            param['id'] = id
             if param['type'] == 'range':
-                params += paramSlider(param)
+                params += paramSlider(lang, param)
             elif param['type'] == 'number':
-                params += paramNumber(param)
+                params += paramNumber(lang, param)
             elif param['type'] == 'distribution':
-                params += paramDistribution(param)
+                params += paramDistribution(lang, param)
             else:
                 params += '謎のふぉーむ: ' + param['type']
         panels += panel(lang, category, c['param-list'], panel_title, params, template_file)
