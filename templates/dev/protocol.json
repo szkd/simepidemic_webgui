@@ -9,7 +9,7 @@
                 "names": [
                     {
                         "opt": "me",
-                        "dev": "Done"
+                        "dev": "対応済"
                     }
                 ],
                 "result": "text/plain"
@@ -19,7 +19,12 @@
                 "method": "GET",
                 "action": "newWorld",
                 "result": "text/plain",
-                "dev": "Done"
+                "names": [
+                    {
+                        "opt": "",
+                        "dev": "対応済"
+                    }
+                ]
             },
             {
                 "description": "世界の消去",
@@ -31,7 +36,7 @@
                         "type": "string",
                         "required": "required",
                         "hint": "消去する世界のID",
-                        "dev": "Done"
+                        "dev": "対応済"
                     }
                 ]
             }
@@ -49,9 +54,9 @@
                 "names": [
                     {
                         "opt": "save",
-                        "dev": "対応予定未定",
+                        "dev": "対応予定なし",
                         "type": "text",
-                        "hint": "ファイル名．このオプションが添えられた場合は，ダウンロード形式で応答する。"
+                        "hint": "スナップショットにてファイル保存可能．あえてsaveを使うほどではなかったので代替．ファイル名．このオプションが添えられた場合は，ダウンロード形式で応答する。"
                     },
                     {
                         "opt": "format",
@@ -61,13 +66,19 @@
                     },
                     {
                         "opt": "world",
-                        "dev": "対応予定未定",
-                        "type": "text"
+                        "dev": "対応済",
+                        "type": "text",
+                        "hint": "スナップショットにて"
                     },
                     {
                         "opt": "me",
-                        "dev": "対応予定未定",
+                        "dev": "対応予定なし",
                         "type": "text"
+                    },
+                    {
+                        "opt": "パラメータなし",
+                        "dev": "対応済",
+                        "hint": "規定値取得のため"
                     }
                 ]
             },
@@ -82,13 +93,13 @@
                     {
                         "opt": "name",
                         "type": "text",
-                        "dev": "Done",
+                        "dev": "対応済",
                         "required": "required",
                         "hint": "対象の世界ID, 'default'であれば既定値世界を表す"
                     },
                     {
                         "opt": "file",
-                        "dev": "Done"
+                        "dev": "対応済"
                     }
                 ]
             },
@@ -110,7 +121,7 @@
                         "opt": "world",
                         "type": "text",
                         "hint": "世界ID",
-                        "dev": "Done"
+                        "dev": "対応済"
                     }
                 ]
             }
@@ -142,12 +153,12 @@
                         "opt": "world",
                         "type": "text",
                         "hint": "世界ID",
-                        "dev": "Done"
+                        "dev": "対応済"
                     },
                     {
                         "opt": "me",
                         "type": "text",
-                        "dev": "Done"
+                        "dev": "対応済"
                     }
                 ]
             },
@@ -161,12 +172,12 @@
                     {
                         "opt": "world",
                         "type": "text",
-                        "dev": "Done"
+                        "dev": "対応済"
                     },
                     {
                         "opt": "me",
                         "type": "text",
-                        "dev": "Done"
+                        "dev": "対応済"
                     }
                 ]
             },
@@ -180,12 +191,12 @@
                     {
                         "opt": "world",
                         "type": "text",
-                        "dev": "Done"
+                        "dev": "対応済"
                     },
                     {
                         "opt": "me",
                         "type": "text",
-                        "dev": "Done"
+                        "dev": "対応済"
                     }
                 ]
             },
@@ -199,19 +210,19 @@
                     {
                         "opt": "world",
                         "type": "text",
-                        "dev": "Done"
+                        "dev": "対応済"
                     },
                     {
                         "opt": "me",
                         "type": "text",
-                        "dev": "Done"
+                        "dev": "対応済"
                     }
                 ]
             }
         ]
     },
     "result": {
-        "category": "実行の監視と結果の取得(未対応）",
+        "category": "実行の監視と結果の取得",
             "protocol": [
                 {
                     "description": "数値情報の取得",
@@ -224,12 +235,20 @@
                             "opt": "names",
                             "hint": "names=[統計指標名1, 統計指標名2,...]または統計指標名=1",
                             "type": "text",
-                            "required": "required"
+                            "required": "required",
+                            "dev": "対応予定なし",
+                            "hint": "[]の字がダメで配列風にリクエストを送るのは諦めた"
+                        },
+                        {
+                            "opt": "統計指標名1=1&統計指標名2=1...",
+                            "dev": "一部対応",
+                            "hint": "個別に問い合わす事はできないがスナップショットとして全ての値を得ることができる"
                         },
                         {
                             "opt": "fromStep",
                             "type": "number",
-                            "hint": "可能であれば指定のステップから現在までの履歴を取得"
+                            "dev": "一部対応",
+                            "hint": "可能であれば指定のステップから現在までの履歴を取得．累積で取る必要がある統計指標のみスナップショットでfromStep=0を指定"
                         },
                         {
                             "opt": "fromDay",
@@ -248,11 +267,15 @@
                         },
                         {
                             "opt": "world",
-                            "type": "text"
+                            "type": "text",
+                            "dev": "対応済",
+                            "hint": "スナップショットにて"
                         },
                         {
                             "opt": "me",
-                            "type": "text"
+                            "type": "text",
+                            "dev": "対応済",
+                            "hint": "スナップショットにて"
                         }
                     ]
                 },
@@ -267,7 +290,14 @@
                             "opt": "names",
                             "hint": "names=[統計指標名1, 統計指標名2,...]または統計指標名=1",
                             "type": "text",
-                            "required": "required"
+                            "required": "required",
+                            "dev": "対応予定なし",
+                            "hint": "[]の字がダメで配列風にリクエストを送るのは諦めた"
+                        },
+                        {
+                            "opt": "統計指標名1=1&統計指標名2=1...",
+                            "dev": "一部対応",
+                            "hint": "個別に問い合わす事はできないがスナップショットとして全ての値を得ることができる"
                         },
                         {
                             "opt": "format",
@@ -276,10 +306,14 @@
                         },
                         {
                             "opt": "world",
+                            "hint": "スナップショットにて",
+                            "dev": "対応済",
                             "type": "text"
                         },
                         {
                             "opt": "me",
+                            "hint": "スナップショットにて",
+                            "dev": "対応済",
                             "type": "text"
                         }
                     ]
@@ -290,7 +324,7 @@
                     "action": "getPopulation",
                     "target": "populationData",
                     "result": "iframe",
-                    "name": [
+                    "names": [
                         {
                             "opt": "format",
                             "type": "number",
@@ -299,18 +333,123 @@
                         {
                             "opt": "world",
                             "type": "text",
-                            "hint": "世界ID"
+                            "dev": "対応済",
+                            "hint": "スナップショットにて"
                         }
                     ]
                 },
                 {
                     "description": "個体の健康状態の取得",
                     "method": "GET",
-                    "action": "getPopulation2(ver. 1.2",
-                        "target": "populationData",
-                        "result": "iframe"
+                    "action": "getPopulation2(ver. 1.2)",
+                    "names": [
+                        {
+                            "opt": "world",
+                            "target": "populationData",
+                            "dev": "対応済",
+                            "hint": "スナップショットにて",
+                            "result": "iframe"
+                        }
+                    ]
                 }
             ]
+    },
+    "report": {
+        "category": "実行状況の定期的取得(ver.1.1)",
+        "protocol": [
+            {
+                "description": "定期的取得の開始",
+                "method": "GET",
+                "action": "periodicReport",
+                "result": "iframe",
+                "type": "form-data",
+                "names": [
+                    {
+                        "opt": "report",
+                        "type": "array",
+                        "hint": "[item_1, item_2...] itemは指標名"
+                    },
+                    {
+                        "opt": "daily..",
+                        "hint": "dailyの後に日毎に取得可能な統計指標名を指定すると日ごとのデータを返す"
+                    },
+                    {
+                        "opt": "interval",
+                        "type": "正の実数",
+                        "unit": "秒",
+                        "hint": "正の実数，省略した場合1秒"
+                    },
+                    {
+                        "opt": "popFormat",
+                        "type": "number",
+                        "unit": "なし",
+                        "hint": "getPopulationを使うかgetPopulation2を使うか"
+                    }
+                ]
+            },
+            {
+                "description": "定期的取得の廃止",
+                "method": "GET",
+                "action": "quitReport",
+                "result": "iframe",
+                "names": [
+                    {
+                        "opt": "process",
+                        "type": "",
+                        "required": "required",
+                        "hint": ""
+                    },
+                    {
+                        "opt": "report",
+                        "type": "array",
+                        "hint": "[item_1, item_2...] itemは指標名"
+                    },
+                    {
+                        "opt": "interval",
+                        "type": "正の実数",
+                        "unit": "秒",
+                        "hint": "正の実数，省略した場合1秒"
+                    },
+                    {
+                        "opt": "popFormat",
+                        "type": "number",
+                        "unit": "なし",
+                        "hint": "getPopulationを使うかgetPopulation2を使うか"
+                    }
+                ]
+            },
+            {
+                "description": "定期的取得指標の変更",
+                "method": "GET",
+                "action": "changeReport",
+                "result": "iframe",
+                "names": [
+                    {
+                        "opt": "process",
+                        "type": "",
+                        "required": "required",
+                        "hint": "[item_1, item_2...] itemは指標名"
+                    },
+                    {
+                        "opt": "report",
+                        "type": "array",
+                        "hint": "[item_1, item_2...] itemは指標名"
+                    },
+                    {
+                        "opt": "interval",
+                        "type": "正の実数",
+                        "unit": "秒",
+                        "hint": "正の実数，省略した場合1秒"
+                    },
+                    {
+                        "opt": "popFormat",
+                        "type": "number",
+                        "unit": "なし",
+                        "hint": "getPopulationを使うかgetPopulation2を使うか"
+                    }
+                ]
+            }
+        ]
     },
     "scenario": {
         "category": "シナリオ",
@@ -355,7 +494,8 @@
                     {
                         "opt": "job",
                         "type": "text",
-                        "required": "required"
+                        "required": "required",
+                        "dev": "保留"
                     }
                 ]
             },
@@ -368,6 +508,25 @@
                 "hint": "jobIDの複数指定可能，省略可能",
                 "names": [
                     {
+                        "opt": "job"
+                    },
+                    {
+                        "opt": "省略",
+                        "dev": "対応した?",
+                        "hint": "ジョブを投入しないと意味なしだったのでこのタブの一番上にボタンを設置して結果を表示させた"
+                    }
+                ]
+            },
+            {
+                "description": "ジョブの監視",
+                "method": "GET",
+                "action": "getJobStatus",
+                "result": "iframe",
+                "type": "text",
+                "hint": "jobIDの複数指定可能，省略可能",
+                "names": [
+                    {
+                        "dev": "投入に対応するなら対応可能",
                         "opt": "job",
                         "required": "required"
                     }
@@ -381,6 +540,7 @@
                 "type": "text",
                 "names": [
                     {
+                        "dev": "投入に対応するなら対応可能",
                         "opt": "job",
                         "required": "required"
                     }
@@ -394,6 +554,7 @@
                 "type": "text",
                 "names": [
                     {
+                        "dev": "投入に対応するなら対応可能",
                         "opt": "job",
                         "required": "required"
                     },
@@ -403,11 +564,11 @@
                     },
                     {
                         "opt": "sep",
-                        "hint": "欄区切り"
+                        "hint": "欄区切り(省略可）, saveが指定された場合"
                     },
                     {
                         "opt": "nl",
-                        "hint": "行区切り"
+                        "hint": "行区切り(省略可）, saveが指定された場合"
                     }
                 ]
             }

@@ -1,22 +1,37 @@
 {
     "world": {
-        "name": "世界",
+        "name": {
+            "JA": "世界",
+            "EN": "World"
+        },
         "param-list": "populationSize,worldSize,mesh,stepsPerDay,initialInfected"
     },
     "move": {
-        "name": "移動",
+        "name": {
+            "JA": "移動",
+            "EN": "Movement"
+        },
         "param-list":"mass,friction,avoidance"
     },
     "mechanism": {
-        "name": "発症機序",
+        "name": {
+            "JA": "発症機序",
+            "EN": "Mechanism of pathogenesis"
+        },
        "param-list": "infectionProberbility,infectionDistance,contagionDelay,contagionPeak,incubation,fatality,recovery,immunity"
     },
     "measure": {
-        "name": "対策",
+        "name": {
+            "JA": "対策",
+            "EN": "Measures"
+        },
         "param-list": "distancingStrength,distancingObedience,mobilityFrequency,mobilityDistance,gatheringFrequency,gatheringSize,gatheringDuration,gatheringStrength,contactTracing"
     },
     "tests": {
-        "name" : "検査",
+        "name" : {
+            "JA": "検査",
+            "EN": "Tests"
+        },
         "param-list": "testProcess,testInterval,testDelay,testSensitivity,testSpecificity,subjectAsymptomatic,subjectSymptomatic"
     }
 }

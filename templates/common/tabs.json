@@ -1,12 +1,21 @@
 {
     "sim" : {
-        "tabname": "シミュレーション",
+        "tabname": {
+            "JA": "シミュレーション",
+            "EN": "Simulation"
+        },
         "checked": "checked"
     },
     "param" : {
-        "tabname": "パラメータ"
+        "tabname": {
+            "JA": "パラメータ",
+            "EN": "Parameter"
+        }
     },
     "development": {
-        "tabname": "development"
+        "tabname": {
+            "JA": "開発",
+            "EN": "Development"
+        }
     }
 }

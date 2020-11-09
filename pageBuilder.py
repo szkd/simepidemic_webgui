@@ -8,6 +8,12 @@ const
 ******************************** """
 TEMPLATE_DIR = "templates/"
 OUTPUT_DIR = "SimEpidemic/"
+STYLES = "../css/"
+SCRIPTS = "../script/"
+OUTPUT_FILE = {
+        "JA": OUTPUT_DIR + "ja/index.html",
+        "EN": OUTPUT_DIR + "en/index.html"
+}
 CONTENTS_DIR = OUTPUT_DIR + "contents/"
 SIM_DIR = TEMPLATE_DIR + "sim/"
 PARAM_DIR = TEMPLATE_DIR + "param/"
@@ -31,22 +37,27 @@ def convertMyProperty():
         html_str += tag("input", attr={"type" : "hidden", "name": name, "value": my_property[name]}, end=False)
     return html_str
 
-def buttonGroupFromJson(jsonfile):
-    html_str=""
-    json = json2dict(jsonfile, True)
-    info = json['info']
-    listener = json['listener']
-    buttons = json['buttons']
-    other = json['other'] if 'other' in json else ''
+def buttonGroup(d, lang):
+    info = d['info']
+    listener = d['listener']
+    buttons = d['buttons']
+    other = d['other'] if 'other' in d else ''
+    html_str = ""
 
     for cmd in buttons:
-        html_str += tag("button", buttons[cmd], {\
+        button_name = buttons[cmd]
+        if type(buttons[cmd]) != type(''):
+            button_name = buttons[cmd][lang]
+        html_str += tag("button", button_name, {\
+                "type": "button",\
                 "class": info['cmd_cls'],\
                 "onclick": listener[cmd]\
                 })
     for key in other:
         cmd = other[key]
         content = cmd['content'] if 'content' in cmd else ''
+        if type(content) != type(''):
+            content = content[lang]
         attr = cmd['attr']
         html_str += tag(cmd['tag'], content, cmd['attr'], cmd['end'])
 
@@ -55,13 +66,18 @@ def buttonGroupFromJson(jsonfile):
             })
     return html_str
 
+
+def buttonGroupFromJson(jsonfile, lang):
+    j = json2dict(jsonfile, True)
+    return buttonGroup(j, lang)
+
 """ ********************************
 pages
 ******************************** """
-def settingSection(sec, key, label_cl, opt_cl, opt_style, file_attr):
-    options = sec['options']
+def settingSection(lang, section, key, label_cl, opt_cl, opt_style, file_attr):
+    options = section['options']
     result = ""
-    result +=  tag("div", sec['label'], {"class": label_cl})
+    result +=  tag("div", section['label'][lang], {"class": label_cl})
     idx = -1
     for opt in options:
         idx += 1
@@ -69,8 +85,8 @@ def settingSection(sec, key, label_cl, opt_cl, opt_style, file_attr):
         opt_html = ""
 
         attr = {\
-            "type": sec['type'],\
-            "name": sec['name'],\
+            "type": section['type'],\
+            "name": section['name'],\
             "id": opt_id,\
             "class": opt_cl,\
             "style": opt_style,\
@@ -81,17 +97,17 @@ def settingSection(sec, key, label_cl, opt_cl, opt_style, file_attr):
         if 'checked' in opt:
             attr['checked'] = "checked"
         opt_html += tag("input", attr=attr,end = False)
-        opt_html += tag("label", opt['label'], {"for": opt_id, "style": "margin-right:  8px;"})
+        opt_html += tag("label", opt['label'][lang], {"for": opt_id, "style": "margin-right:  8px;"})
         if 'file' in opt:
-            file_attr['id'] = sec['file-id']
+            file_attr['id'] = section['file-id']
             file_attr['onchange'] = opt['file-onchange']
-            opt_html += tag("label", '', {"for": sec['file-id'], "class": "file-plus"})
+            opt_html += tag("label", '', {"for": section['file-id'], "class": "file-plus"})
             opt_html += tag("input", attr=file_attr, end=False)
         result += tag("div", opt_html)
     return result
 
-def simSettings(id):
-    template  = json2dict(CONTENTS_DIR + "sim_settings.json")
+def simSettings(id, lang):
+    template  = json2dict(SIM_DIR + "sim_settings.json")
     sections = template['sections']
     info = template['info']
     html_str = tag("button", "×",\
@@ -100,8 +116,8 @@ def simSettings(id):
                 "class": "close-btn",
                 "onclick": "hideElement('sim-"+id+"');"
                 })
-    html_str += tag("div", info['description'], {"style": "margin-top: 15px; margin-bottom:20px;"});
-    html_str += tag("button", "適用",\
+    html_str += tag("div", info['description'][lang], {"style": "margin-top: 15px; margin-bottom:20px;"});
+    html_str += tag("button", info['button'][lang],\
             {
                 "type": "button",
                 "class": "apply-btn",
@@ -110,6 +126,7 @@ def simSettings(id):
             });
     for sec in sections:
         html_str += settingSection(\
+                lang,
                 sections[sec],\
                 sec,\
                 info['title_cls'],\
@@ -124,39 +141,52 @@ def simSettings(id):
         {'name': 'sim-'+id+'-form'})
     return html_str
 
-def sim():
-    cmd = buttonGroupFromJson(SIM_DIR + "world_commands.json")
-    w_cmd = buttonGroupFromJson(SIM_DIR + "commands.json")
-    return rephrase(SIM_DIR + "world.html",\
-            {
-                "WORLDCMD": w_cmd,\
-                "SETTINGS": simSettings('default'),\
-            }, 1000) + cmd
+def sim(lang):
+    cmd = buttonGroupFromJson(SIM_DIR + "world_commands.json", lang)
+    w_cmd = buttonGroupFromJson(SIM_DIR + "commands.json", lang)
+    indicator_type = json2dict(COMMON_DIR + "indicator_type.json")
+    dist_type = json2dict(COMMON_DIR + "distribution_type.json")
+    for name in indicator_type:
+        if indicator_type[name]['now']:
+            addProperty('current_step_indicator', name)
+        elif indicator_type[name]['accumulation']:
+            addProperty('accumulation_indicator', name)
+    for name in dist_type:
+        addProperty('distribution_indicators', name)
+
+    world_template = rephrase(SIM_DIR + "world.html",\
+            {\
+                 "WORLDCMD": w_cmd,\
+                "ID": "default",\
+                "SETTINGS": simSettings('default', lang)\
+            }, 1000)
+    return tag("div", world_template, {"id": "world-list"}) + cmd
 
 """ ********************************* """
 """ ********************************* """
-def param():
-    commands = buttonGroupFromJson(PARAM_DIR + "commands.json");
+def param(lang):
+    commands = buttonGroupFromJson(PARAM_DIR + "commands.json", lang);
     paramtype = json2dict(CONTENTS_DIR + "paramtype.json")
     params = ""
-    params += paramPanels(paramtype, PARAM_DIR + 'param.json', COMMON_DIR + 'panel.html')
+    params += paramPanels(lang, paramtype, PARAM_DIR + 'param.json', COMMON_DIR + 'panel.html')
     return commands + params
 
 """ ********************************* """
 """ ********************************* """
-def scenario():
-    commands = buttonGroupFromJson(SCENARIO_DIR + "commands.json");
+def scenario(lang):
+    commands = buttonGroupFromJson(SCENARIO_DIR + "commands.json", lang);
     return rephrase(SCENARIO_DIR + "scenario.html", {"COMMANDS": commands});
 """ ********************************* """
 """ ********************************* """
-def statistics():
+def statistics(lang):
     return 'statistics'
 
 """ ********************************* """
 """ ********************************* """
-def development():
+def development(lang):
     protocol = json2dict(DEVELOP_DIR + "protocol.json")
     html_str = ""
+    html_str += job();
     th_style = "background-color: grey; color: white;"
     th_row = ""
     for elem in ["method", "action", "option", "stage", "hint"]:
@@ -182,6 +212,16 @@ def development():
                     rows += tag("tr", row)
         html_str += rephrase(DEVELOP_DIR + "table.html", {"CATEGORY": protocol[section]['category'], "TABLEROW": rows})
     return html_str
+""" ********************************* """
+""" ********************************* """
+def job():
+    html_str = ""
+    html_str += tag("button", "ジョブの待ち行列の監視",{\
+            "type": "button",\
+            "onclick": "getJobQueueStatus('job_queue');"
+            })
+    html_str += tag("span", '', {"id": "job_queue"})
+    return html_str
 """ ****************************** 
 page function
 ********************************* """
@@ -194,40 +234,50 @@ PAGE_FUNC["development"] = development
 """ ****************************** 
 partial
 ********************************* """
-def paramSlider(param):
+def paramSlider(lang, param):
     param['min'] = param['min'] if 'min' in param else '0'
     param['max'] = param['max'] if 'max' in param else '100'
     param['value'] = param['value'] if 'value' in param else '50'
-    unit = param['unit'] if 'unit' in param else ''
-    description = param['description'] if 'description' in param else '謎のパラメータ'
+    unit = param['unit'][lang] if 'unit' in param else ''
+    description = param['description'][lang] if 'description' in param else '謎のパラメータ'
     description = tag("div", description, {"class": 'param-title'})
     del param['unit'],  param['description']
     return slider(description, param, unit = unit)
 
-def paramNumber(param):
+def paramNumber(lang, param):
     for_id = param['id']
-    label = tag("label", param['description'], {'for': for_id, 'class': 'num-label'})
-    unit = tag("span", param['unit'] if 'unit' in param else '')
+    label = tag("label", param['description'][lang], {'for': for_id, 'class': 'num-label'})
+    unit = tag("span", param['unit'][lang] if 'unit' in param else '')
     del param['description'], param['unit']
     param['class'] = "param-input"
     numbox = tag("input", attr=param, end=False)
     return tag("div", label + numbox + unit, {'class': 'param-num'})
 
-def paramDistribution(param):
+def paramDistribution(lang, param):
     rep_dict = {
             'ID': param["id"],
-            'TITLE': param["description"],
+            'TITLE': param["description"][lang],
             'VALUE-MIN': param['value'][0],
             'VALUE-MAX': param['value'][1],
             'VALUE-MODE': param['value'][2],
-            'UNIT': tag("span", param['unit']) if 'unit' in param else ""
+            'UNIT': tag("span", param['unit'][lang]) if 'unit' in param else "",
+            'MINIMUM': 'Minimum' if lang == 'EN' else '最小値',
+            'MAXIMUM': 'Maximum' if lang == 'EN' else '最大値',
+            'MODE': 'Mode' if lang == 'EN' else '最頻値'
             }
     return rephrase(PARAM_DIR + "distribution.html", rep_dict, 1000)
 
-def panel(_id, str_list, title, content, template_file, icon_normal = '"▶︎"', icon_checked = '"▼"', add_property = True):
+def panel(lang, _id, str_list, title, content, template_file, icon_normal = '"▶︎"', icon_checked = '"▼"', add_property = True):
     if add_property:
         addProperty('param_formnames', _id + '-form')
     attr = {}
+    attr['PANEL-CMD'] = buttonGroup(\
+            jsonStr2dict(\
+                rephrase(\
+                    COMMON_DIR + "panel.json",\
+                    {"ID": _id}, 1000),\
+                True),\
+            lang)
     attr['ID'] = _id
     attr['FORMNAME'] = _id + "-form"
     attr['VAL'] = str_list
@@ -237,62 +287,69 @@ def panel(_id, str_list, title, content, template_file, icon_normal = '"▶︎"'
     attr['ICON-CHECKED'] = icon_checked
     return rephrase(template_file, attr, 1000)
 
-def paramPanels(p_types, paramjsonfile, template_file, add_property = True):
+def paramPanels(lang, p_types, paramjsonfile, template_file, add_property = True):
     categories = json2dict(paramjsonfile)
     panels =""
     for category in categories:
         c = categories[category]
         p_list = c['param-list'].split(',')
-        panel_title = c['name'] if 'name' in c else 'カテゴリ名前がない!'
+        panel_title = c['name'][lang] if 'name' in c else 'カテゴリ名前がない!'
         params = ""
         for id in p_list:
             param = p_types[id]
-            param['id'] = id 
+            param['id'] = id
             if param['type'] == 'range':
-                params += paramSlider(param)
+                params += paramSlider(lang, param)
             elif param['type'] == 'number':
-                params += paramNumber(param)
+                params += paramNumber(lang, param)
             elif param['type'] == 'distribution':
-                params += paramDistribution(param)
+                params += paramDistribution(lang, param)
             else:
                 params += '謎のふぉーむ: ' + param['type']
-        panels += panel(category, c['param-list'], panel_title, params, template_file)
+        panels += panel(lang, category, c['param-list'], panel_title, params, template_file)
     return panels
 
 def head(title, stylesheets=[], scripts=[]):
     html = tag("title", title)\
             + tag("meta", attr={'charset': 'utf-8'}, end = False)\
-            + tag("link", attr = {'rel': 'icon', 'href': 'favicon.png'}, end = False)
+            + tag("link", attr = {'rel': 'icon', 'href': '../favicon.png'}, end = False)
     for stylesheet in stylesheets:
         html += tag("link", attr={'rel': 'stylesheet', 'href': stylesheet}, end=False)
     for script in scripts:
         html+= tag("script", '', {'src':script})
     return html;
 
-def header(jsonfile):
+def header(jsonfile, lang):
     data = json2dict(jsonfile)
-    data["SIGNATURE"] = tag("a", data["SIGNATURE"]["name"],\
-            {'href' : data["SIGNATURE"]["link"]})
+    data['TITLE'] = data['TITLE'][lang]
+
+    data["SIGNATURE"] = tag("a", data['SIGNATURE']['name'][lang],\
+            {'href' : data['SIGNATURE']['link']})
 
     data["DESCRIPTION"] = \
-            data["DESCRIPTION"]["description"]\
+            data["DESCRIPTION"]["description"][lang]\
             + tag("a",\
-            data["DESCRIPTION"]["project"],\
+            data["DESCRIPTION"]["project"][lang],\
             {'href' : data["DESCRIPTION"]["project-link"],\
             'target' : '_blank'})
+    data["HINT"] = data["HINT"][lang]
+    data["LINK"] = data["LINK"][lang]
+    data["LINKNAME"] = data["LINKNAME"][lang]
 
     return rephrase(COMMON_DIR + "header.html", data)
-
 """ ******************************
 json
 ********************************* """
+def jsonStr2dict(json_str, ordered=False):
+    if ordered:
+        return json.loads(json_str, object_pairs_hook=OrderedDict)
+    return json.loads(json_str)
+
 def json2dict(filename, ordered=False):
     json_str = ""
     with open(filename) as f:
         json_str = f.read()
-    if ordered:
-        return json.loads(json_str, object_pairs_hook=OrderedDict)
-    return json.loads(json_str)
+    return jsonStr2dict(json_str, ordered)
 
 """ ******************************
 tools
@@ -305,15 +362,6 @@ def rephrase(template_file, data_dict, count=1):
     for key in data_dict:
         template_str = template_str.replace(key, data_dict[key], count)
     return template_str
-
-def makedirs(path, fource = False):
-    if not os.path.isdir(path):
-        os.makedirs(path)
-    elif fource:
-        shutil.rmtree(path)
-        os.makedirs(path)
-    else:
-        return
 
 """ ******************************
 html parts
@@ -364,7 +412,7 @@ tab
 def tabItemContainer(tab_items, container_id, myclass = 'tab_container'):
     return tag("div", tab_items, {'class' : myclass, 'id' : container_id})
 
-def addTab(tabname, id, name, c_func, checked=False):
+def addTab(tabname, id, name, c_func, lang, checked=False):
     attr={
             'type':'radio',
             'id': id,
@@ -375,26 +423,54 @@ def addTab(tabname, id, name, c_func, checked=False):
         attr['checked'] = 'checked'
     tab = tag("input",attr= attr, end=False)
     tab += tag("label", tabname, {'for':id, 'class': 'tab_item'})
-    tabcontent = tag("div", c_func(), {'class': 'tab_content', 'id': id + '_content'})
+    tabcontent = tag("div", c_func(lang), {'class': 'tab_content', 'id': id + '_content'})
     style = tag("style", rephrase(COMMON_DIR + "tab_style.css", {'ID': id}, 100))
     return {'tab_item': style + tab, 'tab_content': tabcontent}
 
 """ ******************************
 build
 ******************************** """
-data = {}
-data["HEAD"] = head("SimEpidemic", stylesheets=["css/common.css"], scripts=["script.js"])
-data["HEADER"] = header(CONTENTS_DIR + "info.json")
-tablist = json2dict(COMMON_DIR + "tabs.json", ordered = True)
-tab_items = ""
-tab_contents = ""
-for key in tablist:
-    checked = False if 'checked' not in tablist[key] else True
-    tab = addTab(tablist[key]["tabname"], key, 'page_tab', PAGE_FUNC[key], checked)
-    tab_items += tab['tab_item']
-    tab_contents += tab['tab_content']
+def buildPage(lang):
+    stylesheets=[\
+            STYLES + "common.css"\
+    ]
+    scripts=[\
+        "https://cdnjs.cloudflare.com/ajax/libs/pixi.js/5.3.3/pixi.min.js",\
+        SCRIPTS + "windowPanel.js",\
+        SCRIPTS + "script.js"\
+    ]
+    data = {}
+    data["HEAD"] = head("SimEpidemic",\
+        stylesheets,\
+        scripts)
+    data["HEADER"] = header(COMMON_DIR + "header.json", lang)
+    tablist = json2dict(COMMON_DIR + "tabs.json", ordered = True)
+    tab_items = ""
+    tab_contents = ""
+    for key in tablist:
+        checked = False if 'checked' not in tablist[key] else True
+        tab = addTab(tablist[key]["tabname"][lang], key, 'page_tab', PAGE_FUNC[key], lang, checked)
+        tab_items += tab['tab_item']
+        tab_contents += tab['tab_content']
 
-data["MAIN"] = tabItemContainer(tab_items + tab_contents,'tabs')
-data["PROPERTY"] = tag("form", convertMyProperty(), {"style": "display:none;", "name": "property"})
-with open(OUTPUT_DIR + "index.html", mode="w") as f:
-    f.write(rephrase(COMMON_DIR + "base.html", data))
+    data["MAIN"] = tabItemContainer(tab_items + tab_contents,'tabs')
+    data["PROPERTY"] = tag("form", convertMyProperty(), {"style": "display:none;", "name": "property"})
+    with open(OUTPUT_FILE[lang], mode="w") as f:
+        f.write(rephrase(COMMON_DIR + "base.html", data))
+
+def langSwitchPage():
+    data = {}
+    data['PROPERTY'] = ""
+    data['HEAD'] = head('SimEpidemic', stylesheets=[STYLES + 'common.css'])
+    data['HEADER'] = ''
+    with open(COMMON_DIR + 'toppage.html') as f:
+        data['MAIN'] = f.read()
+    with open(OUTPUT_DIR + 'index.html', mode="w") as f:
+        f.write(rephrase(COMMON_DIR + "base.html", data))
+
+""" ******************************
+main
+******************************** """
+buildPage("JA")
+buildPage("EN")
+langSwitchPage();

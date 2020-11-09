@@ -1,0 +1,83 @@
+{
+    "info": {
+        "description": {
+            "JA": "シミュレーションの進行中に設定を変更した場合，進行中のシミュレーションに反映されます．<br>ただし，「世界」に分類されるパラメータが変更された場合は次に実行するシミュレーションとして予約されます．",
+            "EN": "If you change the simulation settings while simulation running, the changes immediately are reflected except changes of parameters classified as 'world'. The changes of world parameters are reserved for the next simulation."
+        },
+        "formname": "sim-settings",
+        "title_cls": "param-title",
+        "option-container": "display: flex; flex-wrap: wrap; margin-top: 10px; justify-content: flex-start",
+        "option-cls": "inline-block margin-right",
+        "option-style": "flex-grow: 1;",
+        "file-attr": {
+            "type": "file",
+            "accept": ".json, application/json",
+            "style": "display:none;"
+        },
+        "button": {
+            "JA": "適用",
+            "EN": "Apply"
+        }
+    },
+    "sections": {
+        "param": {
+            "label": {
+                "JA": "パラメータ",
+                "EN": "Parameter"
+            },
+            "type": "radio",
+            "name": "sim-param",
+            "file-id": "sim-param-file",
+            "options": [
+                {
+                    "checked": "checked",
+                    "label": {
+                        "JA": "パラメータタブの値を使用",
+                        "EN": "Use tab values"
+                    },
+                    "value": "tab"
+                },
+                {
+                    "label": {
+                        "JA": "ファイルから読み込む",
+                        "EN": "Load file"
+                    },
+                    "file": "JSONファイルを選択",
+                    "file-onchange": "loadFile(this);",
+                    "value": "file"
+                }
+            ]
+        },
+        "scenario": {
+            "label": {
+                "JA": "シナリオ",
+                "EN": "Scenario"
+            },
+            "type": "radio",
+            "name": "sim-scenario",
+            "file-id": "sim-scenario-file",
+            "options": [
+                {
+                    "label": {
+                        "JA": "使用しない",
+                        "EN": "None"
+                    },
+                    "checked": "checked",
+                    "value": "disabled"
+                },
+                {
+                    "label": {
+                        "JA": "ファイルから読み込む",
+                        "EN": "Load file"
+                    },
+                    "value": "file",
+                    "file": {
+                        "JA": "JSONファイルを選択",
+                        "EN": "Choose JSON file"
+                    },
+                    "file-onchange": "loadFile(this);"
+                }
+            ]
+        }
+    }
+}
