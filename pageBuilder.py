@@ -309,10 +309,10 @@ def paramPanels(lang, p_types, paramjsonfile, template_file, add_property = True
         panels += panel(lang, category, c['param-list'], panel_title, params, template_file)
     return panels
 
-def head(title, stylesheets=[], scripts=[]):
+def head(title, stylesheets=[], scripts=[], icon = '../favicon.png'):
     html = tag("title", title)\
             + tag("meta", attr={'charset': 'utf-8'}, end = False)\
-            + tag("link", attr = {'rel': 'icon', 'href': '../favicon.png'}, end = False)
+            + tag("link", attr = {'rel': 'icon', 'href': icon}, end = False)
     for stylesheet in stylesheets:
         html += tag("link", attr={'rel': 'stylesheet', 'href': stylesheet}, end=False)
     for script in scripts:
@@ -461,7 +461,7 @@ def buildPage(lang):
 def langSwitchPage():
     data = {}
     data['PROPERTY'] = ""
-    data['HEAD'] = head('SimEpidemic', stylesheets=[STYLES + 'common.css'])
+    data['HEAD'] = head('SimEpidemic', stylesheets=['common.css'], icon = 'favicon.png')
     data['HEADER'] = ''
     with open(COMMON_DIR + 'toppage.html') as f:
         data['MAIN'] = f.read()

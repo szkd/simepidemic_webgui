@@ -1,7 +1,7 @@
 /********************************************
  * グローバル
  ***************************************** */
-const SEVERNAME = "http://simepi.intlab.soka.ac.jp";
+const SEVERNAME = "http://simepi.intlab.soka.ac.jp/";
 const WORLDLIST = {};
 
 /********************************************
