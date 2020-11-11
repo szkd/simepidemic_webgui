@@ -429,6 +429,20 @@ function resetSim(world) {
     WORLDLIST[world].reset();
 }
 
+/********************************************
+ * アニメーション設定
+ ***************************************** */
+function animationFilter(w_id, name, checked) {
+    console.log("world id: "+ w_id + "name: " + name + " checked: " + checked);
+}
+
+function applyAnimSettings() {
+    console.log("applyAnimSettings");
+}
+
+/********************************************
+ * ワールドリスト
+ ***************************************** */
 function addNewWorld(world_id='') {
     if(world_id != '') {
         console.log("GET/addNewWorld: " + world_id);
@@ -482,7 +496,15 @@ function getJobQueueStatus(result_view) {
     }, "getJobQueueStatus");
 }
 
-
+/********************************************
+ * サーバーバージョン
+ ***************************************** */
+function getServerVersion(result_view) {
+    serverGetReq(function (val) {
+        const result = document.getElementById(result_view);
+        result.innerText = val;
+    }, "version");
+}
 /********************************************
  * 共通
  ***************************************** */

@@ -1,0 +1,39 @@
+
+{
+    "info": {
+        "cmd_cls": "animation-checkbox",
+        "cmd_list_cls": "cmd-btn-list",
+        "type": "checkbox",
+        "listener_type": "onchange",
+        "tagname": "input"
+    },
+    "listener": {
+        "day": "animationFilter('default', 'day', this.checked);",
+        "uneffected": "animationFilter('default', 'uneffected', this.checked);",
+        "effected": "animationFilter('default', 'effected', this.checked);",
+        "recoverd": "animationFilter('default', 'recoverd', this.checked);",
+        "dead": "animationFilter('default', 'dead', this);"
+    },
+    "buttons": {
+        "day": {
+            "JA": "日",
+            "EN": "Day"
+        },
+        "uneffected": {
+            "JA": "未発症",
+            "EN": "ASymptomatic"
+        },
+        "effected": {
+            "JA": "発症",
+            "EN": "Symptomatic"
+        },
+        "recoverd": {
+            "JA": "快復",
+            "EN": "Recovered"
+        },
+        "dead": {
+            "JA": "死亡",
+            "EN": "Dead"
+        }
+    }
+}
