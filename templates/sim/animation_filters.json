@@ -1,11 +1,8 @@
-
 {
     "info": {
         "cmd_cls": "animation-checkbox",
         "cmd_list_cls": "cmd-btn-list",
-        "type": "checkbox",
-        "listener_type": "onchange",
-        "tagname": "input"
+        "id": "default-draw-filter"
     },
     "listener": {
         "day": "animationFilter('default', 'day', this.checked);",
@@ -14,26 +11,38 @@
         "recoverd": "animationFilter('default', 'recoverd', this.checked);",
         "dead": "animationFilter('default', 'dead', this);"
     },
-    "buttons": {
-        "day": {
-            "JA": "日",
-            "EN": "Day"
-        },
+    "boxes": {
         "uneffected": {
-            "JA": "未発症",
-            "EN": "ASymptomatic"
+            "label": {
+                "JA": "未発症",
+                "EN": "ASymptomatic"
+            },
+            "checked": true,
+            "name": "uneffected"
         },
         "effected": {
-            "JA": "発症",
-            "EN": "Symptomatic"
+            "label": {
+                "JA": "発症",
+                "EN": "Symptomatic"
+            },
+            "name": "effected",
+            "checked": true
         },
         "recoverd": {
-            "JA": "快復",
-            "EN": "Recovered"
+            "label": {
+                "JA": "快復",
+                "EN": "Recovered"
+            },
+            "name": "recoverd",
+            "checked": true
         },
         "dead": {
-            "JA": "死亡",
-            "EN": "Dead"
+            "label": {
+                "JA": "死亡",
+                "EN": "Dead"
+            },
+            "name": "dead",
+            "checked": true
         }
     }
 }

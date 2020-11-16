@@ -1,38 +1,36 @@
 {
     "info": {
         "cmd_cls": "animation-checkbox",
-        "cmd_list_cls": "cmd-btn-list",
-        "apply_cls": "command-button"
+        "cmd_list_cls": "cmd-btn-list"
     },
     "listener": {
         "speed": "",
-        "interval": "",
-        "apply": "applyAnimSettings();"
+        "interval": ""
     },
-    "settings": {
+    "numbers": {
         "speed": {
-            "name": {
+            "label": {
                 "JA": "描画速度（最大）",
                 "EN": "Maximum Speed of Rendering"
             },
             "unit": {
                 "JA": "ステップ/秒",
                 "EN": "steps/sec"
-            }
+            },
+            "default-value": "30",
+            "step": "0.1"
         },
         "interval": {
-            "name": {
+            "label": {
                 "JA": "時間間隔",
                 "EN": "Time Interval"
             },
             "unit": {
                 "JA": "秒",
                 "EN": "sec"
-            }
+            },
+            "default-value": "1",
+            "step": "0.1"
         }
-    },
-    "apply": {
-        "JA": "適用",
-        "EN": "Apply"
     }
 }

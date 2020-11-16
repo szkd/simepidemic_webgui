@@ -382,39 +382,45 @@ function shareDefaultId(id = '') {
     serverGetReq(shareDefaultId, "getWorldID");
 }
 
-function worldControl(command, world) {
+function worldControl(command, world, after = null) {
     if(world == 'default') {
         world += '&me=' + getBrowserId();
     }
     const req = command + '?world=' + world;
     serverGetReq(function (val) {
         console.log('GET:' + command + ' id: ' + world + ' result:' + val);
+        if(after != null) {
+            after(val);
+        }
     }, req);
 }
 
-function addCanvas(world_id) {
-    const canvas_id = world_id + '-canvas';
-    const canvas = document.getElementById(canvas_id);
+function addCanvas(world_id, interval_btn, steps_ps_btn) {
+    const canvas = document.getElementById(world_id + '-canvas');
     const width = document.querySelector("#world-template .cmd-btn-list").offsetWidth;
-    WORLDLIST[world_id] = new WindowPanel(canvas, world_id, width, width * 0.75);//4:3
-    WORLDLIST[world_id].initialize();
+    WORLDLIST[world_id] = new Monitor(
+        world_id, getBrowserId(),
+        interval_btn, steps_ps_btn,
+        canvas, width,
+        world_id + "-draw-filter"
+    );
 }
 
 function deleteCanvas(world_id) {
     WORLDLIST[world_id].finalize();
+    WORLDLIST[world_id] = null;
     delete WORLDLIST[world_id];
 }
 
-
 function pauseOrResume(world, button) {
     if(button.innerText == "▶︎") {
-        worldControl('start', world);
+        worldControl('start', world, WORLDLIST[world].startMonitor());
         button.innerText = "Ⅱ";
     } else {
-        worldControl('stop', world);
+        worldControl('stop', world, WORLDLIST[world].stopMonitor());
         button.innerText = "▶︎";
     }
-    WORLDLIST[world].pauseOrResume();
+    return;
 }
 
 function stepSim(world) {
@@ -461,12 +467,14 @@ function addNewWorld(world_id='') {
         delete_sim_btn.setAttribute("class", "command-button");
 
         new_world.querySelector('.world-name-container').appendChild(delete_sim_btn);
+        const interval_btn = new_world.querySelector("input[name='interval']");
+        const steps_ps_btn = new_world.querySelector("input[name='speed']");
         new_world.innerHTML = new_world.innerHTML.toString().replace(/default/gi, world_id);
 
         const w_list = document.getElementById("world-list");
         w_list.append(new_world);
 
-        addCanvas(world_id);
+        addCanvas(world_id, interval_btn, steps_ps_btn);
         return;
     }
     console.log("func: addNewWorld");
