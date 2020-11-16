@@ -49,7 +49,8 @@ def checkboxGroup(formname, d, lang):
         attr = {
                 'name': box['name'],
                 'type': 'checkbox',
-                'checked': 'checked' if box['checked'] else ''
+                'checked': 'checked' if box['checked'] else '',
+                'onchange': listener[b]
         }
         html_str += tag("input", attr=attr, end=False) + label
     if formname != '':
@@ -545,7 +546,7 @@ def buildPage(lang):
     scripts=[\
         #"https://cdnjs.cloudflare.com/ajax/libs/pixi.js/5.3.3/pixi.min.js",\
         #SCRIPTS + "windowPanel.js",\
-        SCRIPTS + "canvas.js",\
+        SCRIPTS + "Monitor.js",\
         SCRIPTS + "script.js"\
     ]
     data = {}

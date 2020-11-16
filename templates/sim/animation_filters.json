@@ -5,43 +5,51 @@
         "id": "default-draw-filter"
     },
     "listener": {
-        "day": "animationFilter('default', 'day', this.checked);",
-        "uneffected": "animationFilter('default', 'uneffected', this.checked);",
-        "effected": "animationFilter('default', 'effected', this.checked);",
-        "recoverd": "animationFilter('default', 'recoverd', this.checked);",
-        "dead": "animationFilter('default', 'dead', this);"
+        "susceptible": "",
+        "asymptomatic": "",
+        "symptomatic": "",
+        "recovered": "",
+        "died": ""
     },
     "boxes": {
-        "uneffected": {
+        "susceptible": {
+            "label": {
+                "JA": "非感染",
+                "EN": "Susceptible"
+            },
+            "checked": true,
+            "name": "susceptible"
+        },
+        "asymptomatic": {
             "label": {
                 "JA": "未発症",
                 "EN": "ASymptomatic"
             },
             "checked": true,
-            "name": "uneffected"
+            "name": "asymptomatic"
         },
-        "effected": {
+        "symptomatic": {
             "label": {
                 "JA": "発症",
                 "EN": "Symptomatic"
             },
-            "name": "effected",
+            "name": "symptomatic",
             "checked": true
         },
-        "recoverd": {
+        "recovered": {
             "label": {
                 "JA": "快復",
                 "EN": "Recovered"
             },
-            "name": "recoverd",
+            "name": "recovered",
             "checked": true
         },
-        "dead": {
+        "died": {
             "label": {
                 "JA": "死亡",
-                "EN": "Dead"
+                "EN": "Died"
             },
-            "name": "dead",
+            "name": "died",
             "checked": true
         }
     }

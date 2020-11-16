@@ -436,17 +436,6 @@ function resetSim(world) {
 }
 
 /********************************************
- * アニメーション設定
- ***************************************** */
-function animationFilter(w_id, name, checked) {
-    console.log("world id: "+ w_id + "name: " + name + " checked: " + checked);
-}
-
-function applyAnimSettings() {
-    console.log("applyAnimSettings");
-}
-
-/********************************************
  * ワールドリスト
  ***************************************** */
 function addNewWorld(world_id='') {
