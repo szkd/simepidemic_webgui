@@ -544,8 +544,9 @@ def buildPage(lang):
             STYLES + "common.css"\
     ]
     scripts=[\
-        #"https://cdnjs.cloudflare.com/ajax/libs/pixi.js/5.3.3/pixi.min.js",\
+        "https://cdnjs.cloudflare.com/ajax/libs/pixi.js/5.3.3/pixi.min.js",\
         #SCRIPTS + "windowPanel.js",\
+        SCRIPTS + "common.js",\
         SCRIPTS + "Monitor.js",\
         SCRIPTS + "script.js"\
     ]
