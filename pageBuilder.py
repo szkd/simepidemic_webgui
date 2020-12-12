@@ -45,7 +45,8 @@ def checkboxGroup(formname, d, lang):
 
     for b in boxes:
         box = boxes[b]
-        label = tag("label", box['label'][lang]);
+        label = tag('div', '■', {'style': 'width: 1em; display: inline-block;', 'name' : b})\
+            + tag("label", box['label'][lang]);
         attr = {
                 'name': box['name'],
                 'type': 'checkbox',
@@ -548,7 +549,9 @@ def buildPage(lang):
         #SCRIPTS + "windowPanel.js",\
         SCRIPTS + "common.js",\
         SCRIPTS + "Monitor.js",\
-        SCRIPTS + "script.js"\
+        SCRIPTS + "EventWork.js",\
+        SCRIPTS + "script.js",\
+        SCRIPTS + "Interface.js"\
     ]
     data = {}
     data["HEAD"] = head("SimEpidemic",\

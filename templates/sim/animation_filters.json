@@ -1,15 +1,14 @@
 {
     "info": {
-        "cmd_cls": "animation-checkbox",
-        "cmd_list_cls": "cmd-btn-list",
+        "cmd_list_cls": "cmd-btn-list animation-filters",
         "id": "default-draw-filter"
     },
     "listener": {
-        "susceptible": "",
-        "asymptomatic": "",
-        "symptomatic": "",
-        "recovered": "",
-        "died": ""
+        "susceptible": "changeFilter('default', 'susceptible', this);",
+        "asymptomatic": "changeFilter('default', 'asymptomatic', this);",
+        "symptomatic": "changeFilter('default', 'symptomatic', this);",
+        "recovered": "changeFilter('default', 'recovered', this);",
+        "died": "changeFilter('default', 'died', this);"
     },
     "boxes": {
         "susceptible": {
