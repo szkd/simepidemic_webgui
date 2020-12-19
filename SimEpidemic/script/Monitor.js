@@ -150,7 +150,7 @@ class MonitorPIXI {
         this.pixi.stage.addChild(draw.backgroundGraphic(false, true));//y軸反転
         for(let key in this.agents) {
             this.pixi.stage.addChild(this.agents[key]);
-            const q = "form[name=" + w_id + "-draw-filter] div[name=" + key + "]";
+            const q = "form[name=\"" + w_id + "-draw-filter\"] div[name=\"" + key + "\"]";
             const fill = document.querySelector(q);
             fill.style.color = draw.typeColor(key);
         }

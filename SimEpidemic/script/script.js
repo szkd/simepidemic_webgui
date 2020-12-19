@@ -321,8 +321,9 @@ sim.worldControl = function(command, world, afterfunc = null) {
 function pauseOrResume(world, button) {
     if(button.innerText == "▶︎") {
         const filtername = world + '-draw-filter';
-        sim.worldControl('start', world);
-        MONITORS[world].start(tool.getBrowserId(), world);
+        sim.worldControl('start', world, function () {
+            MONITORS[world].start(tool.getBrowserId(), world);
+        });
         button.innerText = "Ⅱ";
     } else {
         sim.worldControl('stop', world);
@@ -332,8 +333,13 @@ function pauseOrResume(world, button) {
     return;
 }
 
-function stepSim(world){//, startbtn) {
-    //startbtn.innerText = "▶︎";
+function stepSim(world){
+    let space_id = world;
+    if(world == 'default') {
+        space_id = 'world-template';
+    }
+    const node = document.getElementById(space_id);
+    node.querySelector(".cmd-btn-list button[name='simswitch']").innerText = "▶︎";
     sim.worldControl('stop', world);
     sim.worldControl('step', world);
 }
@@ -347,6 +353,7 @@ function resetSim(world) {
 
 function addMonitor(w_id) {
     const p_node = document.getElementById(w_id + '-result');
+    p_node.innerHTML='';
     const width = document.querySelector("#world-template .cmd-btn-list").offsetWidth;
     MONITORS[w_id] = new MonitorPIXI(p_node, width, w_id);
 }
@@ -365,6 +372,7 @@ function addNewWorld(world_id='') {
         const new_world = document.getElementById('world-template').cloneNode(true);
         new_world.style = 'display:block;';
         new_world.id = world_id;
+        new_world.querySelector("button[name='simswitch']").innerText = '▶︎';
         new_world.querySelector("button[name='share']").remove();
         new_world.querySelector('.world-name-container label').innerText = w_name;
 
