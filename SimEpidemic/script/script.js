@@ -1,134 +1,50 @@
 /********************************************
  * グローバル
  ***************************************** */
+/**
+ * サーバー名，リリース時に変更必須
+ */
 const SEVERNAME = "http://simepi.intlab.soka.ac.jp/";
-const WORLDLIST = {};
+/**
+ * リアルタイムアニメーション領域の辞書{worldID:MonitorPIXI}
+ * @type {object:dict}
+ */
+const MONITORS = {};
+/**
+ * 選択中の言語，の予定
+ */
+let LANGUAGE = 'JA';
 
 /********************************************
- * 初期化
  ***************************************** */
+/**
+ * 初期化 window.onload
+ */
 window.onload = function(){
-    if (typeof getBrowserId() === 'undefined') {
-        setBrowserId();
+    if (typeof tool.getBrowserId() === 'undefined') {
+        tool.setBrowserId();
     }
-    addCanvas('default');
-    serverGetReq(setHiddenValues, 'getParams', responseType = 'json');
-}
-
-function setBrowserId(storage = localStorage, key = 'simepidemicBrowerID') {
-    try {
-        let id = new Date();
-        id = id.getTime();
-        storage.setItem(key, id);
-    } catch(e) {
-        console.log(e);
-        alert("ブラウザの設定でlocalStorageを利用可能にしてください．");
-    }
-}
-
-function setHiddenValues(values, formname = 'default_values') {
-    if(document.forms[formname] != undefined) {
-        document.forms[formname].remove();
-    }
-    let f = document.createElement('form');
-    f.name = formname;
-    f.style = 'display:none;';
-    document.body.append(f);
-    let field = document.forms[formname];
-    for(let name in values) {
-        let elem = document.createElement("input");
-        elem.type = "hidden";
-        elem.name = name;
-        elem.value = values[name];
-        field.append(elem);
-    }
-}
-
-function getBrowserId(storage = localStorage, key = 'simepidemicBrowerID') {
-    try {
-        return storage[key];
-    } catch(e) {
-        console.log(e);
-        alert("ブラウザの設定でlocalStorageを利用可能にしてください．");
-    }
-}
-
-function getHiddenValues(formname = 'default_values') {
-    let d = Array.from(document.forms[formname].children);
-    let dict = {};
-    for (let i in d) {
-        dict[d[i].name] = d[i].value;
-    }
-    return dict;
+    server.get(tool.setHiddenValues, 'getParams', responseType = 'json');
+    addMonitor('default');
 }
 
 /********************************************
- * パネル
  ***************************************** */
-function resetForm(formname) {
-    let d = getHiddenValues();
-    loadParams(d, formname);
-}
-
-function loadForm(file_input, formname) {
-    readJsonFile(file_input, function(dict, file) {
-        setHiddenValues(dict, 'tmp');
-        loadParams(getHiddenValues('tmp'), formname);
-    });
-}
-
-function convertDict2FakeURL(dict) {
-    const writejson = JSON.stringify(dict);
-    const blob = new Blob([writejson], {type: 'application/json'});
-    return URL.createObjectURL(blob);
-}
-
-function saveJsonFile(val) {
-    const userAgent = window.navigator.userAgent.toLowerCase();
-    const fakeurl = convertDict2FakeURL(val);
-
-    if(userAgent.indexOf('msie') != -1
-        || userAgent.indexOf('edge') != -1
-        || userAgent.indexOf('chrome') != -1) {
-        enfocedDownload(fakeurl);
-    }
-    else if(userAgent.indexOf('safari') != -1
-        || userAgent.indexOf('firefox') != -1) {
-        alert("新しいタブでJSONファイルを開きます．\nFirefoxをお使いの方は左上の保存ボタン，Safariをお使いの方は右クリック→ページを別名で保存，を使って保存してください．");
-        window.open(fakeurl);
-    } else {
-        enfocedDownload(fakeurl);
-    }
-}
-
-function saveForm(formname) {
-    let formdata = form2paramDict(formname);
-    saveJsonFile(formdata);
-}
-
-function loadParams(val_dict, formname) {
-    let formdata = form2paramDict(formname);
-    let form = document.forms[formname];
-    let param_list = document.getElementById(formname + "-plist").innerText.split(',');
-    for(let p of param_list) {
-        if(val_dict[p] == null) continue;
-        if(val_dict[p].split(',').length > 1) {
-            let v = val_dict[p].split(',');
-            form[p + "-min"].value = v[0];
-            form[p + "-max"].value = v[1];
-            form[p + "-mode"].value = v[2];
-        }
-        form[p].value = val_dict[p];
-        let view = document.getElementById("view" + p);
-        if(view != null) view.value = val_dict[p];
-    }
-}
-
-function form2paramDict(formname) {
-    let p_list = document.getElementById(formname + "-plist").innerText.split(',');
-    let d = getHiddenValues();
-    let p_dict = {};
-    let form = document.forms[formname];
+/**
+ * パラメータ
+ * @namespace
+ */
+const param = {};
+/**
+ * パラメータパネル（の中のフォーム）を(inputの)name:value辞書にして返す．
+ * @param {string} formname
+ * @return {object} - パラメータID:値の辞書
+ */
+param.form2dict = function(formname) {
+    const p_list = document.getElementById(formname + "-plist").innerText.split(',');
+    const d = tool.getHiddenValues();
+    const p_dict = {};
+    const form = document.forms[formname];
     for(let p of p_list) {
         if(d[p].split(',').length > 1) {
             p_dict[p] = new Array();
@@ -141,164 +57,157 @@ function form2paramDict(formname) {
     }
     return p_dict;
 }
-
-//server
-function callbackFunc(func, arg_arr) {
-    return function(value) {
-        return func(value, ...arg_arr);
-    }
+/**
+ * パラメータパネル(の中のフォーム）の値をJSONファイルにしてユーザーにダウンロード・保存させる
+ * @param {string} formname
+ */
+param.download = function(formname) {
+    const formdata = param.form2dict(formname);
+    tool.saveJsonFile(formdata);
 }
-
-function serverGetReq(callback, _req, responseType ='') {
-    _req = SEVERNAME + _req;
-    const req = new XMLHttpRequest();
-    req.timeout = 3000;
-    req.open("GET", _req);
-    if(responseType != ''){
-        req.responseType = responseType;
-    }
-    req.onload = function(){
-        callback(req.response);
-    }
-    req.error = function() {
-        alert("Error:");
-    };
-    req.send();
-}
-
-function serverPostReq(callback, action, type, senddata, options={}) {
-    let fd = new FormData();
-    let req = new XMLHttpRequest();
-    req.eroor = function () {
-        alert("ERROR:POST " + action);
-    }
-    req.onload=function() {
-        callback(req.response);
-    }
-    req.open('POST', action);
-
-    function appendDict(dict) {
-        for(let key in dict) {
-            fd.append(key, dict[key]);
+/**
+ * パラメータパネル(の中のフォームのinput）に辞書を反映させる．そのパネルのパラメータ名のリストはHiddenタイプのフォームに保存されているので
+ * @param {object} val_dict - 反映させたい辞書
+ * @param {string} formname - 対象のパラメータパネル
+ */
+param.load = function(val_dict, formname) {
+    const formdata = param.form2dict(formname);
+    const form = document.forms[formname];
+    const param_list = document.getElementById(formname + "-plist").innerText.split(',');
+    for(let p of param_list) {
+        if(val_dict[p] == null) continue;
+        if(val_dict[p].split(',').length > 1) {
+            const v = val_dict[p].split(',');
+            form[p + "-min"].value = v[0];
+            form[p + "-max"].value = v[1];
+            form[p + "-mode"].value = v[2];
         }
-        return fd;
-    }
-    if(options != {}) {
-        appendDict(options);
-    }
-    if (type == 'form') {
-        fd.append(senddata);
-        req.send(fd);
-        return;
-    }
-    if (type == 'dict') {
-        appendDict(senddata);
-        req.send(fd);
-        return;
-    }
-    if(type=="file" && senddata.files.length > 0) {
-        const file = senddata.files[0];
-        fd.append(file.name, file);
-        req.send(fd);
-        return;
-    }
-    if (type=="file") {
-        alert('ファイルを選択してください');
-        return;
+        form[p].value = val_dict[p];
+        const view = document.getElementById("view" + p);
+        if(view != null) view.value = val_dict[p];
     }
 }
 
-/********************************************
- * パラメータ
- ***************************************** */
-function getParaForms() {
-    let para_forms = document.forms['property']['param_formnames'].value.split(',');
+/**
+ * パラメータパネル（の中のフォーム）にJSONファイルの値を反映させる
+ * @param {object:input} file_input
+ * @param {string} formname - 分類とフォームが１対１になっている
+ */
+param.loadFromFile = function(file_input, formname) {
+    tool.readJsonFile(file_input, function(dict, file) {
+        tool.setHiddenValues(dict, 'tmp');
+        param.load(tool.getHiddenValues('tmp'), formname);
+    });
+}
+
+/**
+ * パラメータパネル（の中のフォーム）の値を既定値に戻す
+ * @param {string} formname
+ */
+param.resetForm = function(formname) {
+    const d = tool.getHiddenValues();
+    param.load(d, formname);
+}
+/**
+ * 全てのパラメータパネル（の中のフォーム)を取得する
+ * @return {object:array} フォームのリスト
+ */
+param.getParamForms = function() {
+    const para_forms = document.forms['property']['param_formnames'].value.split(',');
     return para_forms;
 }
-function resetAll() {
-    let result = confirm("シミュレーションタブの「世界」を含む全てのパラメータをリセットします．");
+/**
+ * 全てのパラメータパネルの値を既定値に戻す
+ */
+param.resetAll =  function() {
+    const result = confirm(msg.resetAll[LANGUAGE]);
     if(!result) return;
 
-    let para_forms = getParaForms();
+    const para_forms = param.getParamForms();
     for (let f of para_forms) {
         resetForm(f);
     }
 }
-function saveAll() {
-    let para_forms = getParaForms();
+/**
+ * 全てのパラメータをJSONファイルとして保存する
+ */
+param.saveAll = function() {
+    const para_forms = param.getParamForms();
     let p_dict = {};
     for (let f of para_forms) {
-        let d = form2paramDict(f);
+        let d = param.form2dict(f);
         p_dict = {...p_dict, ...d};
     }
-    saveJsonFile(p_dict);
+    tool.saveJsonFile(p_dict);
 }
-function loadAll(file_input) {
-    let para_forms = getParaForms();
+/**
+ * JSONファイルから全ての分類のパラメータを設定する
+ * 発火：input(file) onchange
+ * @param {object:input} file_input - JSONファイル
+ */
+param.loadAll = function(file_input) {
+    const para_forms = param.getParamForms();
     for (let f of para_forms) {
-        loadForm(file_input, f);
+        param.loadFromFile(file_input, f);
     }
-}
-function sliderValueChanged(slider, outputid){
-    let element = document.getElementById(outputid);
-    element.value = slider.value;
-}
-
-function enfocedDownload(url, filename = '') {
-    if(filename == '') {
-        filename = window.prompt("ファイル名を入力してください．", "my.json");
-    }
-    let a = document.createElement("a");
-    a.href = url
-    a.download = filename;
-    a.click();
-    URL.revokeObjectURL(a.href);
 }
 
 /********************************************
- * シミュレーション制御
  ***************************************** */
-
-function setParams(formname, world) {
+/**
+ * シミュレーション制御
+ * @namespace
+ */
+const sim = {};
+/**
+ * パラメータを設定
+ * @param {string} formname - 適用したいパラメータ情報
+ * @param {string} world - ワールドID
+ */
+sim.setParams = function(formname, world) {
     const form = document.forms[formname];
-    const option = {'world': world, 'me': getBrowserId()};
+    const option = {'world': world, 'me': tool.getBrowserId()};
     if(form['sim-param'].value == 'file') {
         const file = form['sim-param-file'];
         if(!(file.files.length > 0)) {
             console.log("Error: setParams-NoFile");
             console.log(file);
-            alert("パラメータのファイルを選択してください．");
+            alert(msg.selectParamFile[LANGUAGE]);
             return;
         }
-        serverPostReq(function(val) {
+        server.post(function(val) {
             console.log('POST/setParams[file]: ' + val);
         }, 'setParams', 'file', file, option);
         return;
     } else {
-        const prop = getHiddenValues('property');
+        const prop = tool.getHiddenValues('property');
         const forms = prop.param_formnames.split(",");
         let p_dict = {}
         for (let p_form of forms) {
-            p_dict = {...p_dict, ...form2paramDict(p_form)};
+            p_dict = {...p_dict, ...param.form2dict(p_form)};
         }
-        serverPostReq(function(val) {
+        server.post(function(val) {
             console.log('POST/setParams[tab]: ' + val);
         }, 'setParams', 'dict', p_dict, option);
         return;
     }
     return;
 }
-
-function setScenario(formname, world) {
+/**
+ * シナリオを設定
+ * @param {string} formname - 適用したいパラメータ情報
+ * @param {string} world - ワールドID
+ */
+sim.setScenario =  function(formname, world) {
     const form = document.forms[formname];
-    const option = {'world': world, 'me': getBrowserId()};
+    const option = {'world': world, 'me': tool.getBrowserId()};
     if(form['sim-scenario'].value == 'file') {
         let file = form['sim-scenario-file'];
         if(!(file.files.length > 0)) {
-            alert("シナリオのファイルを選択してください．");
+            alert(msg.selectScenarioFile[LANGUAGE]);
             return;
         }
-        serverPostReq(function(val) {
+        server.post(function(val) {
             console.log('POST/setScenario[file]: ' + val);
         }, 'setScenario', 'file', file, option);
         return;
@@ -307,13 +216,20 @@ function setScenario(formname, world) {
     }
     return;
 }
-
-function applySettings(formname, world) {
-    setParams(formname, world);
-    setScenario(formname, world);
+/**
+ * シミュレーションに設定を適用する
+ * @param {string} formname - 適用したいパラメータ情報
+ * @param {string} world - ワールドID
+ */
+sim.applySettings = function (formname, world) {
+    sim.setParams(formname, world);
+    sim.setScenario(formname, world);
 }
-
-function takeSnap(world) {
+/**
+ * その瞬間に取得できるデータを取得する
+ * @param {string} world - ワールドID
+ */
+sim.takeSnap = function(world) {
     const date_time = new Date().getTime();
     const strArray2getURI = (str) =>  {
         const array = str.split(',');
@@ -327,108 +243,127 @@ function takeSnap(world) {
         return name + '-' + date_time + '.json';
     }
     const take_snap = (v, name) => {
-        return enfocedDownload(
-            convertDict2FakeURL(v), filename(name)
+        return tool.enfocedDownload(
+            tool.convertDict2FakeURL(v), filename(name)
         );
     }
 
     //getPopulation
-    serverGetReq(
-        callbackFunc(take_snap, ['population']),
-        'getPopulation?world=' + world + '&me=' + getBrowserId(),
+    server.get(
+        tool.callbackFunc(take_snap, ['population']),
+        'getPopulation?world=' + world + '&me=' + tool.getBrowserId(),
         responseType = 'json'
     );
-    serverGetReq(
-        callbackFunc(take_snap, ['population2']),
-        'getPopulation2?world=' + world + '&me=' + getBrowserId(),
+    server.get(
+        tool.callbackFunc(take_snap, ['population2']),
+        'getPopulation2?world=' + world + '&me=' + tool.getBrowserId(),
         responseType = 'json'
     );
     //getIndexes
     const indicator_names = strArray2getURI(
         document.forms['property']['current_step_indicator'].value);
-    serverGetReq(
-        callbackFunc(take_snap, ['indicators']),
-        'getIndexes?' + indicator_names + 'world=' + world + '&me=' + getBrowserId(),
+    server.get(
+        tool.callbackFunc(take_snap, ['indicators']),
+        'getIndexes?' + indicator_names + 'world=' + world + '&me=' + tool.getBrowserId(),
         responseType = 'json'
     );
     const accumulation_indicators = strArray2getURI(
         document.forms['property']['accumulation_indicator'].value);
-    serverGetReq(
-        callbackFunc(take_snap, ['accum_indicators']),
-        'getIndexes?' + accumulation_indicators + 'world=' + world + '&me=' + getBrowserId(),
+    server.get(
+        tool.callbackFunc(take_snap, ['accum_indicators']),
+        'getIndexes?' + accumulation_indicators + 'world=' + world + '&me=' + tool.getBrowserId(),
         responseType = 'json'
     );
     //getDistribution
     const distribution_indicator = strArray2getURI(
         document.forms['property']['distribution_indicators'].value);
-    serverGetReq(
-        callbackFunc(take_snap, ['distribution_indicators']),
-        'getDistribution?' + distribution_indicator + 'fromStep=0&world=' + world + '&me=' + getBrowserId(),
+    server.get(
+        tool.callbackFunc(take_snap, ['distribution_indicators']),
+        'getDistribution?' + distribution_indicator + 'fromStep=0&world=' + world + '&me=' + tool.getBrowserId(),
         responseType = 'json'
     );
     //getParams -world
-    serverGetReq(
-        callbackFunc(take_snap, ['params-' + 'world-' + world]),
-        'getParams?world=' + world + '&me=' + getBrowserId(),
+    server.get(
+        tool.callbackFunc(take_snap, ['params-' + 'world-' + world]),
+        'getParams?world=' + world + '&me=' + tool.getBrowserId(),
         responseType = 'json'
     );
 }
-
-function shareDefaultId(id = '') {
+/**
+ * 既定世界のIDを取得する
+ * @param {string} [id=''] - server.getのcallbackに同じ関数を指定するため．idを代入して使うことはない
+ */
+sim.shareDefaultId = function(id = '') {
     if (id != '') {
-        alert("既定世界のIDは "+ id + " です．\nこのIDを共有された人はあなたの既定世界のシミュレーションを閲覧できます．");
-        return;
+        alert(msg.defaultId[LANGUAGE](id));
     }
-    serverGetReq(shareDefaultId, "getWorldID");
+    else {
+        server.get(sim.shareDefaultId, "getWorldID");
+    }
 }
-
-function worldControl(command, world) {
+/**
+ * シミュレーション世界
+ * @param {string} command - シミュレーションに適用するコマンド
+ * @param {string} world - 世界ID
+ * @param {object:function} [afterfunc=null] - callbackとして使いたい関数がある場合は指定できる
+ */
+sim.worldControl = function(command, world, afterfunc = null) {
     if(world == 'default') {
-        world += '&me=' + getBrowserId();
+        world += '&me=' + tool.getBrowserId();
     }
     const req = command + '?world=' + world;
-    serverGetReq(function (val) {
+    server.get(function (val) {
         console.log('GET:' + command + ' id: ' + world + ' result:' + val);
+        if(afterfunc != null) afterfunc(val);
     }, req);
 }
 
-function addCanvas(world_id) {
-    const canvas_id = world_id + '-canvas';
-    const canvas = document.getElementById(canvas_id);
-    const width = document.querySelector("#world-template .cmd-btn-list").offsetWidth;
-    WORLDLIST[world_id] = new WindowPanel(canvas, world_id, width, width * 0.75);//4:3
-    WORLDLIST[world_id].initialize();
-}
-
-function deleteCanvas(world_id) {
-    WORLDLIST[world_id].finalize();
-    delete WORLDLIST[world_id];
-}
-
-
 function pauseOrResume(world, button) {
     if(button.innerText == "▶︎") {
-        worldControl('start', world);
+        const filtername = world + '-draw-filter';
+        sim.worldControl('start', world, function () {
+            MONITORS[world].start(tool.getBrowserId(), world);
+        });
         button.innerText = "Ⅱ";
     } else {
-        worldControl('stop', world);
+        sim.worldControl('stop', world);
+        MONITORS[world].stop();
         button.innerText = "▶︎";
     }
-    WORLDLIST[world].pauseOrResume();
+    return;
 }
 
-function stepSim(world) {
-    worldControl('step', world);
-    WORLDLIST[world].step();
+function stepSim(world){
+    let space_id = world;
+    if(world == 'default') {
+        space_id = 'world-template';
+    }
+    const node = document.getElementById(space_id);
+    node.querySelector(".cmd-btn-list button[name='simswitch']").innerText = "▶︎";
+    sim.worldControl('stop', world);
+    sim.worldControl('step', world);
 }
 
 function resetSim(world) {
-    let result = confirm("実行中の世界を初期化しますか?");
+    const result = confirm(msg.confirmResetWorld[LANGUAGE]);
     if(!result) return;
-    worldControl('reset', world);
-    WORLDLIST[world].reset();
+    sim.worldControl('reset', world);
+    MONITORS[world].reset();
 }
 
+function addMonitor(w_id) {
+    const p_node = document.getElementById(w_id + '-result');
+    p_node.innerHTML='';
+    const width = document.querySelector("#world-template .cmd-btn-list").offsetWidth;
+    MONITORS[w_id] = new MonitorPIXI(p_node, width, w_id);
+}
+
+function deleteMonitor(w_id) {
+    delete MONITORS[w_id];
+}
+/********************************************
+ * ワールドリスト
+ ***************************************** */
 function addNewWorld(world_id='') {
     if(world_id != '') {
         console.log("GET/addNewWorld: " + world_id);
@@ -437,92 +372,41 @@ function addNewWorld(world_id='') {
         const new_world = document.getElementById('world-template').cloneNode(true);
         new_world.style = 'display:block;';
         new_world.id = world_id;
+        new_world.querySelector("button[name='simswitch']").innerText = '▶︎';
         new_world.querySelector("button[name='share']").remove();
         new_world.querySelector('.world-name-container label').innerText = w_name;
 
         const delete_sim_btn = document.createElement("button");
         delete_sim_btn.title =  w_name + 'を削除';
-        delete_sim_btn.innerHTML = trash_box;
+        delete_sim_btn.innerHTML = img.trash_box;
         delete_sim_btn.setAttribute("onclick", "closeWorld('" + world_id + "');");
         delete_sim_btn.setAttribute("class", "command-button");
 
         new_world.querySelector('.world-name-container').appendChild(delete_sim_btn);
+        const interval_btn = new_world.querySelector("input[name='interval']");
+        const steps_ps_btn = new_world.querySelector("input[name='speed']");
         new_world.innerHTML = new_world.innerHTML.toString().replace(/default/gi, world_id);
 
         const w_list = document.getElementById("world-list");
         w_list.append(new_world);
 
-        addCanvas(world_id);
+        addMonitor(world_id);
         return;
     }
     console.log("func: addNewWorld");
-    serverGetReq(addNewWorld, "newWorld");
+    server.get(addNewWorld, "newWorld");
 }
 
 function closeWorld(world_id){
-    const DO = confirm("この世界を消去します．");
+    const DO = confirm(msg.confirmCloseWorld[LANGUAGE]);
     if(!DO) return;
 
     document.getElementById(world_id).remove();
-    deleteCanvas(world_id)
-    worldControl('closeWorld', world_id);
+    deleteMonitor(world_id);
+    sim.worldControl('closeWorld', world_id);
 }
 
 function sharedWorld() {
     alert("この機能は未実装です");
 }
 
-/********************************************
- * ジョブ監視
- ***************************************** */
-function getJobQueueStatus(result_view) {
-    serverGetReq(function (val) {
-        const result = document.getElementById(result_view);
-        result.innerText = val;
-    }, "getJobQueueStatus");
-}
-
-
-/********************************************
- * 共通
- ***************************************** */
-function loadFile(file_input) {
-    readJsonFile(file_input, function (result, file) {
-        let filename = file_input.previousSibling;
-        filename.innerText = "";
-        filename.innerText = " " + file.name;
-    });
-}
-
-function dict2formdata(dict) {
-    let fd = new FormData();
-    for (key in dict) {
-        fd.append(key, dict[key]);
-    }
-    return fd;
-}
-
-function showElement(id) {
-    document.getElementById(id).style.display = "block";
-}
-
-function hideElement(id) {
-    document.getElementById(id).style.display = 'none';
-}
-
-//json
-function readJsonFile(file_input, callback) {
-    let file = file_input.files[0];
-    let reader = new FileReader();
-    file_input.reset;
-    reader.onerror = () => {
-        alert("ファイル読み込みに失敗しました．");
-    }
-    reader.onload = function(e) {
-        callback(JSON.parse(reader.result), file);
-    }
-    reader.readAsText(file);
-}
-
-//image
-const trash_box = '<svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-trash-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">  <path fill-rule="evenodd" d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5a.5.5 0 0 0-1 0v7a.5.5 0 0 0 1 0v-7z"/></svg>';

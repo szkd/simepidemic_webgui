@@ -1,0 +1,55 @@
+{
+    "info": {
+        "cmd_list_cls": "cmd-btn-list animation-filters",
+        "id": "default-draw-filter"
+    },
+    "listener": {
+        "susceptible": "changeFilter('default', 'susceptible', this);",
+        "asymptomatic": "changeFilter('default', 'asymptomatic', this);",
+        "symptomatic": "changeFilter('default', 'symptomatic', this);",
+        "recovered": "changeFilter('default', 'recovered', this);",
+        "died": "changeFilter('default', 'died', this);"
+    },
+    "boxes": {
+        "susceptible": {
+            "label": {
+                "JA": "非感染",
+                "EN": "Susceptible"
+            },
+            "checked": true,
+            "name": "susceptible"
+        },
+        "asymptomatic": {
+            "label": {
+                "JA": "未発症",
+                "EN": "ASymptomatic"
+            },
+            "checked": true,
+            "name": "asymptomatic"
+        },
+        "symptomatic": {
+            "label": {
+                "JA": "発症",
+                "EN": "Symptomatic"
+            },
+            "name": "symptomatic",
+            "checked": true
+        },
+        "recovered": {
+            "label": {
+                "JA": "快復",
+                "EN": "Recovered"
+            },
+            "name": "recovered",
+            "checked": true
+        },
+        "died": {
+            "label": {
+                "JA": "死亡",
+                "EN": "Died"
+            },
+            "name": "died",
+            "checked": true
+        }
+    }
+}

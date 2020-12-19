@@ -37,22 +37,45 @@ def convertMyProperty():
         html_str += tag("input", attr={"type" : "hidden", "name": name, "value": my_property[name]}, end=False)
     return html_str
 
+def checkboxGroup(formname, d, lang):
+    info = d['info']
+    listener = d['listener']
+    boxes = d['boxes']
+    html_str = ""
+
+    for b in boxes:
+        box = boxes[b]
+        label = tag('div', '■', {'style': 'width: 1em; display: inline-block;', 'name' : b})\
+            + tag("label", box['label'][lang]);
+        attr = {
+                'name': box['name'],
+                'type': 'checkbox',
+                'checked': 'checked' if box['checked'] else '',
+                'onchange': listener[b]
+        }
+        html_str += tag("input", attr=attr, end=False) + label
+    if formname != '':
+        return tag("form",html_str, {'name': formname})
+    return tag("div", html_str, {'class':info['cmd_list_cls']})
+
 def buttonGroup(d, lang):
     info = d['info']
     listener = d['listener']
     buttons = d['buttons']
-    other = d['other'] if 'other' in d else ''
+    other = d['other'] if 'other' in d else {}
     html_str = ""
 
     for cmd in buttons:
         button_name = buttons[cmd]
         if type(buttons[cmd]) != type(''):
             button_name = buttons[cmd][lang]
-        html_str += tag("button", button_name, {\
-                "type": "button",\
-                "class": info['cmd_cls'],\
-                "onclick": listener[cmd]\
-                })
+        attr = {
+            "type": "button",\
+            "class": info['cmd_cls']\
+        }
+        attr['onclick'] = listener[cmd]
+        html_str += tag("button", button_name, attr)
+
     for key in other:
         cmd = other[key]
         content = cmd['content'] if 'content' in cmd else ''
@@ -66,10 +89,40 @@ def buttonGroup(d, lang):
             })
     return html_str
 
+def numberGroup(d, lang):
+    numbers = d['numbers']
+    info = d['info']
+    html_str = ""
+    for n in numbers:
+        number = numbers[n];
+        html_str += tag("span",\
+            tag("label", number['label'][lang])\
+            + tag("input",\
+            attr = {\
+                'type': "number",\
+                'value': number['default-value'],\
+                'step': "0.1"\
+                }, end = False)\
+            + tag("span", number['unit'][lang]) if 'unit' in number else '',\
+            {\
+                "style": "display: inline-block;margin-right: 25px;",\
+                "name": n\
+            }
+        )
+    html_str = tag("div", html_str, {\
+            'class': info['cmd_list_cls']\
+            })
+    return html_str
 
-def buttonGroupFromJson(jsonfile, lang):
+
+def inputGroupFromJson(jsonfile, lang, i_type = "button", formname = ''):
     j = json2dict(jsonfile, True)
-    return buttonGroup(j, lang)
+    if i_type == "button":
+        return buttonGroup(j, lang)
+    if i_type == "checkbox":
+        return checkboxGroup(formname, j, lang)
+    if i_type == "number":
+        return numberGroup(j, lang)
 
 """ ********************************
 pages
@@ -141,9 +194,51 @@ def simSettings(id, lang):
         {'name': 'sim-'+id+'-form'})
     return html_str
 
+def animSettings(jsonfile, lang):
+    d = json2dict(jsonfile, True)
+    settings = d['settings']
+    html_str = ""
+    for s in settings:
+        html_str += tag("span",\
+            tag("label", settings[s]['name'][lang])\
+            + tag("input",\
+            attr = {\
+                "type": "number",\
+                "id": s + 'anim-settings',\
+                "value": "1",\
+                "step": "0.1"\
+                }, end = False)\
+            + tag("span", settings[s]['unit'][lang]) if 'unit' in settings[s] else '',\
+            {\
+                "style": "display: inline-block;margin-right: 25px;",\
+                "name": s\
+            }
+        )
+    result = {}
+    result['settings'] = html_str
+    result['apply'] = ""
+    return result
+
 def sim(lang):
-    cmd = buttonGroupFromJson(SIM_DIR + "world_commands.json", lang)
-    w_cmd = buttonGroupFromJson(SIM_DIR + "commands.json", lang)
+    title = {
+        "sim-title": {
+            "JA": "シミュレーション制御",
+            "EN": "Simulation Control"
+            },
+        "anim-filter-title": {
+            "JA": "アニメーションに表示",
+            "EN": "Watch on ..."
+            },
+        "anim-stg-title": {
+            "JA": "アニメーション設定",
+            "EN": "Animation Settings"
+            }
+    }
+    cmd = inputGroupFromJson(SIM_DIR + "world_commands.json", lang, 'button')
+    w_cmd = inputGroupFromJson(SIM_DIR + "commands.json", lang, 'button')
+    anim_settings = inputGroupFromJson(SIM_DIR + "animation_settings.json", lang, 'number')
+
+    anim_filters = inputGroupFromJson(SIM_DIR + "animation_filters.json", lang, 'checkbox', 'default-draw-filter');
     indicator_type = json2dict(COMMON_DIR + "indicator_type.json")
     dist_type = json2dict(COMMON_DIR + "distribution_type.json")
     for name in indicator_type:
@@ -156,7 +251,12 @@ def sim(lang):
 
     world_template = rephrase(SIM_DIR + "world.html",\
             {\
-                 "WORLDCMD": w_cmd,\
+                "SIM-TITLE": title['sim-title'][lang],\
+                "ANIM-FILTER-TITLE": title['anim-filter-title'][lang],\
+                "ANIM-STG-TITLE": title['anim-stg-title'][lang],\
+                "WORLDCMD": w_cmd,\
+                "ANIMATION-FILTER": anim_filters,\
+                "ANIMATION-STG": anim_settings,\
                 "ID": "default",\
                 "SETTINGS": simSettings('default', lang)\
             }, 1000)
@@ -165,7 +265,7 @@ def sim(lang):
 """ ********************************* """
 """ ********************************* """
 def param(lang):
-    commands = buttonGroupFromJson(PARAM_DIR + "commands.json", lang);
+    commands = inputGroupFromJson(PARAM_DIR + "commands.json", lang);
     paramtype = json2dict(CONTENTS_DIR + "paramtype.json")
     params = ""
     params += paramPanels(lang, paramtype, PARAM_DIR + 'param.json', COMMON_DIR + 'panel.html')
@@ -174,7 +274,7 @@ def param(lang):
 """ ********************************* """
 """ ********************************* """
 def scenario(lang):
-    commands = buttonGroupFromJson(SCENARIO_DIR + "commands.json", lang);
+    commands = inputGroupFromJson(SCENARIO_DIR + "commands.json", lang);
     return rephrase(SCENARIO_DIR + "scenario.html", {"COMMANDS": commands});
 """ ********************************* """
 """ ********************************* """
@@ -187,6 +287,7 @@ def development(lang):
     protocol = json2dict(DEVELOP_DIR + "protocol.json")
     html_str = ""
     html_str += job();
+    html_str += serverVersion();
     th_style = "background-color: grey; color: white;"
     th_row = ""
     for elem in ["method", "action", "option", "stage", "hint"]:
@@ -214,6 +315,15 @@ def development(lang):
     return html_str
 """ ********************************* """
 """ ********************************* """
+def serverVersion():
+    html_str = ""
+    html_str += tag("button", "SV version",{\
+            "type": "button",\
+            "onclick": "getServerVersion('SVversion');"
+            })
+    html_str += tag("span", '', {"id": "SVversion"})
+    return html_str
+
 def job():
     html_str = ""
     html_str += tag("button", "ジョブの待ち行列の監視",{\
@@ -436,8 +546,12 @@ def buildPage(lang):
     ]
     scripts=[\
         "https://cdnjs.cloudflare.com/ajax/libs/pixi.js/5.3.3/pixi.min.js",\
-        SCRIPTS + "windowPanel.js",\
-        SCRIPTS + "script.js"\
+        #SCRIPTS + "windowPanel.js",\
+        SCRIPTS + "common.js",\
+        SCRIPTS + "Monitor.js",\
+        SCRIPTS + "EventWork.js",\
+        SCRIPTS + "script.js",\
+        SCRIPTS + "Interface.js"\
     ]
     data = {}
     data["HEAD"] = head("SimEpidemic",\
