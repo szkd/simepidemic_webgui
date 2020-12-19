@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <title>SimEpidemic</title><meta charset = "utf-8"><link rel = "icon" href = "../favicon.png"><link rel = "stylesheet" href = "../css/common.css"><script src = "https://cdnjs.cloudflare.com/ajax/libs/pixi.js/5.3.3/pixi.min.js"></script><script src = "../script/common.js"></script><script src = "../script/Monitor.js"></script><script src = "../script/EventWork.js"></script><script src = "../script/script.js"></script><script src = "../script/Interface.js"></script>
+    </head>
+    <body>
+        <div id = "wrapper">
+            <header>
+    <div>
+        <h1>個体ベース感染シミュレーション</h1>
+        <input type = 'checkbox' id = 'info-checkbox'>
+        <label for = 'info-checkbox' class = 'info' title = 'これは何?'></label>
+        <span class = 'info-item'>
+            <a href = "http://www.intlab.soka.ac.jp/~unemi/index-j.html">畝見 達夫</a>
+        </span>
+        <a href='http://localhost:1234/en/index.html'>English</a>
+        <div id='info-panel'>
+            簡単かつ適当にいうと、個人の行動と感染・発症・隔離・回復・死亡の確率的状態遷移モデルを実装して、ランダム配置された人口3000人の１人が感染者という状況から1日５ステップの想定で状態が変わっていきます。<br>パラメータとして、未感染者と感染者が接近したときの感染確率、潜伏期間の分布、症状の進行速度の分布、回復開始時期の分布、人口、領域の広さ、など、さらに対策としての無症状感染者および発症者の隔離の割合と隔離までの日数、社会距離の推奨距離と協力率、移動制限の度合いを設定できます。<br>って感じですが、詳しいモデルの式などは、ちょっと（かなりかもしれないけど）お待ちください。<a href = "http://www.intlab.soka.ac.jp/~unemi/SimEpidemic1/info/index-ja.html" target = "_blank">プロジェクトのウェブサイトはこちらです</a>
+        </div>
+    </div>
+</header>
+
+
+            <main>
+                <div class = "tab_container" id = "tabs"><style>#sim_content{display: none;}
+#sim:checked ~ #sim_content{
+    display: block;
+}
+#sim:checked + .tab_item{
+    background-color:white;
+    color: var(--my-black);
+    border: none;
+}
+</style><input type = "radio" id = "sim" name = "page_tab" style = "display:none;" checked = "checked"><label for = "sim" class = "tab_item">シミュレーション</label><style>#param_content{display: none;}
+#param:checked ~ #param_content{
+    display: block;
+}
+#param:checked + .tab_item{
+    background-color:white;
+    color: var(--my-black);
+    border: none;
+}
+</style><input type = "radio" id = "param" name = "page_tab" style = "display:none;"><label for = "param" class = "tab_item">パラメータ</label><style>#scenario_content{display: none;}
+#scenario:checked ~ #scenario_content{
+    display: block;
+}
+#scenario:checked + .tab_item{
+    background-color:white;
+    color: var(--my-black);
+    border: none;
+}
+</style><input type = "radio" id = "scenario" name = "page_tab" style = "display:none;"><label for = "scenario" class = "tab_item">シナリオ</label><style>#development_content{display: none;}
+#development:checked ~ #development_content{
+    display: block;
+}
+#development:checked + .tab_item{
+    background-color:white;
+    color: var(--my-black);
+    border: none;
+}
+</style><input type = "radio" id = "development" name = "page_tab" style = "display:none;"><label for = "development" class = "tab_item">開発</label><div class = "tab_content" id = "sim_content"><div id = "world-list">﻿<div class="world" id = 'world-template'>
+    <div class="world-name-container">
+        <label>Default</label>
+    </div>
+    <div class="world-content">
+        <!--
+            <div style="color: var(--my-black); font-size: 11pt; padding: 5px 0;">
+                アニメーション設定
+            </div>
+            <div class = "cmd-btn-list"><span style = "display: inline-block;margin-right: 25px;" name = "speed"><label>描画速度（最大）</label><input type = "number" value = "30" step = "0.1"><span>ステップ/秒</span></span><span style = "display: inline-block;margin-right: 25px;" name = "interval"><label>時間間隔</label><input type = "number" value = "1" step = "0.1"><span>秒</span></span></div>
+        -->
+        <div style="color: var(--my-black); font-size: 11pt; padding: 5px 0;">
+            シミュレーション制御
+        </div>
+            <div class = "cmd-btn-list"><button type = "button" class = "command-button" onclick = "showElement('sim-default');"><svg width='1em' height='1em' viewBox='0 0 16 16' class='bi bi-gear-fill' fill='currentColor' xmlns='http://www.w3.org/2000/svg'>  <path fill-rule='evenodd' d='M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 0 0-5.86 2.929 2.929 0 0 0 0 5.858z'/></svg></button><button type = "button" class = "command-button" onclick = "pauseOrResume('default', this);" name='simswitch'">▶︎</button><button type = "button" class = "command-button" onclick = "stepSim('default');">1ステップ進む</button><button type = "button" class = "command-button" onclick = "resetSim('default');">初期化</button><button type = "button" class = "command-button" onclick = "takeSnap('default');"><svg width='1em' height='1em' viewBox='0 0 16 16' class='bi bi-camera-fill' fill='currentColor' xmlns='http://www.w3.org/2000/svg'>  <path d='M10.5 8.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z'/>  <path fill-rule='evenodd' d='M2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.172a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 9.172 2H6.828a2 2 0 0 0-1.414.586l-.828.828A2 2 0 0 1 3.172 4H2zm.5 2a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1zm9 2.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0z'/></svg></button><button class = "command-button" onclick = "shareDefaultId();" name = "share"><svg width='1em' height='1em' viewBox='0 0 16 16' class='bi bi-share' fill='currentColor' xmlns='http://www.w3.org/2000/svg'><path fill-rule='evenodd' d='M13.5 1a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5zm-8.5 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm11 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z'/></svg> 共有</button></div>
+        <div style="position: relative;">
+            <div id="sim-default" class="setting-panel">
+                <form name = "sim-default-form"><div class = "display: flex; flex-wrap: wrap; margin-top: 10px; justify-content: flex-start"><button type = "button" class = "close-btn" onclick = "hideElement('sim-default');">×</button><div style = "margin-top: 15px; margin-bottom:20px;">シミュレーションの進行中に設定を変更した場合，進行中のシミュレーションに反映されます．<br>ただし，「世界」に分類されるパラメータが変更された場合は次に実行するシミュレーションとして予約されます．</div><button type = "button" class = "apply-btn" name = "apply-settings" onclick = "applySettings('sim-default-form', 'default');">適用</button><div class = "param-title">パラメータ</div><div><input type = "radio" name = "sim-param" id = "param0" class = "inline-block margin-right" style = "flex-grow: 1;" value = "tab" checked = "checked"><label for = "param0" style = "margin-right:  8px;">パラメータタブの値を使用</label></div><div><input type = "radio" name = "sim-param" id = "param1" class = "inline-block margin-right" style = "flex-grow: 1;" value = "file"><label for = "param1" style = "margin-right:  8px;">ファイルから読み込む</label><label for = "sim-param-file" class = "file-plus"></label><input type = "file" accept = ".json, application/json" style = "display:none;" id = "sim-param-file" onchange = "loadFile(this);"></div><div class = "param-title">シナリオ</div><div><input type = "radio" name = "sim-scenario" id = "scenario0" class = "inline-block margin-right" style = "flex-grow: 1;" value = "disabled" checked = "checked"><label for = "scenario0" style = "margin-right:  8px;">使用しない</label></div><div><input type = "radio" name = "sim-scenario" id = "scenario1" class = "inline-block margin-right" style = "flex-grow: 1;" value = "file"><label for = "scenario1" style = "margin-right:  8px;">ファイルから読み込む</label><label for = "sim-scenario-file" class = "file-plus"></label><input type = "file" accept = ".json, application/json" style = "display:none;" id = "sim-scenario-file" onchange = "loadFile(this);"></div></div></form>
+            </div>
+        </div>
+        <div class="result-view">
+            <div style="color: var(--my-black); font-size: 11pt; padding: 5px 0;">
+                アニメーションに表示
+            </div>
+                <form name = "default-draw-filter"><input name = "susceptible" type = "checkbox" checked = "checked" onchange = "changeFilter('default', 'susceptible', this);"><div style = "width: 1em; display: inline-block;" name = "susceptible">■</div><label>非感染</label><input name = "asymptomatic" type = "checkbox" checked = "checked" onchange = "changeFilter('default', 'asymptomatic', this);"><div style = "width: 1em; display: inline-block;" name = "asymptomatic">■</div><label>未発症</label><input name = "symptomatic" type = "checkbox" checked = "checked" onchange = "changeFilter('default', 'symptomatic', this);"><div style = "width: 1em; display: inline-block;" name = "symptomatic">■</div><label>発症</label><input name = "recovered" type = "checkbox" checked = "checked" onchange = "changeFilter('default', 'recovered', this);"><div style = "width: 1em; display: inline-block;" name = "recovered">■</div><label>快復</label><input name = "died" type = "checkbox" checked = "checked" onchange = "changeFilter('default', 'died', this);"><div style = "width: 1em; display: inline-block;" name = "died">■</div><label>死亡</label></form>
+                <div id='default-result'>
+                </div>
+        </div>
+    </div>
+</div>
+</div><div class = "cmd-btn-list"><button type = "button" class = "command-button" onclick = "addNewWorld();">新しい世界を追加</button><button type = "button" class = "command-button" onclick = "sharedWorld();">共有された世界を表示</button></div></div><div class = "tab_content" id = "param_content"><div class = "cmd-btn-list"><button type = "button" class = "command-button" onclick = "saveAll();">現在の設定を保存</button><button type = "button" class = "command-button" onclick = "resetAll();">既定値に戻す</button><label for = "param-title-button" class = "command-button">ファイルから読み込む</label><input type = "file" id = "param-title-button" class = "command-button" style = "display:none;" accept = ".json, application/json" onchange = "loadAll(this);"></input></div><style>
+.panel-cmd-list {
+    display: inline-block;
+}
+label[for="world"]::before {
+    content: "▶︎";
+    vertical-align: middle;
+}
+        #world:checked ~ label[for="world"]::before {
+            content: "▼";
+            vertical-align: middle;
+        }
+        #world-content {
+            display: none;
+        }
+        #world:checked ~ #world-content {
+            display: block;
+        }
+</style>
+
+<div class="panel">
+    <div style="display:none;" id="world-form-plist">populationSize,worldSize,mesh,stepsPerDay,initialInfected</div>
+    <form name="world-form">
+        <input type="checkbox" id="world" style="display:none;" checked="checked" title="折りたたみ">
+        <label for="world">
+            世界
+            <div class = "pnel-cmd-list"><button type = "button" class = "panel-cmd" onclick = "saveForm('world-form');">現在の設定を保存</button><button type = "button" class = "panel-cmd" onclick = "resetForm('world-form');">既定値に戻す</button><label for = "world-file" class = "panel-cmd">ファイルから読み込む</label><input type = "file" id = "world-file" style = "display:none;" accept = ".json, application/json" onchange = "loadForm(this, 'world-form');"></input></div>
+        </label>
+        <div id="world-content">
+            <div class = "param-num"><label for = "populationSize" class = "num-label">初期人口</label><input step = "1" value = "10000" min = "100" type = "number" id = "populationSize" class = "param-input"><span>人</span></div><div class = "param-num"><label for = "worldSize" class = "num-label">世界の大きさ</label><input step = "1" value = "360" min = "10" type = "number" info = "一辺の長さ" id = "worldSize" class = "param-input"><span>距離単位</span></div><div><div class = "param-title">メッシュ</div><div class = "slider"><span>1 </span><input type = "range" step = "1" value = "18" min = "1 " max = "999" info = "縦横の各分割数" id = "mesh" oninput = "sliderValueChanged(this,'viewmesh')"><span>999</span><input type = "number" step = "1" value = "18" class = "slider_value" id = "viewmesh" oninput = "sliderValueChanged(this, 'mesh')"><span class = "slider_unit">-h</span></div></div><div><div class = "param-title">1日当たりステップ数</div><div class = "slider"><span>1</span><input type = "range" step = "1" value = "4" min = "1" max = "999" id = "stepsPerDay" oninput = "sliderValueChanged(this,'viewstepsPerDay')"><span>999</span><input type = "number" step = "1" value = "4" class = "slider_value" id = "viewstepsPerDay" oninput = "sliderValueChanged(this, 'stepsPerDay')"><span class = "slider_unit">ステップ</span></div></div><div><div class = "param-title">初期状態での感染者数</div><div class = "slider"><span>1</span><input type = "range" step = "1" value = "4" min = "1" max = "999" id = "initialInfected" oninput = "sliderValueChanged(this,'viewinitialInfected')"><span>999</span><input type = "number" step = "1" value = "4" class = "slider_value" id = "viewinitialInfected" oninput = "sliderValueChanged(this, 'initialInfected')"><span class = "slider_unit">人</span></div></div>
+        </div>
+    </form>
+</div>
+
+
+
+<style>
+.panel-cmd-list {
+    display: inline-block;
+}
+label[for="move"]::before {
+    content: "▶︎";
+    vertical-align: middle;
+}
+        #move:checked ~ label[for="move"]::before {
+            content: "▼";
+            vertical-align: middle;
+        }
+        #move-content {
+            display: none;
+        }
+        #move:checked ~ #move-content {
+            display: block;
+        }
+</style>
+
+<div class="panel">
+    <div style="display:none;" id="move-form-plist">mass,friction,avoidance</div>
+    <form name="move-form">
+        <input type="checkbox" id="move" style="display:none;" checked="checked" title="折りたたみ">
+        <label for="move">
+            移動
+            <div class = "pnel-cmd-list"><button type = "button" class = "panel-cmd" onclick = "saveForm('move-form');">現在の設定を保存</button><button type = "button" class = "panel-cmd" onclick = "resetForm('move-form');">既定値に戻す</button><label for = "move-file" class = "panel-cmd">ファイルから読み込む</label><input type = "file" id = "move-file" style = "display:none;" accept = ".json, application/json" onchange = "loadForm(this, 'move-form');"></input></div>
+        </label>
+        <div id="move-content">
+            <div><div class = "param-title">質量</div><div class = "slider"><span>10.0</span><input type = "range" step = "0.1" value = "50" min = "10.0" max = "100.0" info = "個体加速度の係数" id = "mass" oninput = "sliderValueChanged(this,'viewmass')"><span>100.0</span><input type = "number" step = "0.1" value = "50" class = "slider_value" id = "viewmass" oninput = "sliderValueChanged(this, 'mass')"><span class = "slider_unit">%</span></div></div><div><div class = "param-title">摩擦</div><div class = "slider"><span>0.0</span><input type = "range" step = "0.1" value = "50" min = "0.0" max = "100.0" info = "個体加速度の減速係数" id = "friction" oninput = "sliderValueChanged(this,'viewfriction')"><span>100.0</span><input type = "number" step = "0.1" value = "50" class = "slider_value" id = "viewfriction" oninput = "sliderValueChanged(this, 'friction')"><span class = "slider_unit">%</span></div></div><div><div class = "param-title">衝突回避</div><div class = "slider"><span>0.0</span><input type = "range" step = "0.1" value = "80" min = "0.0" max = "100.0" info = "個体間の斥力" id = "avoidance" oninput = "sliderValueChanged(this,'viewavoidance')"><span>100.0</span><input type = "number" step = "0.1" value = "80" class = "slider_value" id = "viewavoidance" oninput = "sliderValueChanged(this, 'avoidance')"><span class = "slider_unit">%</span></div></div>
+        </div>
+    </form>
+</div>
+
+
+
+<style>
+.panel-cmd-list {
+    display: inline-block;
+}
+label[for="mechanism"]::before {
+    content: "▶︎";
+    vertical-align: middle;
+}
+        #mechanism:checked ~ label[for="mechanism"]::before {
+            content: "▼";
+            vertical-align: middle;
+        }
+        #mechanism-content {
+            display: none;
+        }
+        #mechanism:checked ~ #mechanism-content {
+            display: block;
+        }
+</style>
+
+<div class="panel">
+    <div style="display:none;" id="mechanism-form-plist">infectionProberbility,infectionDistance,contagionDelay,contagionPeak,incubation,fatality,recovery,immunity</div>
+    <form name="mechanism-form">
+        <input type="checkbox" id="mechanism" style="display:none;" checked="checked" title="折りたたみ">
+        <label for="mechanism">
+            発症機序
+            <div class = "pnel-cmd-list"><button type = "button" class = "panel-cmd" onclick = "saveForm('mechanism-form');">現在の設定を保存</button><button type = "button" class = "panel-cmd" onclick = "resetForm('mechanism-form');">既定値に戻す</button><label for = "mechanism-file" class = "panel-cmd">ファイルから読み込む</label><input type = "file" id = "mechanism-file" style = "display:none;" accept = ".json, application/json" onchange = "loadForm(this, 'mechanism-form');"></input></div>
+        </label>
+        <div id="mechanism-content">
+            <div><div class = "param-title">感染確率</div><div class = "slider"><span>0.0</span><input type = "range" step = "0.1" value = "50.0" min = "0.0" max = "100.0" id = "infectionProberbility" oninput = "sliderValueChanged(this,'viewinfectionProberbility')"><span>100.0</span><input type = "number" step = "0.1" value = "50.0" class = "slider_value" id = "viewinfectionProberbility" oninput = "sliderValueChanged(this, 'infectionProberbility')"><span class = "slider_unit">%</span></div></div><div><div class = "param-title">感染距離</div><div class = "slider"><span>1.0</span><input type = "range" step = "0.1" value = "4.0" min = "1.0" max = "20.0" id = "infectionDistance" oninput = "sliderValueChanged(this,'viewinfectionDistance')"><span>20.0</span><input type = "number" step = "0.1" value = "4.0" class = "slider_value" id = "viewinfectionDistance" oninput = "sliderValueChanged(this, 'infectionDistance')"><span class = "slider_unit">距離単位</span></div></div><div><div class = "param-title">感染症の遅れ</div><div class = "slider"><span>0.0</span><input type = "range" step = "0.1" value = "5.0" min = "0.0" max = "10.0" info = "感染からの期間" id = "contagionDelay" oninput = "sliderValueChanged(this,'viewcontagionDelay')"><span>10.0</span><input type = "number" step = "0.1" value = "5.0" class = "slider_value" id = "viewcontagionDelay" oninput = "sliderValueChanged(this, 'contagionDelay')"><span class = "slider_unit">日</span></div></div><div><div class = "param-title">感染症のピーク</div><div class = "slider"><span>0.0</span><input type = "range" step = "0.1" value = "3.0" min = "0.0" max = "10.0" info = "感染からの期間" id = "contagionPeak" oninput = "sliderValueChanged(this,'viewcontagionPeak')"><span>10.0</span><input type = "number" step = "0.1" value = "3.0" class = "slider_value" id = "viewcontagionPeak" oninput = "sliderValueChanged(this, 'contagionPeak')"><span class = "slider_unit">日</span></div></div><div class="param_dist">
+    <div class="param-title">潜伏期間 [ <span>日</span> ]</div>
+    <div id="incubation" class="dist-input">
+        <div class="dist-item">
+            <div class="dist-num">
+                <label for="incubation-min">最小値</label>
+                <input type="number" step="0.1" value="1.0" id="incubation-min" name="incubation">
+            </div>
+        </div>
+        <div class="dist-item">
+            <div class="dist-num">
+                <label for="incubation-max">最大値</label>
+                <input type="number" step="0.1" value="14.0" id="incubation-max" name="incubation">
+            </div>
+        </div>
+        <div class="dist-item">
+            <div class="dist-num">
+                <label for="incubation-mode">最頻値</label>
+                <input type="number" step="0.1" value="5.0" id="incubation-mode" name="incubation">
+            </div>
+        </div>
+    </div>
+</div>
+<div class="param_dist">
+    <div class="param-title">発症から死亡まで [ <span>日</span> ]</div>
+    <div id="fatality" class="dist-input">
+        <div class="dist-item">
+            <div class="dist-num">
+                <label for="fatality-min">最小値</label>
+                <input type="number" step="0.1" value="4.0" id="fatality-min" name="fatality">
+            </div>
+        </div>
+        <div class="dist-item">
+            <div class="dist-num">
+                <label for="fatality-max">最大値</label>
+                <input type="number" step="0.1" value="20.0" id="fatality-max" name="fatality">
+            </div>
+        </div>
+        <div class="dist-item">
+            <div class="dist-num">
+                <label for="fatality-mode">最頻値</label>
+                <input type="number" step="0.1" value="16.0" id="fatality-mode" name="fatality">
+            </div>
+        </div>
+    </div>
+</div>
+<div class="param_dist">
+    <div class="param-title">快復開始まで [ <span>日</span> ]</div>
+    <div id="recovery" class="dist-input">
+        <div class="dist-item">
+            <div class="dist-num">
+                <label for="recovery-min">最小値</label>
+                <input type="number" step="0.1" value="4.0" id="recovery-min" name="recovery">
+            </div>
+        </div>
+        <div class="dist-item">
+            <div class="dist-num">
+                <label for="recovery-max">最大値</label>
+                <input type="number" step="0.1" value="40.0" id="recovery-max" name="recovery">
+            </div>
+        </div>
+        <div class="dist-item">
+            <div class="dist-num">
+                <label for="recovery-mode">最頻値</label>
+                <input type="number" step="0.1" value="10.0" id="recovery-mode" name="recovery">
+            </div>
+        </div>
+    </div>
+</div>
+<div class="param_dist">
+    <div class="param-title">免疫有効期間 [ <span>日</span> ]</div>
+    <div id="immunity" class="dist-input">
+        <div class="dist-item">
+            <div class="dist-num">
+                <label for="immunity-min">最小値</label>
+                <input type="number" step="0.1" value="30.0" id="immunity-min" name="immunity">
+            </div>
+        </div>
+        <div class="dist-item">
+            <div class="dist-num">
+                <label for="immunity-max">最大値</label>
+                <input type="number" step="0.1" value="360.0" id="immunity-max" name="immunity">
+            </div>
+        </div>
+        <div class="dist-item">
+            <div class="dist-num">
+                <label for="immunity-mode">最頻値</label>
+                <input type="number" step="0.1" value="180.0" id="immunity-mode" name="immunity">
+            </div>
+        </div>
+    </div>
+</div>
+
+        </div>
+    </form>
+</div>
+
+
+
+<style>
+.panel-cmd-list {
+    display: inline-block;
+}
+label[for="measure"]::before {
+    content: "▶︎";
+    vertical-align: middle;
+}
+        #measure:checked ~ label[for="measure"]::before {
+            content: "▼";
+            vertical-align: middle;
+        }
+        #measure-content {
+            display: none;
+        }
+        #measure:checked ~ #measure-content {
+            display: block;
+        }
+</style>
+
+<div class="panel">
+    <div style="display:none;" id="measure-form-plist">distancingStrength,distancingObedience,mobilityFrequency,mobilityDistance,gatheringFrequency,gatheringSize,gatheringDuration,gatheringStrength,contactTracing</div>
+    <form name="measure-form">
+        <input type="checkbox" id="measure" style="display:none;" checked="checked" title="折りたたみ">
+        <label for="measure">
+            対策
+            <div class = "pnel-cmd-list"><button type = "button" class = "panel-cmd" onclick = "saveForm('measure-form');">現在の設定を保存</button><button type = "button" class = "panel-cmd" onclick = "resetForm('measure-form');">既定値に戻す</button><label for = "measure-file" class = "panel-cmd">ファイルから読み込む</label><input type = "file" id = "measure-file" style = "display:none;" accept = ".json, application/json" onchange = "loadForm(this, 'measure-form');"></input></div>
+        </label>
+        <div id="measure-content">
+            <div><div class = "param-title">社会的距離の強さ</div><div class = "slider"><span>0.0</span><input type = "range" step = "0.1" value = "50.0" min = "0.0" max = "100.0" id = "distancingStrength" oninput = "sliderValueChanged(this,'viewdistancingStrength')"><span>100.0</span><input type = "number" step = "0.1" value = "50.0" class = "slider_value" id = "viewdistancingStrength" oninput = "sliderValueChanged(this, 'distancingStrength')"><span class = "slider_unit">%</span></div></div><div><div class = "param-title">社会的距離協力率</div><div class = "slider"><span>0.0</span><input type = "range" step = "0.1" value = "20.0" min = "0.0" max = "100.0" id = "distancingObedience" oninput = "sliderValueChanged(this,'viewdistancingObedience')"><span>100.0</span><input type = "number" step = "0.1" value = "20.0" class = "slider_value" id = "viewdistancingObedience" oninput = "sliderValueChanged(this, 'distancingObedience')"><span class = "slider_unit">%</span></div></div><div><div class = "param-title">移動頻度</div><div class = "slider"><span>0.0</span><input type = "range" step = "0.1" value = "50.0" min = "0.0" max = "100.0" id = "mobilityFrequency" oninput = "sliderValueChanged(this,'viewmobilityFrequency')"><span>100.0</span><input type = "number" step = "0.1" value = "50.0" class = "slider_value" id = "viewmobilityFrequency" oninput = "sliderValueChanged(this, 'mobilityFrequency')"><span class = "slider_unit">%</span></div></div><div class="param_dist">
+    <div class="param-title">移動距離 [ <span>%</span> ]</div>
+    <div id="mobilityDistance" class="dist-input">
+        <div class="dist-item">
+            <div class="dist-num">
+                <label for="mobilityDistance-min">最小値</label>
+                <input type="number" step="0.1" value="10.0" id="mobilityDistance-min" name="mobilityDistance">
+            </div>
+        </div>
+        <div class="dist-item">
+            <div class="dist-num">
+                <label for="mobilityDistance-max">最大値</label>
+                <input type="number" step="0.1" value="80.0" id="mobilityDistance-max" name="mobilityDistance">
+            </div>
+        </div>
+        <div class="dist-item">
+            <div class="dist-num">
+                <label for="mobilityDistance-mode">最頻値</label>
+                <input type="number" step="0.1" value="30.0" id="mobilityDistance-mode" name="mobilityDistance">
+            </div>
+        </div>
+    </div>
+</div>
+<div><div class = "param-title">集会の頻度</div><div class = "slider"><span>0.0</span><input type = "range" step = "0.1" value = "50.0" min = "0.0" max = "100.0" id = "gatheringFrequency" oninput = "sliderValueChanged(this,'viewgatheringFrequency')"><span>100.0</span><input type = "number" step = "0.1" value = "50.0" class = "slider_value" id = "viewgatheringFrequency" oninput = "sliderValueChanged(this, 'gatheringFrequency')"><span class = "slider_unit">個/面積/日</span></div></div><div class="param_dist">
+    <div class="param-title">集会の大きさ [ <span>距離単位</span> ]</div>
+    <div id="gatheringSize" class="dist-input">
+        <div class="dist-item">
+            <div class="dist-num">
+                <label for="gatheringSize-min">最小値</label>
+                <input type="number" step="0.1" value="10.0" id="gatheringSize-min" name="gatheringSize">
+            </div>
+        </div>
+        <div class="dist-item">
+            <div class="dist-num">
+                <label for="gatheringSize-max">最大値</label>
+                <input type="number" step="0.1" value="100.0" id="gatheringSize-max" name="gatheringSize">
+            </div>
+        </div>
+        <div class="dist-item">
+            <div class="dist-num">
+                <label for="gatheringSize-mode">最頻値</label>
+                <input type="number" step="0.1" value="20.0" id="gatheringSize-mode" name="gatheringSize">
+            </div>
+        </div>
+    </div>
+</div>
+<div class="param_dist">
+    <div class="param-title">集会の持続時間 [ <span>時間</span> ]</div>
+    <div id="gatheringDuration" class="dist-input">
+        <div class="dist-item">
+            <div class="dist-num">
+                <label for="gatheringDuration-min">最小値</label>
+                <input type="number" step="0.1" value="10.0" id="gatheringDuration-min" name="gatheringDuration">
+            </div>
+        </div>
+        <div class="dist-item">
+            <div class="dist-num">
+                <label for="gatheringDuration-max">最大値</label>
+                <input type="number" step="0.1" value="168.0" id="gatheringDuration-max" name="gatheringDuration">
+            </div>
+        </div>
+        <div class="dist-item">
+            <div class="dist-num">
+                <label for="gatheringDuration-mode">最頻値</label>
+                <input type="number" step="0.1" value="24.0" id="gatheringDuration-mode" name="gatheringDuration">
+            </div>
+        </div>
+    </div>
+</div>
+<div class="param_dist">
+    <div class="param-title">集会の強さ [ <span>%</span> ]</div>
+    <div id="gatheringStrength" class="dist-input">
+        <div class="dist-item">
+            <div class="dist-num">
+                <label for="gatheringStrength-min">最小値</label>
+                <input type="number" step="0.1" value="0.0" id="gatheringStrength-min" name="gatheringStrength">
+            </div>
+        </div>
+        <div class="dist-item">
+            <div class="dist-num">
+                <label for="gatheringStrength-max">最大値</label>
+                <input type="number" step="0.1" value="100.0" id="gatheringStrength-max" name="gatheringStrength">
+            </div>
+        </div>
+        <div class="dist-item">
+            <div class="dist-num">
+                <label for="gatheringStrength-mode">最頻値</label>
+                <input type="number" step="0.1" value="50.0" id="gatheringStrength-mode" name="gatheringStrength">
+            </div>
+        </div>
+    </div>
+</div>
+<div><div class = "param-title">接触者追跡</div><div class = "slider"><span>0.0</span><input type = "range" step = "0.1" value = "20.0" min = "0.0" max = "100.0" info = "捕捉率" id = "contactTracing" oninput = "sliderValueChanged(this,'viewcontactTracing')"><span>100.0</span><input type = "number" step = "0.1" value = "20.0" class = "slider_value" id = "viewcontactTracing" oninput = "sliderValueChanged(this, 'contactTracing')"><span class = "slider_unit">%</span></div></div>
+        </div>
+    </form>
+</div>
+
+
+
+<style>
+.panel-cmd-list {
+    display: inline-block;
+}
+label[for="tests"]::before {
+    content: "▶︎";
+    vertical-align: middle;
+}
+        #tests:checked ~ label[for="tests"]::before {
+            content: "▼";
+            vertical-align: middle;
+        }
+        #tests-content {
+            display: none;
+        }
+        #tests:checked ~ #tests-content {
+            display: block;
+        }
+</style>
+
+<div class="panel">
+    <div style="display:none;" id="tests-form-plist">testProcess,testInterval,testDelay,testSensitivity,testSpecificity,subjectAsymptomatic,subjectSymptomatic</div>
+    <form name="tests-form">
+        <input type="checkbox" id="tests" style="display:none;" checked="checked" title="折りたたみ">
+        <label for="tests">
+            検査
+            <div class = "pnel-cmd-list"><button type = "button" class = "panel-cmd" onclick = "saveForm('tests-form');">現在の設定を保存</button><button type = "button" class = "panel-cmd" onclick = "resetForm('tests-form');">既定値に戻す</button><label for = "tests-file" class = "panel-cmd">ファイルから読み込む</label><input type = "file" id = "tests-file" style = "display:none;" accept = ".json, application/json" onchange = "loadForm(this, 'tests-form');"></input></div>
+        </label>
+        <div id="tests-content">
+            <div><div class = "param-title">処理期間</div><div class = "slider"><span>0.0</span><input type = "range" step = "0.1" value = "1.0" min = "0.0" max = "10.0" info = "検査から判明まで" id = "testProcess" oninput = "sliderValueChanged(this,'viewtestProcess')"><span>10.0</span><input type = "number" step = "0.1" value = "1.0" class = "slider_value" id = "viewtestProcess" oninput = "sliderValueChanged(this, 'testProcess')"><span class = "slider_unit">日</span></div></div><div><div class = "param-title">検査間隔</div><div class = "slider"><span>0.0</span><input type = "range" step = "0.1" value = "2.0" min = "0.0" max = "10.0" info = "次の検査まで" id = "testInterval" oninput = "sliderValueChanged(this,'viewtestInterval')"><span>10.0</span><input type = "number" step = "0.1" value = "2.0" class = "slider_value" id = "viewtestInterval" oninput = "sliderValueChanged(this, 'testInterval')"><span class = "slider_unit">日</span></div></div><div><div class = "param-title">検査の遅れ</div><div class = "slider"><span>0.0</span><input type = "range" step = "0.1" value = "1.0" min = "0.0" max = "10.0" id = "testDelay" oninput = "sliderValueChanged(this,'viewtestDelay')"><span>10.0</span><input type = "number" step = "0.1" value = "1.0" class = "slider_value" id = "viewtestDelay" oninput = "sliderValueChanged(this, 'testDelay')"><span class = "slider_unit">日</span></div></div><div><div class = "param-title">感度</div><div class = "slider"><span>0.0</span><input type = "range" step = "0.1" value = "70.0" min = "0.0" max = "100.0" id = "testSensitivity" oninput = "sliderValueChanged(this,'viewtestSensitivity')"><span>100.0</span><input type = "number" step = "0.1" value = "70.0" class = "slider_value" id = "viewtestSensitivity" oninput = "sliderValueChanged(this, 'testSensitivity')"><span class = "slider_unit">%</span></div></div><div><div class = "param-title">特異度</div><div class = "slider"><span>0.0</span><input type = "range" step = "0.1" value = "99.8" min = "0.0" max = "100.0" id = "testSpecificity" oninput = "sliderValueChanged(this,'viewtestSpecificity')"><span>100.0</span><input type = "number" step = "0.1" value = "99.8" class = "slider_value" id = "viewtestSpecificity" oninput = "sliderValueChanged(this, 'testSpecificity')"><span class = "slider_unit">%</span></div></div><div><div class = "param-title">疑症状検査対象者</div><div class = "slider"><span>0.0</span><input type = "range" step = "0.1" value = "1.0" min = "0.0" max = "100.0" id = "subjectAsymptomatic" oninput = "sliderValueChanged(this,'viewsubjectAsymptomatic')"><span>100.0</span><input type = "number" step = "0.1" value = "1.0" class = "slider_value" id = "viewsubjectAsymptomatic" oninput = "sliderValueChanged(this, 'subjectAsymptomatic')"><span class = "slider_unit">%</span></div></div><div><div class = "param-title">有症状検査対象者</div><div class = "slider"><span>0.0</span><input type = "range" step = "0.1" value = "99.0" min = "0.0" max = "100.0" id = "subjectSymptomatic" oninput = "sliderValueChanged(this,'viewsubjectSymptomatic')"><span>100.0</span><input type = "number" step = "0.1" value = "99.0" class = "slider_value" id = "viewsubjectSymptomatic" oninput = "sliderValueChanged(this, 'subjectSymptomatic')"><span class = "slider_unit">%</span></div></div>
+        </div>
+    </form>
+</div>
+
+
+
+</div><div class = "tab_content" id = "scenario_content">﻿<style>
+.circleplus {
+    border: none;
+    color: black;
+    background-color: rgba(0,0,0,0);
+    width: 20px;
+    height: 20px;
+}
+.circleplus:hover {
+    color: var(--my-blue);
+}
+.add-scenario-step {
+    margin: 0 auto;
+}
+</style>
+<div class = "cmd-btn-list"><button type = "button" class = "command-button" onclick = "loadScenario();">ファイルから読み込む</button><button type = "button" class = "command-button" onclick = "saveScenario();">ファイルに保存</button></div>
+<div id="scenario-flowChart">
+    <table>
+        <tr>
+            <th>ステップ</th>
+            <th>種別</th>
+            <th>内容</th>
+            <th>アクション</th>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td> 感染者追加</td>
+            <td><input type="number">1</input>人</td>
+            <td>
+                <button type="button">削除</button>
+            </td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>パラメータにセット</td>
+            <td>
+                <select>
+                    <option>p1</option>
+                    <option>p2</option>
+                </select>
+                ← <input type="number">80</input>
+            </td>
+            <td>
+                <button type="button">削除</button>
+            </td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td> 条件 </td>
+            <td>
+                <select>
+                    <option>満たすまで</option>
+                    <option>満たすなら</option>
+                </select>
+                実行
+            </td>
+            <td><button type="button">削除</td>
+        </tr>
+
+        <tr class = "add-scenario-step">
+            <button type="button" class="circleplus">
+                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-plus-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                    <path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                </svg>
+            </button>
+            <tr>
+    </table>
+</div>
+</div><div class = "tab_content" id = "development_content"><button type = "button" onclick = "getJobQueueStatus('job_queue');">ジョブの待ち行列の監視</button><span id = "job_queue"></span><button type = "button" onclick = "getServerVersion('SVversion');">SV version</button><span id = "SVversion"></span><h2 style="background-color: darkgreen; color:white; padding: 2px 15px;">世界</h2>
+<table style="margin:0 auto; width: 100%;">
+    <tr><td style = "background-color: var(--hover-color); color: white;" colspan = "5">GET [getWorldID] 既定値の世界IDの取得</td></tr><tr><td style = "background-color: grey; color: white;">method</td><td style = "background-color: grey; color: white;">action</td><td style = "background-color: grey; color: white;">option</td><td style = "background-color: grey; color: white;">stage</td><td style = "background-color: grey; color: white;">hint</td></tr><tr><td></td><td></td><td>me</td><td>対応済</td><td></td></tr><tr><td style = "background-color: var(--hover-color); color: white;" colspan = "5">GET [newWorld] 世界の生成</td></tr><tr><td style = "background-color: grey; color: white;">method</td><td style = "background-color: grey; color: white;">action</td><td style = "background-color: grey; color: white;">option</td><td style = "background-color: grey; color: white;">stage</td><td style = "background-color: grey; color: white;">hint</td></tr><tr><td></td><td></td><td></td><td>対応済</td><td></td></tr><tr><td style = "background-color: var(--hover-color); color: white;" colspan = "5">GET [closeWorld] 世界の消去</td></tr><tr><td style = "background-color: grey; color: white;">method</td><td style = "background-color: grey; color: white;">action</td><td style = "background-color: grey; color: white;">option</td><td style = "background-color: grey; color: white;">stage</td><td style = "background-color: grey; color: white;">hint</td></tr><tr><td></td><td></td><td>world</td><td>対応済</td><td>消去する世界のID</td></tr>
+</table>
+<h2 style="background-color: darkgreen; color:white; padding: 2px 15px;">パラメータ</h2>
+<table style="margin:0 auto; width: 100%;">
+    <tr><td style = "background-color: var(--hover-color); color: white;" colspan = "5">GET [getParams] パラメータ値の取得</td></tr><tr><td style = "background-color: grey; color: white;">method</td><td style = "background-color: grey; color: white;">action</td><td style = "background-color: grey; color: white;">option</td><td style = "background-color: grey; color: white;">stage</td><td style = "background-color: grey; color: white;">hint</td></tr><tr><td></td><td></td><td>save</td><td>対応予定なし</td><td>スナップショットにてファイル保存可能．あえてsaveを使うほどではなかったので代替．ファイル名．このオプションが添えられた場合は，ダウンロード形式で応答する。</td></tr><tr><td></td><td></td><td>format</td><td>対応予定未定</td><td>整数，JSONフォーマットオプション</td></tr><tr><td></td><td></td><td>world</td><td>対応済</td><td>スナップショットにて</td></tr><tr><td></td><td></td><td>me</td><td>対応予定なし</td><td></td></tr><tr><td></td><td></td><td>パラメータなし</td><td>対応済</td><td>規定値取得のため</td></tr><tr><td style = "background-color: var(--hover-color); color: white;" colspan = "5">POST [setParams] パラメータ値の設定</td></tr><tr><td style = "background-color: grey; color: white;">method</td><td style = "background-color: grey; color: white;">action</td><td style = "background-color: grey; color: white;">option</td><td style = "background-color: grey; color: white;">stage</td><td style = "background-color: grey; color: white;">hint</td></tr><tr><td></td><td></td><td>name</td><td>対応済</td><td>対象の世界ID, 'default'であれば既定値世界を表す</td></tr><tr><td></td><td></td><td>file</td><td>対応済</td><td></td></tr><tr><td style = "background-color: var(--hover-color); color: white;" colspan = "5">POST [setParams] パラメータ値の設定</td></tr><tr><td style = "background-color: grey; color: white;">method</td><td style = "background-color: grey; color: white;">action</td><td style = "background-color: grey; color: white;">option</td><td style = "background-color: grey; color: white;">stage</td><td style = "background-color: grey; color: white;">hint</td></tr><tr><td></td><td></td><td>パラメーター名</td><td></td><td>パラメータ値を指定</td></tr><tr><td></td><td></td><td>world</td><td>対応済</td><td>世界ID</td></tr>
+</table>
+<h2 style="background-color: darkgreen; color:white; padding: 2px 15px;">実行の制御</h2>
+<table style="margin:0 auto; width: 100%;">
+    <tr><td style = "background-color: var(--hover-color); color: white;" colspan = "5">GET [start] 開始</td></tr><tr><td style = "background-color: grey; color: white;">method</td><td style = "background-color: grey; color: white;">action</td><td style = "background-color: grey; color: white;">option</td><td style = "background-color: grey; color: white;">stage</td><td style = "background-color: grey; color: white;">hint</td></tr><tr><td></td><td></td><td>stopAt</td><td>未実装対応予定</td><td>整数，シミュレーションを止める日数</td></tr><tr><td></td><td></td><td>maxSPS</td><td>未実装,結果描写後に対応予定</td><td></td></tr><tr><td></td><td></td><td>world</td><td>対応済</td><td>世界ID</td></tr><tr><td></td><td></td><td>me</td><td>対応済</td><td></td></tr><tr><td style = "background-color: var(--hover-color); color: white;" colspan = "5">GET [stop] 停止</td></tr><tr><td style = "background-color: grey; color: white;">method</td><td style = "background-color: grey; color: white;">action</td><td style = "background-color: grey; color: white;">option</td><td style = "background-color: grey; color: white;">stage</td><td style = "background-color: grey; color: white;">hint</td></tr><tr><td></td><td></td><td>world</td><td>対応済</td><td></td></tr><tr><td></td><td></td><td>me</td><td>対応済</td><td></td></tr><tr><td style = "background-color: var(--hover-color); color: white;" colspan = "5">GET [step] 一歩</td></tr><tr><td style = "background-color: grey; color: white;">method</td><td style = "background-color: grey; color: white;">action</td><td style = "background-color: grey; color: white;">option</td><td style = "background-color: grey; color: white;">stage</td><td style = "background-color: grey; color: white;">hint</td></tr><tr><td></td><td></td><td>world</td><td>対応済</td><td></td></tr><tr><td></td><td></td><td>me</td><td>対応済</td><td></td></tr><tr><td style = "background-color: var(--hover-color); color: white;" colspan = "5">GET [reset] 初期化</td></tr><tr><td style = "background-color: grey; color: white;">method</td><td style = "background-color: grey; color: white;">action</td><td style = "background-color: grey; color: white;">option</td><td style = "background-color: grey; color: white;">stage</td><td style = "background-color: grey; color: white;">hint</td></tr><tr><td></td><td></td><td>world</td><td>対応済</td><td></td></tr><tr><td></td><td></td><td>me</td><td>対応済</td><td></td></tr>
+</table>
+<h2 style="background-color: darkgreen; color:white; padding: 2px 15px;">実行の監視と結果の取得</h2>
+<table style="margin:0 auto; width: 100%;">
+    <tr><td style = "background-color: var(--hover-color); color: white;" colspan = "5">GET [getIndexes] 数値情報の取得</td></tr><tr><td style = "background-color: grey; color: white;">method</td><td style = "background-color: grey; color: white;">action</td><td style = "background-color: grey; color: white;">option</td><td style = "background-color: grey; color: white;">stage</td><td style = "background-color: grey; color: white;">hint</td></tr><tr><td></td><td></td><td>names</td><td>対応予定なし</td><td>[]の字がダメで配列風にリクエストを送るのは諦めた</td></tr><tr><td></td><td></td><td>統計指標名1=1&統計指標名2=1...</td><td>一部対応</td><td>個別に問い合わす事はできないがスナップショットとして全ての値を得ることができる</td></tr><tr><td></td><td></td><td>fromStep</td><td>一部対応</td><td>可能であれば指定のステップから現在までの履歴を取得．累積で取る必要がある統計指標のみスナップショットでfromStep=0を指定</td></tr><tr><td></td><td></td><td>fromDay</td><td></td><td>fromStepよりも優先される,可能であれば指定の日から現在までの履歴を取得</td></tr><tr><td></td><td></td><td>window</td><td></td><td>日毎の値の移動平均の窓幅の日周．</td></tr><tr><td></td><td></td><td>format</td><td></td><td>JSONフォーマット</td></tr><tr><td></td><td></td><td>world</td><td>対応済</td><td>スナップショットにて</td></tr><tr><td></td><td></td><td>me</td><td>対応済</td><td>スナップショットにて</td></tr><tr><td style = "background-color: var(--hover-color); color: white;" colspan = "5">GET [getDistribution] 分布情報の取得</td></tr><tr><td style = "background-color: grey; color: white;">method</td><td style = "background-color: grey; color: white;">action</td><td style = "background-color: grey; color: white;">option</td><td style = "background-color: grey; color: white;">stage</td><td style = "background-color: grey; color: white;">hint</td></tr><tr><td></td><td></td><td>names</td><td>対応予定なし</td><td>[]の字がダメで配列風にリクエストを送るのは諦めた</td></tr><tr><td></td><td></td><td>統計指標名1=1&統計指標名2=1...</td><td>一部対応</td><td>個別に問い合わす事はできないがスナップショットとして全ての値を得ることができる</td></tr><tr><td></td><td></td><td>format</td><td></td><td>JSONフォーマット</td></tr><tr><td></td><td></td><td>world</td><td>対応済</td><td>スナップショットにて</td></tr><tr><td></td><td></td><td>me</td><td>対応済</td><td>スナップショットにて</td></tr><tr><td style = "background-color: var(--hover-color); color: white;" colspan = "5">GET [getPopulation] 個体の健康状態の取得</td></tr><tr><td style = "background-color: grey; color: white;">method</td><td style = "background-color: grey; color: white;">action</td><td style = "background-color: grey; color: white;">option</td><td style = "background-color: grey; color: white;">stage</td><td style = "background-color: grey; color: white;">hint</td></tr><tr><td></td><td></td><td>format</td><td></td><td>JSONフォーマット</td></tr><tr><td></td><td></td><td>world</td><td>対応済</td><td>スナップショットにて</td></tr><tr><td style = "background-color: var(--hover-color); color: white;" colspan = "5">GET [getPopulation2(ver. 1.2)] 個体の健康状態の取得</td></tr><tr><td style = "background-color: grey; color: white;">method</td><td style = "background-color: grey; color: white;">action</td><td style = "background-color: grey; color: white;">option</td><td style = "background-color: grey; color: white;">stage</td><td style = "background-color: grey; color: white;">hint</td></tr><tr><td></td><td></td><td>world</td><td>対応済</td><td>スナップショットにて</td></tr>
+</table>
+<h2 style="background-color: darkgreen; color:white; padding: 2px 15px;">実行状況の定期的取得(ver.1.1)</h2>
+<table style="margin:0 auto; width: 100%;">
+    <tr><td style = "background-color: var(--hover-color); color: white;" colspan = "5">GET [periodicReport] 定期的取得の開始</td></tr><tr><td style = "background-color: grey; color: white;">method</td><td style = "background-color: grey; color: white;">action</td><td style = "background-color: grey; color: white;">option</td><td style = "background-color: grey; color: white;">stage</td><td style = "background-color: grey; color: white;">hint</td></tr><tr><td></td><td></td><td>report</td><td></td><td>[item_1, item_2...] itemは指標名</td></tr><tr><td></td><td></td><td>daily..</td><td></td><td>dailyの後に日毎に取得可能な統計指標名を指定すると日ごとのデータを返す</td></tr><tr><td></td><td></td><td>interval</td><td></td><td>正の実数，省略した場合1秒</td></tr><tr><td></td><td></td><td>popFormat</td><td></td><td>getPopulationを使うかgetPopulation2を使うか</td></tr><tr><td style = "background-color: var(--hover-color); color: white;" colspan = "5">GET [quitReport] 定期的取得の廃止</td></tr><tr><td style = "background-color: grey; color: white;">method</td><td style = "background-color: grey; color: white;">action</td><td style = "background-color: grey; color: white;">option</td><td style = "background-color: grey; color: white;">stage</td><td style = "background-color: grey; color: white;">hint</td></tr><tr><td></td><td></td><td>process</td><td></td><td></td></tr><tr><td></td><td></td><td>report</td><td></td><td>[item_1, item_2...] itemは指標名</td></tr><tr><td></td><td></td><td>interval</td><td></td><td>正の実数，省略した場合1秒</td></tr><tr><td></td><td></td><td>popFormat</td><td></td><td>getPopulationを使うかgetPopulation2を使うか</td></tr><tr><td style = "background-color: var(--hover-color); color: white;" colspan = "5">GET [changeReport] 定期的取得指標の変更</td></tr><tr><td style = "background-color: grey; color: white;">method</td><td style = "background-color: grey; color: white;">action</td><td style = "background-color: grey; color: white;">option</td><td style = "background-color: grey; color: white;">stage</td><td style = "background-color: grey; color: white;">hint</td></tr><tr><td></td><td></td><td>process</td><td></td><td>[item_1, item_2...] itemは指標名</td></tr><tr><td></td><td></td><td>report</td><td></td><td>[item_1, item_2...] itemは指標名</td></tr><tr><td></td><td></td><td>interval</td><td></td><td>正の実数，省略した場合1秒</td></tr><tr><td></td><td></td><td>popFormat</td><td></td><td>getPopulationを使うかgetPopulation2を使うか</td></tr>
+</table>
+<h2 style="background-color: darkgreen; color:white; padding: 2px 15px;">シナリオ</h2>
+<table style="margin:0 auto; width: 100%;">
+    <tr><td style = "background-color: var(--hover-color); color: white;" colspan = "5">POST [setScenario] シナリオの設定</td></tr><tr><td style = "background-color: grey; color: white;">method</td><td style = "background-color: grey; color: white;">action</td><td style = "background-color: grey; color: white;">option</td><td style = "background-color: grey; color: white;">stage</td><td style = "background-color: grey; color: white;">hint</td></tr><tr><td></td><td></td><td>scenario</td><td></td><td></td></tr><tr><td></td><td></td><td>world</td><td></td><td></td></tr><tr><td></td><td></td><td>me</td><td></td><td></td></tr>
+</table>
+<h2 style="background-color: darkgreen; color:white; padding: 2px 15px;">バッチジョブの投入,監視,結果の取得(対応予定未定)</h2>
+<table style="margin:0 auto; width: 100%;">
+    <tr><td style = "background-color: var(--hover-color); color: white;" colspan = "5">POST [submitJob] 投入</td></tr><tr><td style = "background-color: grey; color: white;">method</td><td style = "background-color: grey; color: white;">action</td><td style = "background-color: grey; color: white;">option</td><td style = "background-color: grey; color: white;">stage</td><td style = "background-color: grey; color: white;">hint</td></tr><tr><td></td><td></td><td>job</td><td>保留</td><td></td></tr><tr><td style = "background-color: var(--hover-color); color: white;" colspan = "5">GET [getJobQueueStatus] 待ち行列の監視</td></tr><tr><td style = "background-color: grey; color: white;">method</td><td style = "background-color: grey; color: white;">action</td><td style = "background-color: grey; color: white;">option</td><td style = "background-color: grey; color: white;">stage</td><td style = "background-color: grey; color: white;">hint</td></tr><tr><td></td><td></td><td>job</td><td></td><td></td></tr><tr><td></td><td></td><td>省略</td><td>対応した?</td><td>ジョブを投入しないと意味なしだったのでこのタブの一番上にボタンを設置して結果を表示させた</td></tr><tr><td style = "background-color: var(--hover-color); color: white;" colspan = "5">GET [getJobStatus] ジョブの監視</td></tr><tr><td style = "background-color: grey; color: white;">method</td><td style = "background-color: grey; color: white;">action</td><td style = "background-color: grey; color: white;">option</td><td style = "background-color: grey; color: white;">stage</td><td style = "background-color: grey; color: white;">hint</td></tr><tr><td></td><td></td><td>job</td><td>投入に対応するなら対応可能</td><td></td></tr><tr><td style = "background-color: var(--hover-color); color: white;" colspan = "5">GET [stopJob] ジョブの中断</td></tr><tr><td style = "background-color: grey; color: white;">method</td><td style = "background-color: grey; color: white;">action</td><td style = "background-color: grey; color: white;">option</td><td style = "background-color: grey; color: white;">stage</td><td style = "background-color: grey; color: white;">hint</td></tr><tr><td></td><td></td><td>job</td><td>投入に対応するなら対応可能</td><td></td></tr><tr><td style = "background-color: var(--hover-color); color: white;" colspan = "5">GET [getJobResults] 結果の取得</td></tr><tr><td style = "background-color: grey; color: white;">method</td><td style = "background-color: grey; color: white;">action</td><td style = "background-color: grey; color: white;">option</td><td style = "background-color: grey; color: white;">stage</td><td style = "background-color: grey; color: white;">hint</td></tr><tr><td></td><td></td><td>job</td><td>投入に対応するなら対応可能</td><td></td></tr><tr><td></td><td></td><td>save</td><td></td><td>ファイル名</td></tr><tr><td></td><td></td><td>sep</td><td></td><td>欄区切り(省略可）, saveが指定された場合</td></tr><tr><td></td><td></td><td>nl</td><td></td><td>行区切り(省略可）, saveが指定された場合</td></tr>
+</table>
+</div></div>
+            </main>
+        </div>
+            <form style = "display:none;" name = "property"><input type = "hidden" name = "current_step_indicator" value = "isRunning,step,days,susceptible,asymptomatic,symptomatic,recovered,died,quarantineAsymptomatic,quarantineSymptomatic"><input type = "hidden" name = "accumulation_indicator" value = "tests,testAsSymptom,testAsContact,testAsSuspected,testPositive,testNegative"><input type = "hidden" name = "distribution_indicators" value = "incubasionPeriod,recoveryPeriod,fatalPeriod,infects,contacts"><input type = "hidden" name = "param_formnames" value = "world-form,move-form,mechanism-form,measure-form,tests-form"></form>
+    </body>
+</html>
