@@ -1,0 +1,46 @@
+{
+    "info": {
+        "cmd_cls": "command-button",
+        "cmd_list_cls": "cmd-btn-list"
+    },
+    "listener": {
+        "save": "saveAll();",
+        "reset": "resetAll();"
+    },
+    "buttons": {
+        "save": {
+            "JA": "現在の設定を保存",
+            "EN": "Save current settings"
+        },
+        "reset": {
+            "JA": "既定値に戻す",
+            "EN": "Reset"
+        }
+    },
+    "other": {
+        "file-label": {
+            "tag": "label",
+            "content": {
+                "JA": "ファイルから読み込む",
+                "EN": "Load file"
+            },
+            "end": "True",
+            "attr": {
+                "for": "param-title-button",
+                "class": "command-button"
+            }
+        },
+        "file-input": {
+            "tag": "input",
+            "end": "False",
+            "attr": {
+                "type": "file",
+                "id": "param-title-button",
+                "class": "command-button",
+                "style": "display:none;",
+                "accept": ".json, application/json",
+                "onchange": "loadAll(this);"
+            }
+        }
+    }
+}

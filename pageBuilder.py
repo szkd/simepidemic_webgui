@@ -265,7 +265,7 @@ def sim(lang):
 """ ********************************* """
 """ ********************************* """
 def param(lang):
-    commands = inputGroupFromJson(PARAM_DIR + "commands.json", lang);
+    commands = inputGroupFromJson(PARAM_DIR + "allpanel-commands.json", lang);
     paramtype = json2dict(CONTENTS_DIR + "paramtype.json")
     params = ""
     params += paramPanels(lang, paramtype, PARAM_DIR + 'param.json', COMMON_DIR + 'panel.html')
