@@ -108,13 +108,16 @@ input[type="number"] {
     border: solid 1px snow;
     margin-right: var(--margin);
     padding: 2px 10px;
-    float: right;
 }
 
 .panel-cmd:hover {
     color: white;
     background-color: var(--hover-color);
     border-color: var(--hover-color);
+}
+.panel-cmd-list {
+    text-align: right;
+    margin-bottom: 20px;
 }
 
 /* *****************************
