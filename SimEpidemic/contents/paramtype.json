@@ -398,6 +398,150 @@
         "max": "100.0",
         "info": "個体間の斥力"
     },
+    "maxSpeed": {
+        "type": "range",
+        "description": {
+            "JA": "制限速度",
+            "EN": "Max Speed"
+        },
+        "unit":{
+            "JA": "20距離単位/日",
+            "EN": "20 Distance unit/Day"
+        },
+        "step": "0.1",
+        "value": "50",
+        "min": "10.0",
+        "max": "100.0",
+        "info": "短距離移動の速さ"
+    },
+    "activenessMode": {
+        "type": "range",
+        "description": {
+            "JA": "活発さ最頻値",
+            "EN": "Activeness Mode"
+        },
+        "unit":{
+            "JA": "%",
+            "EN": "%"
+        },
+        "step": "0.1",
+        "value": "50",
+        "min": "0.0",
+        "max": "100.0",
+        "info": "分布の最頻値"
+    },
+    "activenessKurtosis": {
+        "type": "range",
+        "description": {
+            "JA": "活発さの尖度",
+            "EN": "Activeness Kurtosis"
+        },
+        "unit":{
+            "JA": "%",
+            "EN": "%"
+        },
+        "step": "0.1",
+        "value": "0",
+        "min": "-100.0",
+        "max": "100.0",
+        "info": "分布の尖度"
+    },
+    "mobilityBias": {
+        "type": "range",
+        "description": {
+            "JA": "移動への影響",
+            "EN": "Mobility Bias"
+        },
+        "unit":{
+            "JA": "%",
+            "EN": "%"
+        },
+        "step": "0.1",
+        "value": "50",
+        "min": "0.0",
+        "max": "100.0",
+        "info": "活発さの影響"
+    },
+    "gatheringBias": {
+        "type": "range",
+        "description": {
+            "JA": "集会参加への影響",
+            "EN": "Gathering Bias"
+        },
+        "unit":{
+            "JA": "%",
+            "EN": "%"
+        },
+        "step": "0.1",
+        "value": "50",
+        "min": "0.0",
+        "max": "100.0",
+        "info": "活発さの影響"
+    },
+    "incubationBias": {
+        "type": "range",
+        "description": {
+            "JA": "潜伏期間への影響",
+            "EN": "Incubation Bias"
+        },
+        "unit":{
+            "JA": "%",
+            "EN": "%"
+        },
+        "step": "0.1",
+        "value": "0",
+        "min": "-100.0",
+        "max": "100.0",
+        "info": "活発さとの相関"
+    },
+    "fatalityBias": {
+        "type": "range",
+        "description": {
+            "JA": "死亡期間への影響",
+            "EN": "Fatality Bias"
+        },
+        "unit":{
+            "JA": "%",
+            "EN": "%"
+        },
+        "step": "0.1",
+        "value": "0",
+        "min": "-100.0",
+        "max": "100.0",
+        "info": ""
+    },
+    "recoveryBias": {
+        "type": "range",
+        "description": {
+            "JA": "快復期間への影響",
+            "EN": "Recovery Bias"
+        },
+        "unit":{
+            "JA": "%",
+            "EN": "%"
+        },
+        "step": "0.1",
+        "value": "50",
+        "min": "-100.0",
+        "max": "100.0",
+        "info": ""
+    },
+    "immunityBias": {
+        "type": "range",
+        "description": {
+            "JA": "免疫有効期間への影響",
+            "EN": "Immunity Bias"
+        },
+        "unit":{
+            "JA": "%",
+            "EN": "%"
+        },
+        "step": "0.1",
+        "value": "0",
+        "min": "-100.0",
+        "max": "100.0",
+        "info": ""
+    },
     "contagionDelay": {
         "type": "range",
         "description": {

@@ -10,6 +10,11 @@ draw.FILTER = ["susceptible","asymptomatic","symptomatic","recovered","died"];
  * 各個体の色
  */
 draw.FILTERCOLOR = ['0x27559A','0xF6D600', '0xFA302E', '0x207864', '0xB6B6B6'];
+/**
+ * タイプごとの色を取得
+ * @param {string} name - タイプname(FILTERより)
+ * @return {string} - 0x始まりの色
+ */
 draw.typeColor = function(name) {
     const idx = draw.FILTER.findIndex((elem) => elem == name)
     return draw.FILTERCOLOR[idx].replace('0x', '#');
@@ -177,7 +182,7 @@ class MonitorPIXI {
     }
 
     reset() {
-        //this.pixi.renderer.render(draw.backgroundGraphic);
+        //this.pixi.stage.addChild(draw.backgroundGraphic(false, true));//y軸反転
     }
 
     changeFilter(name, on_off) {
