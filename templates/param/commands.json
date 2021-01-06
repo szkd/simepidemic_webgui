@@ -1,7 +1,7 @@
 {
     "info": {
-        "cmd_cls": "command-button",
-        "cmd_list_cls": "cmd-btn-list"
+        "cmd_cls": "panel-cmd",
+        "cmd_list_cls": "panel-cmd-list"
     },
     "listener": {
         "save": "saveAll();",

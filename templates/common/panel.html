@@ -1,7 +1,4 @@
 <style>
-.panel-cmd-list {
-    display: inline-block;
-}
 label[for="ID"]::before {
     content: ICON-NORMAL;
     vertical-align: middle;
@@ -24,10 +21,12 @@ label[for="ID"]::before {
         <input type="checkbox" id="ID" style="display:none;" checked="checked" title="折りたたみ">
         <label for="ID">
             PANEL-TITLE
-            PANEL-CMD
         </label>
         <div id="ID-content">
+            PANEL-CMD
+            <div>
             PANEL-CONTENT
+            </div>
         </div>
     </form>
 </div>
