@@ -11,7 +11,7 @@
             "JA": "移動",
             "EN": "Movement"
         },
-        "param-list":"mass,friction,avoidance"
+        "param-list":"mass,friction,avoidance,maxSpeed,activenessMode,activenessKurtosis,mobilityBias,gatheringBias,incubationBias,fatalityBias,recoveryBias,immunityBias"
     },
     "mechanism": {
         "name": {
