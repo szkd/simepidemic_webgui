@@ -43,7 +43,6 @@ report.configRequest = function(cmd, b_id, w_id, interval) {
  * @param {object:array} e - 上司からのmsgのデータ部分
  */
 report.start = function(e) {
-    report.process_id = '';
     const b_id = e.data[1];
     const w_id = e.data[2];
     const interval = e.data[3];
@@ -51,6 +50,7 @@ report.start = function(e) {
         report.event_src.close();
         report.event_src = null;
     }
+    report.process_id = '';
     report.event_src = new EventSource(this.configRequest("periodicReport", b_id, w_id, interval));
     report.event_src.addEventListener("process", function(e) {
         report.process_id = e.data;
@@ -96,7 +96,7 @@ onmessage = function(e) {
                 postMessage(['error', 'ChangeReport: Unknown index ' + e.data[1]]);
                 return;
             }
-            const req = 'changeReport?i"nterval"=' + v + '&"process"=' + report.process_id;
+            const req = 'changeReport?"interval"=' + v + '&"process"=' + report.process_id;
             postMessage(['change', req]);
             break;
         case 'stop':
@@ -105,7 +105,6 @@ onmessage = function(e) {
             }
             postMessage(['stop', 'quitReport?process=' + report.process_id]);
             report.event_src.close();
-            report.event_src = null;
             break;
         default:
             postMessage(['error', 'Unknown cmd: ' + cmd]);

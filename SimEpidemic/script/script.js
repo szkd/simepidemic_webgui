@@ -318,52 +318,9 @@ sim.worldControl = function(command, world, afterfunc = null) {
     }, req);
 }
 
-function pauseOrResume(world, button) {
-    if(button.innerText == "▶︎") {
-        const filtername = world + '-draw-filter';
-        sim.worldControl('start', world, function () {
-            MONITORS[world].start(tool.getBrowserId(), world);
-        });
-        button.innerText = "Ⅱ";
-    } else {
-        sim.worldControl('stop', world);
-        MONITORS[world].stop();
-        button.innerText = "▶︎";
-    }
-    return;
-}
-
-function stepSim(world){
-    let space_id = world;
-    if(world == 'default') {
-        space_id = 'world-template';
-    }
-    const node = document.getElementById(space_id);
-    node.querySelector(".cmd-btn-list button[name='simswitch']").innerText = "▶︎";
-    sim.worldControl('stop', world);
-    sim.worldControl('step', world);
-}
-
-function resetSim(world) {
-    const result = confirm(msg.confirmResetWorld[LANGUAGE]);
-    if(!result) return;
-    sim.worldControl('reset', world);
-    MONITORS[world].reset();
-}
-
-function addMonitor(w_id) {
-    const p_node = document.getElementById(w_id + '-result');
-    p_node.innerHTML='';
-    const width = document.querySelector("#world-template .cmd-btn-list").offsetWidth;
-    MONITORS[w_id] = new MonitorPIXI(p_node, width, w_id);
-}
-
-function deleteMonitor(w_id) {
-    delete MONITORS[w_id];
-}
-/********************************************
- * ワールドリスト
- ***************************************** */
+/**
+ * gui操作
+ */
 function addNewWorld(world_id='') {
     if(world_id != '') {
         console.log("GET/addNewWorld: " + world_id);
@@ -399,8 +356,7 @@ function addNewWorld(world_id='') {
 
 function closeWorld(world_id){
     const DO = confirm(msg.confirmCloseWorld[LANGUAGE]);
-    if(!DO) return;
-
+    if(!DO) return; 
     document.getElementById(world_id).remove();
     deleteMonitor(world_id);
     sim.worldControl('closeWorld', world_id);
@@ -408,5 +364,16 @@ function closeWorld(world_id){
 
 function sharedWorld() {
     alert("この機能は未実装です");
+}
+
+function addMonitor(w_id) {
+    const p_node = document.getElementById(w_id + '-result');
+    p_node.innerHTML='';
+    const width = document.querySelector("#world-template .cmd-btn-list").offsetWidth;
+    MONITORS[w_id] = new MonitorPIXI(p_node, width, w_id);
+}
+
+function deleteMonitor(w_id) {
+    delete MONITORS[w_id];
 }
 

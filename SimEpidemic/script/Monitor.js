@@ -163,8 +163,7 @@ class MonitorPIXI {
         this.pixi.stage.scale.x = this.ratio;
         this.pixi.stage.scale.y = this.ratio;
         this.pixi.stage.scale.y *= -1;
-        this.event_src = new Worker("../script/EventWork.js");
-        this.event_src.onmessage = this.workerwork;
+        this.event_src = null;
     }
 
     /**
@@ -173,16 +172,17 @@ class MonitorPIXI {
      * @param {float} [interval = 0.1] - レポート間隔（秒）
      */
     start(b_id, w_id, interval = 0.1) {
+        console.log("monitor.start");
+        if(this.event_src == null) {
+            this.event_src = new Worker("../script/EventWork.js");
+            this.event_src.onmessage = this.workerwork;
+        }
         this.event_src.postMessage(['start', b_id, w_id, interval]);
     }
 
     stop() {
-        console.log('monitor stop');
+        console.log('monitor.stop');
         this.event_src.postMessage(['stop']);
-    }
-
-    reset() {
-        //this.pixi.stage.addChild(draw.backgroundGraphic(false, true));//y軸反転
     }
 
     changeFilter(name, on_off) {

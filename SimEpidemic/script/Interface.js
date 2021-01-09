@@ -57,8 +57,67 @@ function resetForm(formname) {
 function getJobQueueStatus(target) {
     server.jobQueStatus(target);
 }
+
 function getServerVersion(target) {
     server.version(target);
+}
+
+function pauseOrResume(world, button) {
+    if(button.innerText == "▶︎") {
+        button.innerText = "Ⅱ";
+        startSim(world);
+    } else {
+        button.innerText = "▶︎";
+        stopSim(world);
+    }
+    return;
+}
+
+function startSim(world) {
+    const filtername = world + '-draw-filter';
+    sim.worldControl('start', world, function () {
+        MONITORS[world].start(tool.getBrowserId(), world);
+    });
+}
+
+function stopSim(world) {
+    sim.worldControl('stop', world);
+    MONITORS[world].stop();
+}
+
+function stepSim(world){
+    MONITORS[world].start(tool.getBrowserId(), world);
+    let space_id = world;
+    if(world == 'default') {
+        space_id = 'world-template';
+    }
+    const button = document.getElementById(space_id).querySelector("button[name='simswitch']");
+    sim.worldControl('step', world);
+    button.innerText = "▶︎";
+}
+
+function resetSim(world) {
+    const result = confirm(msg.confirmResetWorld[LANGUAGE]);
+    if(!result) return;
+    sim.worldControl('reset', world);
+    MONITORS[world].start(tool.getBrowserId(), world);
+    let space_id = world;
+    if(world == 'default') {
+        space_id = 'world-template';
+    }
+    const button = document.getElementById(space_id).querySelector("button[name='simswitch']");
+    button.innerText = "▶︎";
+}
+
+function addMonitor(w_id) {
+    const p_node = document.getElementById(w_id + '-result');
+    p_node.innerHTML='';
+    const width = document.querySelector("#world-template .cmd-btn-list").offsetWidth;
+    MONITORS[w_id] = new MonitorPIXI(p_node, width, w_id);
+}
+
+function deleteMonitor(w_id) {
+    delete MONITORS[w_id];
 }
 /********************************************
  * oninput
