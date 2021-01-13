@@ -28,6 +28,17 @@ window.onload = function(){
     addMonitor('default');
 }
 
+/**
+ * リサイズ window.resize
+ */
+window.addEventListener('resize', function () {
+    const width = draw.getCanvasParentWidth();
+    const height = draw.height(width);
+    for(w_id in MONITORS) {
+        MONITORS[w_id].resize(width, height);
+    }
+});
+
 /********************************************
  ***************************************** */
 /**

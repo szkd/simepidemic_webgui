@@ -504,6 +504,8 @@ def slider( label, attr, unit=''):
 
 def tag(tagname, content = '', attr={}, end=True):
     html_str = "<" + tagname + attributes(attr) + ">"
+    if tagname == 'input':
+        end = False
     if end:
         html_str += content
         html_str += "</" + tagname +">"

@@ -112,8 +112,7 @@ function resetSim(world) {
 function addMonitor(w_id) {
     const p_node = document.getElementById(w_id + '-result');
     p_node.innerHTML='';
-    const width = document.querySelector("#world-template .cmd-btn-list").offsetWidth;
-    MONITORS[w_id] = new MonitorPIXI(p_node, width, w_id);
+    MONITORS[w_id] = new MonitorPIXI(p_node, w_id);
 }
 
 function deleteMonitor(w_id) {
