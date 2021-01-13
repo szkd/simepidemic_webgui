@@ -1,0 +1,27 @@
+{
+    "info": {
+        "cmd_cls": "command-button",
+        "cmd_list_cls": "cmd-btn-list"
+    },
+    "listener": {
+        "stacked": "chart('default', this);",
+        "line": "chart('default', this);",
+        "dist": "chart('default', this);"
+    },
+    "buttons": {
+        "stacked": {
+            "JA": "全体構成変化",
+            "EN": "全体構成変化"
+        },
+        "line": {
+            "JA": "指標別変化",
+            "EN": "指標別変化"
+        },
+        "dist": {
+            "JA": "分布",
+            "EN": "分布"
+        }
+    },
+    "other": {
+    }
+}

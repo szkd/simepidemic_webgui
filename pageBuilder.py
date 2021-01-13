@@ -19,6 +19,7 @@ SIM_DIR = TEMPLATE_DIR + "sim/"
 PARAM_DIR = TEMPLATE_DIR + "param/"
 COMMON_DIR = TEMPLATE_DIR + "common/"
 SCENARIO_DIR = TEMPLATE_DIR + "scenario/"
+GRAPH_DIR = TEMPLATE_DIR + "graph/"
 DEVELOP_DIR = TEMPLATE_DIR + "dev/"
 
 """ ********************************
@@ -221,21 +222,26 @@ def animSettings(jsonfile, lang):
 
 def sim(lang):
     title = {
-        "sim-title": {
+        "sim": {
             "JA": "シミュレーション制御",
             "EN": "Simulation Control"
             },
-        "anim-filter-title": {
+        "anim-filter": {
             "JA": "アニメーションに表示",
             "EN": "Watch on ..."
             },
-        "anim-stg-title": {
+        "anim-stg": {
             "JA": "アニメーション設定",
             "EN": "Animation Settings"
+            },
+        "realtime-stats": {
+            "JA": "グラフ表示",
+            "EN": "グラフ表示"
             }
     }
     cmd = inputGroupFromJson(SIM_DIR + "world_commands.json", lang, 'button')
     w_cmd = inputGroupFromJson(SIM_DIR + "commands.json", lang, 'button')
+    realtime_stats = inputGroupFromJson(SIM_DIR + "realtime_stats.json", lang, 'button')
     anim_settings = inputGroupFromJson(SIM_DIR + "animation_settings.json", lang, 'number')
 
     anim_filters = inputGroupFromJson(SIM_DIR + "animation_filters.json", lang, 'checkbox', 'default-draw-filter');
@@ -251,14 +257,16 @@ def sim(lang):
 
     world_template = rephrase(SIM_DIR + "world.html",\
             {\
-                "SIM-TITLE": title['sim-title'][lang],\
-                "ANIM-FILTER-TITLE": title['anim-filter-title'][lang],\
-                "ANIM-STG-TITLE": title['anim-stg-title'][lang],\
+                "SIM-TITLE": title['sim'][lang],\
+                "ANIM-FILTER-TITLE": title['anim-filter'][lang],\
+                "ANIM-STG-TITLE": title['anim-stg'][lang],\
                 "WORLDCMD": w_cmd,\
                 "ANIMATION-FILTER": anim_filters,\
                 "ANIMATION-STG": anim_settings,\
                 "ID": "default",\
-                "SETTINGS": simSettings('default', lang)\
+                "SETTINGS": simSettings('default', lang),\
+                "REALTIME-STATS-TITLE": title['realtime-stats'][lang],\
+                "REALTIME-STATS": realtime_stats\
             }, 1000)
     return tag("div", world_template, {"id": "world-list"}) + cmd
 
@@ -548,6 +556,7 @@ def buildPage(lang):
     ]
     scripts=[\
         "https://cdnjs.cloudflare.com/ajax/libs/pixi.js/5.3.3/pixi.min.js",\
+        "https://d3js.org/d3.v6.min.js",\
         #SCRIPTS + "windowPanel.js",\
         SCRIPTS + "common.js",\
         SCRIPTS + "Monitor.js",\
@@ -577,7 +586,7 @@ def buildPage(lang):
 def langSwitchPage():
     data = {}
     data['PROPERTY'] = ""
-    data['HEAD'] = head('SimEpidemic', stylesheets=[STYLES + 'common.css'])
+    data['HEAD'] = head('Simepi:グラフ', stylesheets=['css/common.css'])
     data['HEADER'] = ''
     with open(COMMON_DIR + 'toppage.html') as f:
         data['MAIN'] = f.read()

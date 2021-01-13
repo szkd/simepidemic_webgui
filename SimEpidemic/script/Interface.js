@@ -23,6 +23,11 @@ function hideElement(id) {
     tool.switchVisible(id, false);
 }
 
+function chart(world, btn) {
+    const blankwindow = window.open('', '空の窓', 'width=500, height=100')
+    //left top height
+}
+
 /*
 pauseOrResume('default', this)
 stepSim('default')
