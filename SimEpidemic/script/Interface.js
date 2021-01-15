@@ -53,7 +53,10 @@ function applySettings(formname, world) {
 }
 
 //addNewWorld();
-//sharedWorld()
+function sharedWorld() {
+    addSharedWorld();
+}
+
 function saveAll() {
     param.saveAll();
 }

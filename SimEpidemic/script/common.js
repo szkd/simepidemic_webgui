@@ -349,5 +349,9 @@ const msg = {
     confirmCloseWorld: {
         "JA": "この世界を消去します．",
         "EN": "この世界を消去します．"
+    },
+    requestSharedId: {
+        "JA": "共有された世界IDを入力してください．",
+        "EN": "共有された世界IDを入力してください．"
     }
 }
