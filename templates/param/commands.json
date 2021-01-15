@@ -1,6 +1,6 @@
 {
     "info": {
-        "cmd_cls": "panel-cmd",
+        "cmd_cls": "command-button",
         "cmd_list_cls": "panel-cmd-list"
     },
     "listener": {

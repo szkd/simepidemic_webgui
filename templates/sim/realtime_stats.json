@@ -4,20 +4,20 @@
         "cmd_list_cls": "cmd-btn-list"
     },
     "listener": {
-        "stacked": "chart('default', this);",
-        "line": "chart('default', this);",
-        "dist": "chart('default', this);"
+        "stacked": "chart('stacked', 'default', this);",
+        "index": "chart('index', 'default', this);",
+        "distribution": "chart('distribution', default', this);"
     },
     "buttons": {
         "stacked": {
             "JA": "全体構成変化",
             "EN": "全体構成変化"
         },
-        "line": {
+        "index": {
             "JA": "指標別変化",
             "EN": "指標別変化"
         },
-        "dist": {
+        "distribution": {
             "JA": "分布",
             "EN": "分布"
         }

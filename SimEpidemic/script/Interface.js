@@ -23,9 +23,19 @@ function hideElement(id) {
     tool.switchVisible(id, false);
 }
 
-function chart(world, btn) {
+function chart(type, world, btn) {
     const blankwindow = window.open('', '空の窓', 'width=500, height=100')
     //left top height
+    switch(type) {
+        case 'stacked':
+            break;
+        case 'index':
+            break;
+        case 'distribution':
+            break;
+        default:
+            console.log('Error: undefined graph type');
+    }
 }
 
 /*

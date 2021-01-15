@@ -27,7 +27,8 @@
             "end": "True",
             "attr": {
                 "for": "ID-file",
-                "class": "panel-cmd"
+                "class": "panel-cmd",
+                "style": "display: inline-block"
             }
         },
         "file-input": {

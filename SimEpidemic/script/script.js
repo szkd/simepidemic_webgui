@@ -12,6 +12,7 @@ const SEVERNAME = "http://localhost:1234/";
 const MONITORS = {};
 /**
  * 選択中の言語，の予定
+ * @type {string}
  */
 let LANGUAGE = 'JA';
 
