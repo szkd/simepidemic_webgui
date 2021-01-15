@@ -101,7 +101,7 @@ report.graphWork = function (e) {
     switch(cmd) {
         case 'init':
             break;
-        case 'default':
+        default:
             console.log("graphwork: undefined cmd " + cmd);
 
     }
