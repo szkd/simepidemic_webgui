@@ -235,8 +235,8 @@ def sim(lang):
             "EN": "Animation Settings"
             },
         "realtime-stats": {
-            "JA": "グラフ表示",
-            "EN": "グラフ表示"
+            "JA": "統計情報",
+            "EN": "Statisticcs"
             }
     }
     cmd = inputGroupFromJson(SIM_DIR + "world_commands.json", lang, 'button')
@@ -453,6 +453,7 @@ def header(jsonfile, lang):
     data["HINT"] = data["HINT"][lang]
     data["LINK"] = data["LINK"][lang]
     data["LINKNAME"] = data["LINKNAME"][lang]
+    data["LANGUAGE"] = data["LANGUAGE"][lang]
 
     return rephrase(COMMON_DIR + "header.html", data)
 """ ******************************

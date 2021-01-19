@@ -16,6 +16,17 @@ const MONITORS = {};
  */
 let LANGUAGE = 'JA';
 
+function setLanguege(lang) {
+    if(lang == 'JA') {
+        LANGUAGE = 'JA';
+        return;
+    }
+    if(lang == 'EN') {
+        LANGUAGE = 'EN';
+        return;
+    }
+    console.log("ERROR Invalid language: " + lang);
+}
 /********************************************
  ***************************************** */
 /**
@@ -55,9 +66,12 @@ const param = {};
 param.form2dict = function(formname) {
     const p_list = document.getElementById(formname + "-plist").innerText.split(',');
     const d = tool.getHiddenValues();
+    //console.log(d);
+    //console.log(p_list);
     const p_dict = {};
     const form = document.forms[formname];
     for(let p of p_list) {
+        //console.log(p);
         if(d[p].split(',').length > 1) {
             p_dict[p] = new Array();
             p_dict[p].push(form[p + '-min'].value - 0);

@@ -220,7 +220,7 @@ tool.saveJsonFile = function(val) {
     }
     else if(userAgent.indexOf('safari') != -1
         || userAgent.indexOf('firefox') != -1) {
-        alert("新しいタブでJSONファイルを開きます．\nFirefoxをお使いの方は左上の保存ボタン，Safariをお使いの方は右クリック→ページを別名で保存，を使って保存してください．");
+        alert(msg.saveJsonFile[LANGUAGE]);
         window.open(fakeurl);
     } else {
         tool.enfocedDownload(fakeurl);
@@ -299,31 +299,25 @@ const img = {
 const msg = {
     /**
      * script.js: param.resetAll
-     */
-    resetAll: {
-        "JA": "全てのパラメータをリセットします．",
-        "EN": "全てのパラメータをリセットします．"
-    },
-    /**
      * script.js: sim.setParams
      */
     resetAll: {
         "JA": "全てのパラメータをリセットします．",
-        "EN": "全てのパラメータをリセットします．"
+        "EN": "Reset all parameters."
     },
     /**
      * script.js: sim.setParams
      */
     selectParamFile: {
         "JA": "パラメータのファイルを選択してください．",
-        "EN": "パラメータのファイルを選択してください．"
+        "EN": "Choose a parameter file."
     },
     /**
      * script.js: sim.setScenario
      */
     selectScenarioFile: {
         "JA": "シナリオのファイルを選択してください．",
-        "EN": "シナリオのファイルを選択してください．"
+        "EN": "Choose a scenario file."
     },
     /**
      * script.js: sim.shareDefaultId
@@ -333,7 +327,7 @@ const msg = {
             return "既定世界のIDは "+ id + " です．\nこのIDを共有された人はあなたの既定世界のシミュレーションを閲覧できます．";
         },
         "EN": function (id) {
-            return "既定世界のIDは "+ id + " です．\nこのIDを共有された人はあなたの既定世界のシミュレーションを閲覧できます．";
+            return "Your default world ID is "+ id + ". \nAnyone who knows it can watch your simulation."
         }
     },
     /**
@@ -341,17 +335,35 @@ const msg = {
      */
     confirmResetWorld: {
         "JA": "実行中の世界を初期化しますか?",
-        "EN": "実行中の世界を初期化しますか?"
+        "EN": "Do you really want to reset this simulation?"
     },
     /**
      * script.js: function closeWorld
      */
     confirmCloseWorld: {
-        "JA": "この世界を消去します．",
-        "EN": "この世界を消去します．"
+        "JA": "本当にこの世界を消去しますか?",
+        "EN": "Do you really want to discard this simulation?"
+    },
+    requestWorldName: {
+        "JA": "作成する世界の名前を入力してください．",
+        "EN": "Please enter the name of your new world."
     },
     requestSharedId: {
         "JA": "共有された世界IDを入力してください．",
-        "EN": "共有された世界IDを入力してください．"
+        "EN": "Please enter the shared world ID."
+    },
+    saveJsonFile: {
+        "JA": "新しいタブでJSONファイルを開きます．\nFirefoxをお使いの方は左上の保存ボタン，Safariをお使いの方は右クリック→ページを別名で保存，を使って保存してください．",
+        "EN": "The JSON file will appear on new tab.\nPlease save it using browser function."
     }
+}
+
+/**
+ * @namespace
+ */
+msg.warning = {};
+
+msg.warning.sharedIdNull = {
+        "JA": "エラー：共有された世界IDを入力してください",
+        "EN": "ERROR: Please enter the shared world ID."
 }
