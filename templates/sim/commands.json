@@ -4,7 +4,7 @@
         "cmd_list_cls": "cmd-btn-list"
     },
     "listener": {
-        "pauseOrResume": "pauseOrResume('default', this);",
+        "pauseOrResume": "pauseOrResume('default', this);\" name='simswitch'",
         "step": "stepSim('default');",
         "reset": "resetSim('default');",
         "gear": "showElement('sim-default');",

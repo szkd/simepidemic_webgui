@@ -345,38 +345,52 @@ sim.worldControl = function(command, world, afterfunc = null) {
 }
 
 /**
- * gui操作
+ * GUI操作
+ * @namespace
  */
-function worldGui(world_id, title, shared=false) {
-        const new_world = document.getElementById('world-template').cloneNode(true);
-        new_world.style = 'display:block;';
-        new_world.id = world_id;
-        new_world.querySelector("button[name='simswitch']").innerText = '▶︎';
-        new_world.querySelector("button[name='share']").remove();
-        new_world.querySelector('.world-name-container label').innerText = title;
+const gui = {};
+gui.worldGui=function(world_id, title, shared=false) {
+    const new_world = document.getElementById('world-template').cloneNode(true);
+    new_world.style = 'display:block;';
+    new_world.id = world_id;
+    new_world.querySelector("button[name='simswitch']").innerText = '▶︎';
+    new_world.querySelector("button[name='share']").remove();
+    new_world.querySelector('.world-name-container label').innerText = title;
 
-        const delete_sim_btn = document.createElement("button");
-        delete_sim_btn.innerHTML = img.trash_box;
-        delete_sim_btn.setAttribute("onclick", "closeWorld('" + world_id + "');");
-        delete_sim_btn.setAttribute("class", "command-button");
+    const delete_sim_btn = document.createElement("button");
+    delete_sim_btn.innerHTML = img.trash_box;
+    delete_sim_btn.setAttribute("onclick", "closeWorld('" + world_id + "');");
+    delete_sim_btn.setAttribute("class", "command-button");
 
-        new_world.querySelector('.world-name-container').appendChild(delete_sim_btn);
-        new_world.innerHTML = new_world.innerHTML.toString().replace(/default/gi, world_id);
+    new_world.querySelector('.world-name-container').appendChild(delete_sim_btn);
+    new_world.innerHTML = new_world.innerHTML.toString().replace(/default/gi, world_id);
 
-        const w_list = document.getElementById("world-list");
-        w_list.append(new_world);
-        addMonitor(world_id);
+    const w_list = document.getElementById("world-list");
+    w_list.append(new_world);
+    addMonitor(world_id);
 }
 
-function addNewWorld(world_id='') {
+gui.addNewWorld = function (world_id = '') {
     if(world_id != '') {
         console.log("GET/addNewWorld: " + world_id);
-        const w_name = window.prompt("名前を入力してください", "new world");
-        worldGui(world_id, w_name);
+        const w_name = window.prompt(msg.requestWorldName[LANGUAGE], "new world");
+        gui.worldGui(world_id, w_name);
         return;
     }
     console.log("func: addNewWorld");
-    server.get(addNewWorld, "newWorld");
+    server.get(gui.addNewWorld, "newWorld");
+}
+
+gui.addSharedWorld = function () {
+    const input_str = window.prompt(msg.requestSharedId[LANGUAGE]);
+    if(input_str == "") {
+        alert(msg.warning.sharedIdNull[LANGUAGE]);
+        return;
+    }
+    const shared_id = input_str.replace(/[Ａ-Ｚａ-ｚ０-９]/g, function(s) {
+        return String.fromCharCode(s.charCodeAt(0) - 65248);
+    });
+    gui.worldGui(shared_id, 'Shared World:' + shared_id);
 }
 
 function closeWorld(world_id){
@@ -387,13 +401,6 @@ function closeWorld(world_id){
     sim.worldControl('closeWorld', world_id);
 }
 
-function addSharedWorld() {
-    const input_str = window.prompt(msg.requestSharedId[LANGUAGE]);
-    const shared_id = input_str.replace(/[Ａ-Ｚａ-ｚ０-９]/g, function(s) {
-    return String.fromCharCode(s.charCodeAt(0) - 65248);
-});
-    worldGui(shared_id, 'Shared World:' + shared_id);
-}
 
 function addMonitor(w_id) {
     const p_node = document.getElementById(w_id + '-result');

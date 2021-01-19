@@ -52,9 +52,11 @@ function applySettings(formname, world) {
     sim.applySettings(formname, world);
 }
 
-//addNewWorld();
+function addNewWorld() {
+    gui.addNewWorld();
+}
 function sharedWorld() {
-    addSharedWorld();
+    gui.addSharedWorld();
 }
 
 function saveAll() {
@@ -103,7 +105,7 @@ function stopSim(world) {
     MONITORS[world].stop();
 }
 
-function stepSim(world){
+function stepSim(world) {
     MONITORS[world].start(tool.getBrowserId(), world);
     let space_id = world;
     if(world == 'default') {
