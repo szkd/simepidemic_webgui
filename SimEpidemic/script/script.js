@@ -349,8 +349,9 @@ sim.worldControl = function(command, world, afterfunc = null) {
  * @namespace
  */
 const gui = {};
-gui.worldGui=function(world_id, title, shared=false) {
+gui.worldGui = function(world_id, title, shared=false) {
     const new_world = document.getElementById('world-template').cloneNode(true);
+
     new_world.style = 'display:block;';
     new_world.id = world_id;
     new_world.querySelector("button[name='simswitch']").innerText = '▶︎';
@@ -359,7 +360,7 @@ gui.worldGui=function(world_id, title, shared=false) {
 
     const delete_sim_btn = document.createElement("button");
     delete_sim_btn.innerHTML = img.trash_box;
-    delete_sim_btn.setAttribute("onclick", "closeWorld('" + world_id + "');");
+    delete_sim_btn.setAttribute("onclick", "closeWorld('" + world_id + "'," + shared + ");");
     delete_sim_btn.setAttribute("class", "command-button");
 
     new_world.querySelector('.world-name-container').appendChild(delete_sim_btn);
@@ -368,6 +369,15 @@ gui.worldGui=function(world_id, title, shared=false) {
     const w_list = document.getElementById("world-list");
     w_list.append(new_world);
     addMonitor(world_id);
+    if(shared) {
+        new_world.querySelector("div.owner-only").remove();
+        function isRunning(bool) {
+            if(bool) return;
+            alert(msg.warning.notRunning[LANGUAGE]);
+            closeWorld(world_id, true);
+        }
+        server.get(isRunning, 'getIndexes?isRunning=1');
+    }
 }
 
 gui.addNewWorld = function (world_id = '') {
@@ -383,24 +393,19 @@ gui.addNewWorld = function (world_id = '') {
 
 gui.addSharedWorld = function () {
     const input_str = window.prompt(msg.requestSharedId[LANGUAGE]);
-    if(input_str == "") {
+    if(input_str == "" || input_str == null || input_str == undefined) {
         alert(msg.warning.sharedIdNull[LANGUAGE]);
         return;
     }
     const shared_id = input_str.replace(/[Ａ-Ｚａ-ｚ０-９]/g, function(s) {
         return String.fromCharCode(s.charCodeAt(0) - 65248);
     });
-    gui.worldGui(shared_id, 'Shared World:' + shared_id);
+    gui.worldGui(shared_id, 'Shared World:' + shared_id, true);
+    MONITORS[shared_id].start(tool.getBrowserId(), shared_id);
 }
 
-function closeWorld(world_id){
-    const DO = confirm(msg.confirmCloseWorld[LANGUAGE]);
-    if(!DO) return;
-    document.getElementById(world_id).remove();
-    deleteMonitor(world_id);
-    sim.worldControl('closeWorld', world_id);
+gui.deleteSharedWorld = function (w_id) {
 }
-
 
 function addMonitor(w_id) {
     const p_node = document.getElementById(w_id + '-result');
@@ -409,7 +414,4 @@ function addMonitor(w_id) {
     MONITORS[w_id] = new MonitorPIXI(p_node, width, w_id);
 }
 
-function deleteMonitor(w_id) {
-    delete MONITORS[w_id];
-}
 

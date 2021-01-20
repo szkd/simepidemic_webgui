@@ -197,6 +197,9 @@ class MonitorPIXI {
 
     stop() {
         console.log('monitor.stop');
+        if(this.event_src == null) {
+            return;
+        }
         this.event_src.postMessage(['stop']);
     }
 

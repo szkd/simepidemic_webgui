@@ -135,9 +135,17 @@ function addMonitor(w_id) {
     MONITORS[w_id] = new MonitorPIXI(p_node, w_id);
 }
 
-function deleteMonitor(w_id) {
-    delete MONITORS[w_id];
+function closeWorld(world_id, shared = false){
+    MONITORS[world_id].stop();
+    if(!shared) {
+        const DO = confirm(msg.confirmCloseWorld[LANGUAGE]);
+        if(!DO) return;
+        sim.worldControl('closeWorld', world_id);
+    }
+    document.getElementById(world_id).remove();
+    delete MONITORS[world_id];
 }
+
 /********************************************
  * oninput
  ***************************************** */
