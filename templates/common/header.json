@@ -30,7 +30,11 @@
         "EN": "日本語"
     },
     "LINK": {
-        "JA": "http://localhost:1234/en/index.html",
-        "EN": "http://localhost:1234/ja/index.html"
+        "JA": "../en/index.html",
+        "EN": "../ja/index.html"
+    },
+    "LANGUAGE": {
+        "JA": "JA",
+        "EN": "EN"
     }
 }

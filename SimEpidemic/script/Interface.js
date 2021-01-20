@@ -23,6 +23,21 @@ function hideElement(id) {
     tool.switchVisible(id, false);
 }
 
+function chart(type, world, btn) {
+    const blankwindow = window.open('', '空の窓', 'width=500, height=100')
+    //left top height
+    switch(type) {
+        case 'stacked':
+            break;
+        case 'index':
+            break;
+        case 'distribution':
+            break;
+        default:
+            console.log('Error: undefined graph type');
+    }
+}
+
 /*
 pauseOrResume('default', this)
 stepSim('default')
@@ -37,8 +52,13 @@ function applySettings(formname, world) {
     sim.applySettings(formname, world);
 }
 
-//addNewWorld();
-//sharedWorld()
+function addNewWorld() {
+    gui.addNewWorld();
+}
+function sharedWorld() {
+    gui.addSharedWorld();
+}
+
 function saveAll() {
     param.saveAll();
 }
@@ -85,7 +105,7 @@ function stopSim(world) {
     MONITORS[world].stop();
 }
 
-function stepSim(world){
+function stepSim(world) {
     MONITORS[world].start(tool.getBrowserId(), world);
     let space_id = world;
     if(world == 'default') {
@@ -112,13 +132,20 @@ function resetSim(world) {
 function addMonitor(w_id) {
     const p_node = document.getElementById(w_id + '-result');
     p_node.innerHTML='';
-    const width = document.querySelector("#world-template .cmd-btn-list").offsetWidth;
-    MONITORS[w_id] = new MonitorPIXI(p_node, width, w_id);
+    MONITORS[w_id] = new MonitorPIXI(p_node, w_id);
 }
 
-function deleteMonitor(w_id) {
-    delete MONITORS[w_id];
+function closeWorld(world_id, shared = false){
+    MONITORS[world_id].stop();
+    if(!shared) {
+        const DO = confirm(msg.confirmCloseWorld[LANGUAGE]);
+        if(!DO) return;
+        sim.worldControl('closeWorld', world_id);
+    }
+    document.getElementById(world_id).remove();
+    delete MONITORS[world_id];
 }
+
 /********************************************
  * oninput
  ***************************************** */

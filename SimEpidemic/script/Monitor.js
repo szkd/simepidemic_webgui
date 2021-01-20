@@ -98,7 +98,7 @@ draw.initAgents = function() {
 /**
  * エージェントの描画
  * @param {object} d_array
- * @param {MonitorPIXI} monitor
+ * @param {string} w_id - monitorオブジェクトを特定する世界ID
  */
 draw.agents = function(d_array, w_id) {
     const monitor = MONITORS[w_id];
@@ -132,6 +132,21 @@ draw.agents = function(d_array, w_id) {
 }
 
 /**
+ * PIXIアプリケーションの描画領域の幅に設定するべき値を取得
+ */
+draw.getCanvasParentWidth = function() {
+    return document.querySelector("#world-template .cmd-btn-list").offsetWidth;
+}
+
+/**
+ * SimEpiのキャンバスの比率に合わせて高さを算出
+ * @param w - 幅
+ * @return 高さ
+ */
+draw.height = function(w) {
+    return w * 0.83;
+}
+/**
  * @classdesc シミュレーションのエージェントをリアルタイムに監視，アニメーション表示する
  * アニメーションについてはPIXIライブラリを通してWebGLで描画
  */
@@ -141,17 +156,17 @@ class MonitorPIXI {
      * @param {object:node} p_node - PIXI.Application.renerer.viewを持たせる親要素
      * @param {number} w - 表示する画面の幅（高さは幅から自動的に生成）
      */
-    constructor(p_node, w, w_id) {
+    constructor(p_node, w_id) {
         this.pixi = new PIXI.Application({
-            width: w,
-            height: w * 0.83,
-            backgroundColor: 0xFFFFFF
+            width: draw.getCanvasParentWidth(),
+            height: draw.height(draw.getCanvasParentWidth()),
+            backgroundColor: 0xFFFFFF,
+            autoResize: true
         });
-        this.width = w;
         this.agent_textures = draw.agentTextures(this.pixi.renderer, 15);
         this.agents = draw.initAgents();
         this.filter = draw.filter();
-        this.ratio = w/12000;
+        this.ratio = draw.getCanvasParentWidth()/12000;
         this.pixi.stage.addChild(draw.backgroundGraphic(false, true));//y軸反転
         for(let key in this.agents) {
             this.pixi.stage.addChild(this.agents[key]);
@@ -182,6 +197,9 @@ class MonitorPIXI {
 
     stop() {
         console.log('monitor.stop');
+        if(this.event_src == null) {
+            return;
+        }
         this.event_src.postMessage(['stop']);
     }
 
@@ -195,6 +213,12 @@ class MonitorPIXI {
 
     update() {
         this.pixi.renderer.render(this.pixi.stage);
+    }
+
+    resize(w, h) {
+        this.ratio = draw.getCanvasParentWidth()/12000;
+        this.pixi.renderer.view.style.width = w + 'px';
+        this.pixi.renderer.view.style.height = h + 'px';
     }
 
     /**

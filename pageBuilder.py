@@ -1,4 +1,4 @@
-﻿import json
+import json
 import os
 import shutil
 from collections import OrderedDict
@@ -221,15 +221,15 @@ def animSettings(jsonfile, lang):
 
 def sim(lang):
     title = {
-        "sim-title": {
+        "sim": {
             "JA": "シミュレーション制御",
             "EN": "Simulation Control"
             },
-        "anim-filter-title": {
+        "anim-filter": {
             "JA": "アニメーションに表示",
             "EN": "Watch on ..."
             },
-        "anim-stg-title": {
+        "anim-stg": {
             "JA": "アニメーション設定",
             "EN": "Animation Settings"
             }
@@ -251,9 +251,9 @@ def sim(lang):
 
     world_template = rephrase(SIM_DIR + "world.html",\
             {\
-                "SIM-TITLE": title['sim-title'][lang],\
-                "ANIM-FILTER-TITLE": title['anim-filter-title'][lang],\
-                "ANIM-STG-TITLE": title['anim-stg-title'][lang],\
+                "SIM-TITLE": title['sim'][lang],\
+                "ANIM-FILTER-TITLE": title['anim-filter'][lang],\
+                "ANIM-STG-TITLE": title['anim-stg'][lang],\
                 "WORLDCMD": w_cmd,\
                 "ANIMATION-FILTER": anim_filters,\
                 "ANIMATION-STG": anim_settings,\
@@ -265,7 +265,7 @@ def sim(lang):
 """ ********************************* """
 """ ********************************* """
 def param(lang):
-    commands = inputGroupFromJson(PARAM_DIR + "allpanel-commands.json", lang);
+    commands = inputGroupFromJson(PARAM_DIR + "commands.json", lang);
     paramtype = json2dict(CONTENTS_DIR + "paramtype.json")
     params = ""
     params += paramPanels(lang, paramtype, PARAM_DIR + 'param.json', COMMON_DIR + 'panel.html')
@@ -419,10 +419,10 @@ def paramPanels(lang, p_types, paramjsonfile, template_file, add_property = True
         panels += panel(lang, category, c['param-list'], panel_title, params, template_file)
     return panels
 
-def head(title, stylesheets=[], scripts=[], icon = '../favicon.png'):
+def head(title, stylesheets=[], scripts=[]):
     html = tag("title", title)\
             + tag("meta", attr={'charset': 'utf-8'}, end = False)\
-            + tag("link", attr = {'rel': 'icon', 'href': icon}, end = False)
+            + tag("link", attr = {'rel': 'icon', 'href': '../favicon.png'}, end = False)
     for stylesheet in stylesheets:
         html += tag("link", attr={'rel': 'stylesheet', 'href': stylesheet}, end=False)
     for script in scripts:
@@ -445,6 +445,7 @@ def header(jsonfile, lang):
     data["HINT"] = data["HINT"][lang]
     data["LINK"] = data["LINK"][lang]
     data["LINKNAME"] = data["LINKNAME"][lang]
+    data["LANGUAGE"] = data["LANGUAGE"][lang]
 
     return rephrase(COMMON_DIR + "header.html", data)
 """ ******************************
@@ -504,6 +505,8 @@ def slider( label, attr, unit=''):
 
 def tag(tagname, content = '', attr={}, end=True):
     html_str = "<" + tagname + attributes(attr) + ">"
+    if tagname == 'input':
+        end = False
     if end:
         html_str += content
         html_str += "</" + tagname +">"
@@ -575,7 +578,7 @@ def buildPage(lang):
 def langSwitchPage():
     data = {}
     data['PROPERTY'] = ""
-    data['HEAD'] = head('SimEpidemic', stylesheets=['common.css'], icon = 'favicon.png')
+    data['HEAD'] = head('Simepidemic', stylesheets=['css/common.css'])
     data['HEADER'] = ''
     with open(COMMON_DIR + 'toppage.html') as f:
         data['MAIN'] = f.read()

@@ -12,9 +12,21 @@ const SEVERNAME = "http://simepi.intlab.soka.ac.jp/";
 const MONITORS = {};
 /**
  * 選択中の言語，の予定
+ * @type {string}
  */
 let LANGUAGE = 'JA';
 
+function setLanguege(lang) {
+    if(lang == 'JA') {
+        LANGUAGE = 'JA';
+        return;
+    }
+    if(lang == 'EN') {
+        LANGUAGE = 'EN';
+        return;
+    }
+    console.log("ERROR Invalid language: " + lang);
+}
 /********************************************
  ***************************************** */
 /**
@@ -27,6 +39,17 @@ window.onload = function(){
     server.get(tool.setHiddenValues, 'getParams', responseType = 'json');
     addMonitor('default');
 }
+
+/**
+ * リサイズ window.resize
+ */
+window.addEventListener('resize', function () {
+    const width = draw.getCanvasParentWidth();
+    const height = draw.height(width);
+    for(w_id in MONITORS) {
+        MONITORS[w_id].resize(width, height);
+    }
+});
 
 /********************************************
  ***************************************** */
@@ -43,9 +66,12 @@ const param = {};
 param.form2dict = function(formname) {
     const p_list = document.getElementById(formname + "-plist").innerText.split(',');
     const d = tool.getHiddenValues();
+    //console.log(d);
+    //console.log(p_list);
     const p_dict = {};
     const form = document.forms[formname];
     for(let p of p_list) {
+        //console.log(p);
         if(d[p].split(',').length > 1) {
             p_dict[p] = new Array();
             p_dict[p].push(form[p + '-min'].value - 0);
@@ -319,51 +345,66 @@ sim.worldControl = function(command, world, afterfunc = null) {
 }
 
 /**
- * gui操作
+ * GUI操作
+ * @namespace
  */
-function addNewWorld(world_id='') {
+const gui = {};
+gui.worldGui = function(world_id, title, shared=false) {
+    const new_world = document.getElementById('world-template').cloneNode(true);
+
+    new_world.style = 'display:block;';
+    new_world.id = world_id;
+    new_world.querySelector("button[name='simswitch']").innerText = '▶︎';
+    new_world.querySelector("button[name='share']").remove();
+    new_world.querySelector('.world-name-container label').innerText = title;
+
+    const delete_sim_btn = document.createElement("button");
+    delete_sim_btn.innerHTML = img.trash_box;
+    delete_sim_btn.setAttribute("onclick", "closeWorld('" + world_id + "'," + shared + ");");
+    delete_sim_btn.setAttribute("class", "command-button");
+
+    new_world.querySelector('.world-name-container').appendChild(delete_sim_btn);
+    new_world.innerHTML = new_world.innerHTML.toString().replace(/default/gi, world_id);
+
+    const w_list = document.getElementById("world-list");
+    w_list.append(new_world);
+    addMonitor(world_id);
+    if(shared) {
+        new_world.querySelector("div.owner-only").remove();
+        function isRunning(bool) {
+            if(bool) return;
+            alert(msg.warning.notRunning[LANGUAGE]);
+            closeWorld(world_id, true);
+        }
+        server.get(isRunning, 'getIndexes?isRunning=1');
+    }
+}
+
+gui.addNewWorld = function (world_id = '') {
     if(world_id != '') {
         console.log("GET/addNewWorld: " + world_id);
-        const w_name = window.prompt("名前を入力してください", "new world");
-
-        const new_world = document.getElementById('world-template').cloneNode(true);
-        new_world.style = 'display:block;';
-        new_world.id = world_id;
-        new_world.querySelector("button[name='simswitch']").innerText = '▶︎';
-        new_world.querySelector("button[name='share']").remove();
-        new_world.querySelector('.world-name-container label').innerText = w_name;
-
-        const delete_sim_btn = document.createElement("button");
-        delete_sim_btn.title =  w_name + 'を削除';
-        delete_sim_btn.innerHTML = img.trash_box;
-        delete_sim_btn.setAttribute("onclick", "closeWorld('" + world_id + "');");
-        delete_sim_btn.setAttribute("class", "command-button");
-
-        new_world.querySelector('.world-name-container').appendChild(delete_sim_btn);
-        const interval_btn = new_world.querySelector("input[name='interval']");
-        const steps_ps_btn = new_world.querySelector("input[name='speed']");
-        new_world.innerHTML = new_world.innerHTML.toString().replace(/default/gi, world_id);
-
-        const w_list = document.getElementById("world-list");
-        w_list.append(new_world);
-
-        addMonitor(world_id);
+        const w_name = window.prompt(msg.requestWorldName[LANGUAGE], "new world");
+        gui.worldGui(world_id, w_name);
         return;
     }
     console.log("func: addNewWorld");
-    server.get(addNewWorld, "newWorld");
+    server.get(gui.addNewWorld, "newWorld");
 }
 
-function closeWorld(world_id){
-    const DO = confirm(msg.confirmCloseWorld[LANGUAGE]);
-    if(!DO) return; 
-    document.getElementById(world_id).remove();
-    deleteMonitor(world_id);
-    sim.worldControl('closeWorld', world_id);
+gui.addSharedWorld = function () {
+    const input_str = window.prompt(msg.requestSharedId[LANGUAGE]);
+    if(input_str == "" || input_str == null || input_str == undefined) {
+        alert(msg.warning.sharedIdNull[LANGUAGE]);
+        return;
+    }
+    const shared_id = input_str.replace(/[Ａ-Ｚａ-ｚ０-９]/g, function(s) {
+        return String.fromCharCode(s.charCodeAt(0) - 65248);
+    });
+    gui.worldGui(shared_id, 'Shared World:' + shared_id, true);
+    MONITORS[shared_id].start(tool.getBrowserId(), shared_id);
 }
 
-function sharedWorld() {
-    alert("この機能は未実装です");
+gui.deleteSharedWorld = function (w_id) {
 }
 
 function addMonitor(w_id) {
@@ -373,7 +414,4 @@ function addMonitor(w_id) {
     MONITORS[w_id] = new MonitorPIXI(p_node, width, w_id);
 }
 
-function deleteMonitor(w_id) {
-    delete MONITORS[w_id];
-}
 

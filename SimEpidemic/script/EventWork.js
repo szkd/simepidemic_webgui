@@ -1,11 +1,18 @@
-﻿/**
- * @namespace
- */
-const report = {};
+﻿const report = {};
 /**
  * 定期レポートで取得する指標
  */
-report.indexes= ['"recovered"', '"asymptomatic"', '"died"', '"symptomatic"', '"days"', '"population"'];
+report.indexes= [];
+
+report.setIndexes = function (indexes =['"recovered"', '"asymptomatic"', '"died"', '"symptomatic"', '"days"', '"population"']) {
+    this.indexes = indexes;
+}
+
+report.addIndexes = function(idx_array) {
+    for(idx of idx_array) {
+        report.indexes.push(idx);
+    }
+}
 
 /**
  * レポーター
@@ -23,14 +30,15 @@ report.process_id = '';
  * @param {string} b_id - ブラウザID
  * @param {string} w_id - ワールドID
  * @param {float} interval - SVからの送信間隔(s)
+ * @param {int} [format=2] - GET/populationのバージョンは1か2か
  */
-report.configRequest = function(cmd, b_id, w_id, interval) {
+report.configRequest = function(cmd, b_id, w_id, interval, format=2) {
     let request = '/'+ cmd + '?report=["step"';
     for(let index of this.indexes) {
         request += ',' + index;
     }
     request += "]&interval=" + interval;
-    request += "&popFormat=2";
+    request += "&popFormat=" + format;
     if(w_id != 'default') request += "&world=" + w_id;
     request += "&me=" + b_id;
     return request;
@@ -81,6 +89,24 @@ report.start = function(e) {
 report.changeInterval = function(v) {
     if(this.process_id == '') postMessage('error', 'process doesn\'t have ID.');
 }
+
+/**
+ * グラフ用
+ * e.data→コマンド(onmessage)，グラフコマンド, データ1...となる配列
+ * @param {object:array} e - Workerの上司からきたメッセージ
+ */
+
+report.graphWork = function (e) {
+    const cmd = e.data[1];
+    switch(cmd) {
+        case 'init':
+            break;
+        default:
+            console.log("graphwork: undefined cmd " + cmd);
+
+    }
+}
+
 /*
  * 上司からのメッセージを処理
  * e.data→コマンド，データ1, データ2...となる配列
@@ -88,7 +114,11 @@ report.changeInterval = function(v) {
 onmessage = function(e) {
     const cmd = e.data[0];
     switch(cmd) {
+        case 'graph':
+            report.graphWork(e);
+            break;
         case 'start':
+            report.setIndexes();
             report.start(e);
             break;
         case 'change':
