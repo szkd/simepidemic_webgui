@@ -17,6 +17,13 @@ This repository includes web pages for interaction with [SimEpidemic HTTP server
   - Checkout `dev` branch
   - Command `python pageBuilder.py` (Python 3.6.*)
 
+## Screen Shots
+
+<div>
+<img src="https://github.com/szkd/simepidemic_webgui/raw/img/img/sim.png" width="40%" style="float: left;">
+<img src="https://github.com/szkd/simepidemic_webgui/raw/img/img/parameter.png" width="40%" style="float: left;">
+  </div>
+
 &copy; Saki Nawata, 2020-21, All rights reserved.
 
 ---
