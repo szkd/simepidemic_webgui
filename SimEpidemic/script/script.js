@@ -1,35 +1,4 @@
-﻿/********************************************
- * グローバル
- ***************************************** */
-/**
- * サーバー名，リリース時に変更必須
- */
-const SEVERNAME = "http://localhost:1234/";
-/**
- * リアルタイムアニメーション領域の辞書{worldID:MonitorPIXI}
- * @type {object:dict}
- */
-const MONITORS = {};
-/**
- * 選択中の言語，の予定
- * @type {string}
- */
-let LANGUAGE = 'JA';
-
-function setLanguege(lang) {
-    if(lang == 'JA') {
-        LANGUAGE = 'JA';
-        return;
-    }
-    if(lang == 'EN') {
-        LANGUAGE = 'EN';
-        return;
-    }
-    console.log("ERROR Invalid language: " + lang);
-}
-/********************************************
- ***************************************** */
-/**
+﻿/**
  * 初期化 window.onload
  */
 window.onload = function(){

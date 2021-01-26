@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    HEAD
+    </head>
+    <body>
+    <div id = "wrapper">
+
+        <h1>
+            <span id="world_id"></span>::
+            <span id="nickname"></span>
+        </h1>
+        <main style = "background-color: white;">
+        <div id="update-button">
+            <button type="button" onclick="updateData();">
+                更新
+            </button>
+        </div>
+
+        <h2>全体構成変化</h2>
+        <div id="stack-graph">
+        </div>
+
+        <h2>指標別変化</h2>
+        <div id="index-graph">
+        </div>
+
+        <h2>感染周期</h2>
+        <div id="periodic-dist">
+        </div>
+
+        <h2>スプレッダー</h2>
+        <div id="spreader-dist">
+        </div>
+
+        </main>
+    </div>
+    <script>
+    function getData(me, myidx, callback) {
+        console.log("getData");
+
+        const req = 'getIndexes?me=' + me + '&fromDay=0&' + myidx.join("=1&") + "=1";
+        server.get(callback, req, responseType = "json");
+    }
+
+const testindexes = ["days", "susceptible", "asymptomatic", "symptomatic", "recovered", "died"];
+
+getData(tool.getBrowserId(), testindexes,
+    function (v) {
+        drawchart(v);
+});
+
+function drawchart(dataset) {
+//20:38
+const p_node = d3.select("#stack-graph");
+    const width = 800;
+    const height = 600;
+p_node.append("svg")
+    .attr("width", width)
+    .attr("height", height)
+    .attr("id", "stack-svg");
+
+const stacked_keys = testindexes.slice(1);
+console.log(stacked_keys);
+console.log(dataset);
+const data = [];
+for (let i = 0; i < dataset[stacked_keys[0]].length; i++) {
+    data.push({});
+    for(let name of stacked_keys) {
+        data[i][name] = dataset[name][i];
+    }
+}
+console.log(data);
+const stacked_series = d3.stack()
+    .keys(stacked_keys)
+    .order(d3.stackOrderNone)
+    .offset(d3.stackOffsetNone)(data);
+console.log(stacked_series);
+
+  var color = d3.scaleOrdinal()
+    .domain(stacked_keys)
+    .range(d3.schemeSet3);
+const scale_x = d3.scaleLinear()
+    .domain([0, data.length])
+    .range([0, width - 200]);
+const scale_y = d3.scaleLinear()
+    .domain([0, 11000])
+    .range([0, height - 200]);
+const area_maker = d3.area()
+    .x((d, i) => scale_x(i))
+    .y0(function(d) {  return scale_y(d[0]);})
+    .y1(function(d) { return scale_y(d[1]);});
+d3.select("#stack-svg")
+    .selectAll("mylayers")
+    .data(stacked_series)
+    .join("path")
+    .style("fill", function(d) {return color(d.key)})
+    .attr("d", area_maker)
+    .attr('transform', 'translate(100, 0)');
+const x_axis = d3.select("#stack-svg")
+    .append("g")
+    .call(d3.axisBottom(scale_x))
+    .attr('transform', 'translate(100, ' + (height - 237) + ')');
+const y_axis = d3.select("#stack-svg")
+    .append("g")
+    .attr("fill", "white")
+    .attr('transform', 'translate(100, 0)')
+    .call(d3.axisLeft(scale_y));
+}
+
+    </script>
+    </body>
+</html>

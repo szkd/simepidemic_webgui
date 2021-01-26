@@ -11,8 +11,14 @@ OUTPUT_DIR = "SimEpidemic/"
 STYLES = "../css/"
 SCRIPTS = "../script/"
 OUTPUT_FILE = {
+    "index": {
         "JA": OUTPUT_DIR + "ja/index.html",
         "EN": OUTPUT_DIR + "en/index.html"
+        },
+    "graph": {
+        "JA": OUTPUT_DIR + "ja/graph_view.html",
+        "EN": OUTPUT_DIR + "en/graph_view.html"
+        }
 }
 CONTENTS_DIR = OUTPUT_DIR + "contents/"
 SIM_DIR = TEMPLATE_DIR + "sim/"
@@ -552,6 +558,7 @@ def addTab(tabname, id, name, c_func, lang, checked=False):
 build
 ******************************** """
 def buildPage(lang):
+    graphPopup(lang)
     stylesheets=[\
             STYLES + "common.css"\
     ]
@@ -581,18 +588,36 @@ def buildPage(lang):
 
     data["MAIN"] = tabItemContainer(tab_items + tab_contents,'tabs')
     data["PROPERTY"] = tag("form", convertMyProperty(), {"style": "display:none;", "name": "property"})
-    with open(OUTPUT_FILE[lang], mode="w") as f:
+    with open(OUTPUT_FILE["index"][lang], mode="w") as f:
         f.write(rephrase(COMMON_DIR + "base.html", data))
 
 def langSwitchPage():
     data = {}
     data['PROPERTY'] = ""
-    data['HEAD'] = head('Simepi:グラフ', stylesheets=['css/common.css'])
+    data['HEAD'] = head('SimEpidemic', stylesheets=['css/common.css'])
     data['HEADER'] = ''
     with open(COMMON_DIR + 'toppage.html') as f:
         data['MAIN'] = f.read()
     with open(OUTPUT_DIR + 'index.html', mode="w") as f:
         f.write(rephrase(COMMON_DIR + "base.html", data))
+
+def graphPopup(lang):
+    stylesheets=[\
+            STYLES + "common.css"\
+    ]
+    scripts=[\
+        "https://cdnjs.cloudflare.com/ajax/libs/pixi.js/5.3.3/pixi.min.js",\
+        "https://d3js.org/d3.v6.min.js",\
+        #SCRIPTS + "windowPanel.js",\
+        SCRIPTS + "common.js",\
+        #SCRIPTS + "Monitor.js",\
+        #SCRIPTS + "EventWork.js",\
+        #SCRIPTS + "script.js",\
+        #SCRIPTS + "Interface.js"\
+    ]
+    HEAD = head("", stylesheets, scripts)
+    with open(OUTPUT_FILE["graph"][lang], mode="w") as f:
+        f.write(rephrase(GRAPH_DIR + "graph_popup.html", {"HEAD": HEAD}))
 
 """ ******************************
 main
