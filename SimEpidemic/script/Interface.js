@@ -64,12 +64,10 @@ function showCharts(world) {
     w.document.body.appendChild(popup_script);
 }
 
-/*
-pauseOrResume('default', this)
-stepSim('default')
-resetSim('default')
-takeSnap('default')
-*/
+function takeSnap(w_id) {
+    sim.takeSnap(w_id);
+}
+
 function shareDefaultId() {
     sim.shareDefaultId();
 }
