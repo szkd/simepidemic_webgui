@@ -23,19 +23,45 @@ function hideElement(id) {
     tool.switchVisible(id, false);
 }
 
-function chart(type, world, btn) {
-    const blankwindow = window.open('', '空の窓', 'width=500, height=100')
+function showCharts(world) {
     //left top height
-    switch(type) {
-        case 'stacked':
-            break;
-        case 'index':
-            break;
-        case 'distribution':
-            break;
-        default:
-            console.log('Error: undefined graph type');
-    }
+    const w  = window.open('', 'viewchart-' + world, 'width=500, height=500*0.315');
+
+    const css = document.createElement('link');
+    css.setAttribute('rel', 'stylesheet')
+    css.setAttribute('href', SEVERNAME + 'css/common.css');
+
+    const popup_script = document.createElement('script');
+    popup_script.setAttribute('src', SEVERNAME + 'script/GraphPopup.js');
+
+    const common_script = document.createElement('script');
+    common_script.setAttribute('src', SEVERNAME + 'script/common.js');
+
+    const lang = document.createElement('div');
+    lang.id = 'lang';
+    lang.style = 'display:none;';
+    lang.innerText = LANGUAGE;
+    console.log(LANGUAGE);
+
+    const w_id = document.createElement('div');
+    w_id.id = 'w_id';
+    w_id.style = 'display:none;';
+    w_id.innerText = world;
+
+    const d3_script = document.createElement('script');
+    d3_script.setAttribute('src', "https://d3js.org/d3.v6.min.js");
+    const enc = document.createElement('meta');
+    enc.setAttribute('charset', 'utf-8');
+
+    w.document.head.appendChild(css);
+    w.document.head.appendChild(common_script);
+    w.document.head.appendChild(d3_script);
+    w.document.head.appendChild(enc);
+
+    w.document.body.appendChild(lang);
+    w.document.body.appendChild(w_id);
+
+    w.document.body.appendChild(popup_script);
 }
 
 /*

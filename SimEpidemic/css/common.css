@@ -207,12 +207,16 @@ input[type="number"] {
     border-top: solid 1px gray;
 }
 
-.tab_content {
+
+.tab_content, .graph_popup {
     border-radius: 15px;
-    border-top-left-radius: 0;
-    border-top: solid var(--margin) white;
     background-color:white;
     padding: var(--padding);
+}
+
+.tab_content {
+    border-top-left-radius: 0;
+    border-top: solid var(--margin) white;
     padding-top: 0;
     height: calc(99vh - var(--margin)*5 - var(--tab-height));
     overflow: scroll;
