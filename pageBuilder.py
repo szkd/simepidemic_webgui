@@ -239,15 +239,11 @@ def sim(lang):
         "anim-stg": {
             "JA": "アニメーション設定",
             "EN": "Animation Settings"
-            },
-        "realtime-stats": {
-            "JA": "統計情報",
-            "EN": "Statisticcs"
             }
     }
     cmd = inputGroupFromJson(SIM_DIR + "world_commands.json", lang, 'button')
     w_cmd = inputGroupFromJson(SIM_DIR + "commands.json", lang, 'button')
-    realtime_stats = inputGroupFromJson(SIM_DIR + "realtime_stats.json", lang, 'button')
+    shareetc  = inputGroupFromJson(SIM_DIR + "moniteringbuttons.json", lang, 'button')
     anim_settings = inputGroupFromJson(SIM_DIR + "animation_settings.json", lang, 'number')
 
     anim_filters = inputGroupFromJson(SIM_DIR + "animation_filters.json", lang, 'checkbox', 'default-draw-filter');
@@ -263,6 +259,7 @@ def sim(lang):
 
     world_template = rephrase(SIM_DIR + "world.html",\
             {\
+                "BUTTONS": shareetc,\
                 "SIM-TITLE": title['sim'][lang],\
                 "ANIM-FILTER-TITLE": title['anim-filter'][lang],\
                 "ANIM-STG-TITLE": title['anim-stg'][lang],\
@@ -270,9 +267,7 @@ def sim(lang):
                 "ANIMATION-FILTER": anim_filters,\
                 "ANIMATION-STG": anim_settings,\
                 "ID": "default",\
-                "SETTINGS": simSettings('default', lang),\
-                "REALTIME-STATS-TITLE": title['realtime-stats'][lang],\
-                "REALTIME-STATS": realtime_stats\
+                "SETTINGS": simSettings('default', lang)\
             }, 1000)
     return tag("div", world_template, {"id": "world-list"}) + cmd
 

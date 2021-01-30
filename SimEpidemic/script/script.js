@@ -379,7 +379,7 @@ gui.deleteSharedWorld = function (w_id) {
 function addMonitor(w_id) {
     const p_node = document.getElementById(w_id + '-result');
     p_node.innerHTML='';
-    const width = document.querySelector("#world-template .cmd-btn-list").offsetWidth;
+    const width = document.querySelector("#world-template .offset").offsetWidth;
     MONITORS[w_id] = new MonitorPIXI(p_node, width, w_id);
 }
 
