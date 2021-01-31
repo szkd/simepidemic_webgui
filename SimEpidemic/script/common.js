@@ -4,7 +4,7 @@
 /**
  * サーバー名，リリース時に変更必須
  */
-const SEVERNAME = "http://localhost:1234/";
+const SERVERNAME = "http://localhost:1234/";
 /**
  * リアルタイムアニメーション領域の辞書{worldID:MonitorPIXI}
  * @type {object:dict}
@@ -42,7 +42,7 @@ const server = {};
  * @return コールバック関数の結果(この関数自身のreturnは無い)
  */
 server.get = function(callback, _req, responseType ='') {
-    _req = SEVERNAME + _req;
+    _req = SERVERNAME + _req;
     const req = new XMLHttpRequest();
     req.timeout = 3000;
     req.open("GET", _req);
@@ -69,13 +69,13 @@ server.get = function(callback, _req, responseType ='') {
 server.post = function(callback, action, type, senddata, options={}, w_id='') {
     let fd = new FormData();
     const req = new XMLHttpRequest();
-    req.eroor = function () {
+    req.error = function () {
         alert("ERROR:POST " + action);
     }
     req.onload=function() {
         callback(req.response);
     }
-    req.open('POST', SEVERNAME + action);
+    req.open('POST', SERVERNAME + action);
 
     function appendDict(dict) {
         for(let key in dict) {
@@ -216,6 +216,7 @@ tool.getBrowserId = function(storage = localStorage, key = 'simepidemicBrowerID'
  * @return {object:dict} key:valueの辞書，見つけられなかった場合は空辞書{}を返す
  */
 tool.getHiddenValues = function(formname = 'default_values') {
+    if(document.forms[formname] == undefined) return {};
     const d = Array.from(document.forms[formname].children);
     const dict = {};
 
