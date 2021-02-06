@@ -9,7 +9,7 @@ popup.index_keys = ["susceptible", "asymptomatic", "symptomatic", "recovered", "
     "quarantineAsymptomatic", "quarantineSymptomatic",
     "tests", "testPositive", "testNegative",
     "testAsSymptom", "testAsContact", "testAsSuspected"];
-popup.positiveRate_keys = ["testPositiveRate"];
+popup.positiveRate_key = "testPositiveRate";
 popup.distribution_keys = ["incubasionPeriod", "recoveryPeriod", "fatalPeriod", "infects", "contacts"];
 /**
  * contacts(接触者数(人)/人日)は未実装
@@ -192,14 +192,14 @@ popup.msg = {
             { name: 'class', value: "command-button" },
             { name: 'onclick', value: "updateCharts();" }]);
 
-        addPartial("h2", popup.msg.stac.title[LANG]);
+        addPartial("h2", popup.msg.stack.title[LANG]);
         addPartial("div", "", [{ name: 'id', value: 'stack-graph' }]);
 
         addPartial("h2", popup.msg.index.title[LANG]);
         addPartial("div", "", [{ name: 'id', value: 'indexes-graph' }]);
 
         addPartial("h2", popup.msg.testPositiveRate.title[LANG]);
-        addPartial("div", "", [{ name: 'id', value: 'testPositiveRate-graph' }]);
+        addPartial("div", "", [{ name: 'id', value: 'rate-graph' }]);
 
         addPartial("h2", popup.msg.distributions.title[LANG]);
         addPartial("div", "", [{ name: 'id', value: 'distributions' }]);
@@ -272,79 +272,150 @@ popup.msg = {
             .call(d3.axisLeft(scale_y));
     }
 
-    popup.colorScheme = function(domain) {
-        const color = d3.scaleOrdinal()
-            .domain(domain)
-            .range(d3.schemeSet3);
-        return color;
+popup.colorScheme = function(domain) {
+    const color = d3.scaleOrdinal()
+        .domain(domain)
+        .range(d3.schemeSet3);
+    return color;
+}
+
+popup.drawIndexesChart = function (dataset, scale_x, scale_y) {
+    const height = popup.graph_width * popup.aspect;
+    popup.initChart('indexes', 'indexes-graph');
+    const day = dataset['days'];
+    const color = popup.colorScheme(popup.index_keys);
+    const svg = d3.select("#indexes-svg");
+    const line_maker  = d3.line()
+        .defined(d => !isNaN(d))
+        .y(function(d) { return scale_y(d);})
+        .x((d, i) => scale_x(day * (i / dataset[popup.index_keys[0]].length)));
+    const group = svg.append("g");
+    for(let name of popup.index_keys) {
+    group.append("path")
+        .datum(dataset[name])
+        .join("path")
+        .attr('transform', 'translate(70, -30)')
+        .attr("fill", "none")
+        .style("stroke", color(name))
+        .attr("stroke-width", 2)
+        .attr("stroke-linejoin", "round")
+        .attr("stroke-linecap", "round")
+        .attr("d", line_maker);
     }
+    const x_axis = svg.append("g")
+        .call(d3.axisBottom(scale_x))
+        .attr('transform', `translate(70, ${height - 30})`);
+    const y_axis = svg.append("g")
+        .attr('transform', 'translate(70, -30)')
+        .call(d3.axisLeft(scale_y));
+}
 
-    popup.drawChart = function(dataset, popsize, type) {
-        const width = popup.graph_width;
-        const height = width * popup.aspect;
-        const day = dataset['days'];
-        document.getElementById('day').innerText = day;
+popup.drawPositiveRate = function (dataset, scale_x) {
+    const height = popup.graph_width * popup.aspect;
+    popup.initChart('rate', 'rate-graph');
+    const day = dataset['days'];
+    const color = popup.colorScheme([popup.positiveRate_key]);
+    const svg = d3.select("#rate-svg");
+    const series = dataset[popup.positiveRate_key];
+    const scale_y = d3.scaleLinear()
+        .domain([0, d3.max(series) + 2])
+        .range([height, 50]);
+    const line_maker  = d3.line()
+        .defined(d => !isNaN(d))
+        .y(function(d) { return scale_y(d);})
+        .x((d, i) => scale_x(day * (i / series.length)));
+    svg.append("path")
+        .datum(series)
+        .join("path")
+        .attr('transform', 'translate(70, -30)')
+        .attr("fill", "none")
+        .style("stroke", color(name))
+        .attr("stroke-width", 2)
+        .attr("stroke-linejoin", "round")
+        .attr("stroke-linecap", "round")
+        .attr("d", line_maker);
+    const x_axis = svg.append("g")
+        .call(d3.axisBottom(scale_x))
+        .attr('transform', `translate(70, ${height - 30})`);
+    const y_axis = svg.append("g")
+        .attr('transform', 'translate(70, -30)')
+        .call(d3.axisLeft(scale_y));
+}
 
-        const scale_x = d3.scaleLinear()
-            .domain([0, day])
-            .range([0, width-100]);
+popup.drawChart = function(dataset, popsize, type) {
+    const width = popup.graph_width;
+    const height = width * popup.aspect;
+    const day = dataset['days'];
+    document.getElementById('day').innerText = day;
 
-        const scale_y = d3.scaleLinear()
-            .domain([0, popsize])
-            .range([height, 50]);
+    const scale_x = d3.scaleLinear()
+        .domain([0, day])
+        .range([0, width-100]);
 
-        switch(type) {
-            case 'stack':
-                popup.drawStackedChart(dataset, scale_x, scale_y);
-                break;
-            case 'indexes':
-                break;
-            default:
-                console.log('Unknown chart type' + type);
-        }
+    const scale_y = d3.scaleLinear()
+        .domain([0, popsize])
+        .range([height, 50]);
+
+    switch(type) {
+        case 'stack':
+            popup.drawStackedChart(dataset, scale_x, scale_y);
+            break;
+        case 'indexes':
+            popup.drawIndexesChart(dataset, scale_x, scale_y);
+            break;
+        case 'rate':
+            popup.drawPositiveRate(dataset, scale_x);
+            break;
+        default:
+            console.log('Unknown chart type' + type);
     }
+}
 
-    popup.getLanguage = function() {
-        const lang = document.getElementById('lang');
-        if(lang == null || lang == 'undefined') {
-            return 'EN';
-        }
-        return lang.innerText;
-    }
-
-    popup.getPopSize = function() {
-        const props = tool.getHiddenValues('props');
-        //console.log(props);
-        if(props['popsize'] == undefined) {
-            console.log("Error: failed to get populationSize");
-            return 10000;
-        }
-        return props['popsize'];
-    }
-    //Popup Interfaces
-    function updateCharts() {
-        const chart_types = ['stack',];
-        const w_id = tool.getHiddenValues('props')['w_id'];
-        const pop_size = popup.getPopSize();
-        popup.getData(w_id, popup.stacked_keys,
-            tool.callbackFunc(popup.drawChart, [pop_size, 'stack']));
-    }
-
-    //Main Script
+popup.getLanguage = function() {
     const lang = document.getElementById('lang');
-    const w_id = document.getElementById('w_id');
-    server.get((v)=>{
-        document.body.appendChild(
-            popup.content(w_id.innerText)
-        );
-        //console.log(v.populationSize);
-        tool.setHiddenValues({
-            'popsize': v.populationSize,
-            'w_id': w_id.innerText
-        }, "props");
-        updateCharts();
-    }, "getParams?world=" + w_id.innerText, responseType="json");
+    if(lang == null || lang == 'undefined') {
+        return 'EN';
+    }
+    return lang.innerText;
+}
+
+popup.getPopSize = function() {
+    const props = tool.getHiddenValues('props');
+    //console.log(props);
+    if(props['popsize'] == undefined) {
+        console.log("Error: failed to get populationSize");
+        return 10000;
+    }
+    return props['popsize'];
+}
+//Popup Interfaces
+function updateCharts() {
+    const chart_types = ['stack',];
+    const w_id = tool.getHiddenValues('props')['w_id'];
+    const pop_size = popup.getPopSize();
+    popup.getData(w_id, popup.stacked_keys,
+        tool.callbackFunc(popup.drawChart, [pop_size, 'stack']));
+    popup.getData(w_id, popup.index_keys,
+        tool.callbackFunc(popup.drawChart, [pop_size, 'indexes']));
+    popup.getData(w_id, [popup.positiveRate_key],
+        tool.callbackFunc(popup.drawChart, [pop_size, 'rate']));
+}
+
+//Main Script
+const lang = document.getElementById('lang');
+const w_id = document.getElementById('w_id');
+server.get((v)=>{
+    document.body.appendChild(
+        popup.content(w_id.innerText)
+    );
+    //console.log(v.populationSize);
+    tool.setHiddenValues({
+        'popsize': v.populationSize,
+        'w_id': w_id.innerText
+    }, "props");
+    updateCharts();
+}, "getParams?world=" + w_id.innerText, responseType="json");
 
 
 
-    //console.log(popup.getData(['susceptible', 'asymptomatic', 'symptomatic', 'recovered', 'died']));
+//console.log(popup.getData(['susceptible', 'asymptomatic', 'symptomatic', 'recovered', 'died']));
