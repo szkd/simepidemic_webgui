@@ -24,7 +24,7 @@ function hideElement(id) {
 }
 
 function showCharts(world) {
-    const w  = window.open('', 'viewchart-' + world, 'width=550, height=700');
+    const w  = window.open('', 'viewchart-' + world, 'width=580, height=700');
 
     const title = document.createElement('title');
     title.innerText = "Charts:: " + world;
@@ -58,9 +58,9 @@ function showCharts(world) {
     w.document.head.appendChild(d3_script);
     w.document.head.appendChild(css);
     w.document.head.appendChild(enc);
-    w.document.head.appendChild(common_script);
     w.document.head.appendChild(title);
 
+    w.document.body.appendChild(common_script);
     w.document.body.appendChild(lang);
     w.document.body.appendChild(w_id);
     w.document.body.appendChild(popup_script);
