@@ -24,8 +24,6 @@ function hideElement(id) {
 }
 
 function showCharts(world) {
-    const w  = window.open('', 'viewchart-' + world, 'width=580, height=700');
-
     const title = document.createElement('title');
     title.innerText = "Charts:: " + world;
 
@@ -55,15 +53,16 @@ function showCharts(world) {
     const enc = document.createElement('meta');
     enc.setAttribute('charset', 'utf-8');
 
-    w.document.head.appendChild(d3_script);
+    const w  = window.open('', 'viewchart-' + world, 'width=580, height=700');
+    w.document.body.appendChild(lang);
+    w.document.body.appendChild(w_id);
+
+    w.document.head.appendChild(common_script);
     w.document.head.appendChild(css);
     w.document.head.appendChild(enc);
     w.document.head.appendChild(title);
-
-    w.document.body.appendChild(common_script);
-    w.document.body.appendChild(lang);
-    w.document.body.appendChild(w_id);
-    w.document.body.appendChild(popup_script);
+    w.document.head.appendChild(popup_script);
+    w.document.head.appendChild(d3_script);
 }
 
 function takeSnap(w_id) {
