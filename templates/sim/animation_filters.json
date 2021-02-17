@@ -8,6 +8,7 @@
         "asymptomatic": "changeFilter('default', 'asymptomatic', this);",
         "symptomatic": "changeFilter('default', 'symptomatic', this);",
         "recovered": "changeFilter('default', 'recovered', this);",
+        "vaccinated": "changeFilter('default', 'vaccinated', this);",
         "died": "changeFilter('default', 'died', this);"
     },
     "boxes": {
@@ -39,6 +40,14 @@
             "label": {
                 "JA": "快復",
                 "EN": "Recovered"
+            },
+            "name": "recovered",
+            "checked": true
+        },
+        "vaccinated": {
+            "label": {
+                "JA": "ワクチン接種",
+                "EN": "Vaccinated"
             },
             "name": "recovered",
             "checked": true

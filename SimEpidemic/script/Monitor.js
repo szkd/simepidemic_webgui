@@ -5,11 +5,11 @@ const draw = {}
 /**
  * 表示する個体タイプ
  */
-draw.FILTER = ["susceptible","asymptomatic","symptomatic","recovered","died"];
+draw.FILTER = ["susceptible","asymptomatic","symptomatic","recovered", "vaccinated","died"];
 /**
  * 各個体の色
  */
-draw.FILTERCOLOR = ['0x27559A','0xF6D600', '0xFA302E', '0x207864', '0xB6B6B6'];
+draw.FILTERCOLOR = ['0x27559A','0xF6D600', '0xFA302E', '0x207864', 'skyblue', '0xB6B6B6'];
 /**
  * タイプごとの色を取得
  * @param {string} name - タイプname(FILTERより)

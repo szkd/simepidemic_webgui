@@ -4,18 +4,16 @@
  */
 const popup = {};
 
-popup.stacked_keys = ["died","asymptomatic", "symptomatic", "recovered", "susceptible"];
-popup.index_keys = ["susceptible", "asymptomatic", "symptomatic", "recovered", "died",
+popup.stacked_keys = ["died","asymptomatic",  "symptomatic", "recovered", "vaccinated", "susceptible"];
+popup.index_keys = ["died","asymptomatic",  "symptomatic", "recovered", "vaccinated", "susceptible",
     "quarantineAsymptomatic", "quarantineSymptomatic",
     "tests", "testPositive", "testNegative",
     "testAsSymptom", "testAsContact", "testAsSuspected"];
 popup.positiveRate_key = "testPositiveRate";
-popup.distribution_keys = ["incubasionPeriod", "recoveryPeriod", "fatalPeriod", "infects", "contacts"];
 /**
  * contacts(接触者数(人)/人日)は未実装
  */
-popup.distribution_keys = ["incubasionPeriod", "recoveryPeriod", "fatalPeriod",
-    "infects", "contacts"];
+popup.distribution_keys = ["incubasionPeriod", "recoveryPeriod", "fatalPeriod", "infects"];
 
 popup.msg = {
     update: {
@@ -47,6 +45,10 @@ popup.msg = {
             susceptible: {
                 "JA": "未感染者数",
                 "EN": "Susceptible"
+            },
+            vaccinated: {
+                "JA": "ワクチン接種者数",
+                "EN": "Vaccinated"
             }
         }
     },
@@ -122,10 +124,10 @@ popup.msg = {
             }
         }
     },
-    distributions: {
+    distribution: {
         title: {
             "JA": "分布情報",
-            "EN": "Distributions"
+            "EN": "Distribution"
         },
         indexes: {
             incubasionPeriod: {
@@ -154,11 +156,23 @@ popup.msg = {
     popup.makeLegend = function (indexes) {
     }
 
-    popup.getData = function (w_id, idxes, callback) {
-        const req = 'getIndexes?world=' + w_id + '&me=' + tool.getBrowserId()
-            + '&fromDay=0&days=1&' + idxes.join("=1&") + "=1";
-        server.get(callback, req, responseType = "json");
+popup.getData = function (w_id, idxes, callback, req_type ='index') {
+    let req = "";
+    switch(req_type) {
+        case 'index':
+            req  = 'getIndexes?world=' + w_id + '&me=' + tool.getBrowserId()
+                + '&fromDay=0&days=1&' + idxes.join("=1&") + "=1";
+            server.get(callback,  req,  responseType = "json");
+            break;
+        case 'distribution':
+            req  = 'getDistribution?world=' + w_id + '&me=' + tool.getBrowserId()
+                + '&' + idxes.join("=1&") + "=1";
+            server.get(callback,  req,  responseType = "json");
+            break;
+        default:
+            console.log("popup.getData: Error unknown type " + req_type);
     }
+}
 
     popup.content = function (w_id) {
         const wrapper = document.createElement('div');
