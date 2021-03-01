@@ -1,0 +1,106 @@
+{
+    "update": {
+        "JA": "更新",
+        "EN": "Update"
+    },
+    "title": {
+        "stack": {
+            "JA": "全体構成変化",
+            "EN": "Whole"
+        },
+        "index": {
+            "JA": "指標別変化",
+            "EN": "Indexes..."
+        },
+        "testPositiveRate": {
+            "JA": "陽性率",
+            "EN": "Test Positive Rate"
+        },
+        "distribution": {
+            "JA": "分布情報",
+            "EN": "Distribution"
+        }
+    },
+    "index": {
+        "died": {
+            "JA": "死亡者数",
+            "EN": "Died"
+        },
+        "asymptomatic": {
+            "JA": "無症状感染者数",
+            "EN": "Asymptmatic"
+        },
+        "symptomatic": {
+            "JA": "発症感染者数",
+            "EN": "Symptomatic"
+        },
+        "recovered": {
+            "JA": "快復者数",
+            "EN": "Recovered"
+        },
+        "susceptible": {
+            "JA": "未感染者数",
+            "EN": "Susceptible"
+        },
+        "vaccinated": {
+            "JA": "ワクチン接種者数",
+            "EN": "Vaccinated"
+        },
+        "quarantineAsymptomatic": {
+            "JA": "無症状隔離数",
+            "EN": "QuarantineAsymptomatic"
+        },
+        "quarantineSymptomatic": {
+            "JA": "有症状隔離数",
+            "EN": "QuarantineSymptomaticr"
+        },
+        "tests": {
+            "JA": "検査数",
+            "EN": "Tests"
+        },
+        "testPositive": {
+            "JA": "陽性者数",
+            "EN": "Test Positive"
+        },
+        "testNegative": {
+            "JA": "陰性者数",
+            "EN": "testNegative"
+        },
+        "testAsSymptom": {
+            "JA": "発症者検査数",
+            "EN": "Test as Symptomatic"
+        },
+        "testAsContact": {
+            "JA": "接触者検査数",
+            "EN": "Test as Contact"
+        },
+        "testAsSuspected": {
+            "JA": "擬症状者数",
+            "EN": "Test as Suspected"
+        },
+        "testPositiveRate": {
+            "JA": "陽性率",
+            "EN": "Test Positive Rate"
+        },
+        "incubasionPeriod": {
+            "JA": "潜伏期間",
+            "EN": "Incubation Period"
+        },
+        "recoveryPeriod": {
+            "JA": "快復期間",
+            "EN": "Recovery Period"
+        },
+        "fatalPeriod": {
+            "JA": "生存期間",
+            "EN": "Fataal Period"
+        },
+        "infects": {
+            "JA": "伝染数",
+            "EN": "Infects"
+        },
+        "contacts": {
+            "JA": "接触者数",
+            "EN": "Contacts"
+        }
+    }
+}
