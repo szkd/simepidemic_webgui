@@ -4,7 +4,7 @@
  */
 report.indexes= [];
 
-report.setIndexes = function (indexes =['"recovered"', '"asymptomatic"', '"died"', '"symptomatic"', '"days"', '"population"']) {
+report.setIndexes = function (indexes =['"days"', '"population"']) {
     this.indexes = indexes;
 }
 
