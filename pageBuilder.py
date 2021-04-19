@@ -351,29 +351,54 @@ partial
 def paramSlider(lang, param):
     param['min'] = param['min'] if 'min' in param else '0'
     param['max'] = param['max'] if 'max' in param else '100'
-    param['value'] = param['value'] if 'value' in param else '50'
+    param['default'] = param['default'] if 'default' in param else '50'
     unit = param['unit'][lang] if 'unit' in param else ''
-    description = param['description'][lang] if 'description' in param else '謎のパラメータ'
-    description = tag("div", description, {"class": 'param-title'})
-    del param['unit'],  param['description']
-    return slider(description, param, unit = unit)
+    name = param['name'][lang] if 'name' in param else '謎のパラメータ'
+    name = tag("div", name, {"class": 'param-title'})
+    del param['unit'],  param['name']
+    return slider(name, param, unit = unit)
+
+def paramRadio(lang, param):
+    title = tag("div",\
+            param['name'][lang] if 'name' in param and lang in param['name'] else '',\
+            {'class': 'param-title'})
+    if 'options' not in param or 'default' not in param:
+        return tag("div", title);
+    option = ""
+    for opt in param['options']:
+        for_id = param['id'] + str(opt['val'])
+        label = opt['name'][lang] if 'name' in opt and lang in opt['name'] else ''
+        label = tag("span", label, attr={'for': for_id})
+        option_attr = {'id': for_id,\
+                'name': param['id'],\
+                'type': 'radio',\
+                'value': str(opt['val'])\
+        }
+        if opt['val'] == param['default']:
+            option_attr['checked'] = 'checked'
+        option += tag("div",\
+                tag("input", attr=option_attr)\
+                + tag("span", label, attr={'id': for_id}))
+    return tag("div", title + option)
 
 def paramNumber(lang, param):
     for_id = param['id']
-    label = tag("label", param['description'][lang], {'for': for_id, 'class': 'num-label'})
+    label = tag("label", param['name'][lang], {'for': for_id, 'class': 'num-label'})
     unit = tag("span", param['unit'][lang] if 'unit' in param else '')
-    del param['description'], param['unit']
+    del param['name'], param['unit']
     param['class'] = "param-input"
+    param['value'] = param['default']
+    del param['default']
     numbox = tag("input", attr=param, end=False)
     return tag("div", label + numbox + unit, {'class': 'param-num'})
 
 def paramDistribution(lang, param):
     rep_dict = {
             'ID': param["id"],
-            'TITLE': param["description"][lang],
-            'VALUE-MIN': param['value'][0],
-            'VALUE-MAX': param['value'][1],
-            'VALUE-MODE': param['value'][2],
+            'TITLE': param["name"][lang],
+            'VALUE-MIN': param['default'][0],
+            'VALUE-MODE': param['default'][1],
+            'VALUE-MAX': param['default'][2],
             'UNIT': tag("span", param['unit'][lang]) if 'unit' in param else "",
             'MINIMUM': 'Minimum' if lang == 'EN' else '最小値',
             'MAXIMUM': 'Maximum' if lang == 'EN' else '最大値',
@@ -418,6 +443,8 @@ def paramPanels(lang, p_types, paramjsonfile, template_file, add_property = True
                 params += paramNumber(lang, param)
             elif param['type'] == 'distribution':
                 params += paramDistribution(lang, param)
+            elif param['type'] == 'radio':
+                params += paramRadio(lang, param)
             else:
                 params += '謎のふぉーむ: ' + param['type']
         panels += panel(lang, category, c['param-list'], panel_title, params, template_file)
@@ -483,7 +510,7 @@ html parts
 ********************************* """
 def slider( label, attr, unit=''):
     attr['type'] = 'range'
-    if 'value' not in attr:
+    if 'default' not in attr:
         return 'error'
     if 'id' not in attr:
         return 'error'
@@ -499,7 +526,7 @@ def slider( label, attr, unit=''):
     html += tag("input", attr=attr, end=False)
     html += tag("span", attr['max'])
     html += tag("input", attr={'type': 'number', 'step': attr['step'],\
-            'value': attr['value'], 'class': 'slider_value', 'id': prefix + attr['id'],\
+            'value': attr['default'], 'class': 'slider_value', 'id': prefix + attr['id'],\
             'oninput': 'sliderValueChanged(this, ' + "\'" + attr['id'] + "\'" + ')'},\
             end= False)
     if unit != '':

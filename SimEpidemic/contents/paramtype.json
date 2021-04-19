@@ -1,6 +1,6 @@
 {
     "populationSize": {
-        "description":{
+        "name": {
             "JA":  "初期人口",
             "EN": "Population"
         },
@@ -9,389 +9,152 @@
             "EN": ""
         },
         "step": "1",
-        "value": "10000",
+        "default": "10000",
         "min": "100",
+        "max": "999900",
         "type": "number"
     },
     "worldSize": {
-        "description": {
+        "name": {
             "JA": "世界の大きさ",
-            "EN": "World size"
+            "EN": "World Size"
         },
-        "unit":{
+        "unit": {
             "JA": "距離単位",
-            "EN": "Distance unit"
+            "EN": "Distance Unit"
         },
         "step": "1",
-        "value": "360",
+        "default": "360",
         "min": "10",
+        "max": "999999",
         "type": "number",
         "info": "一辺の長さ"
     },
     "mesh": {
         "type": "range",
-        "description": {
+        "name": {
             "JA": "メッシュ",
             "EN": "Mesh"
         },
         "unit": {
-            "JA": "-h",
-            "EN": "-h"
+            "JA": "",
+            "EN": ""
         },
         "step": "1",
-        "value": "18",
+        "default": "18",
         "min": "1 ",
         "max": "999",
         "info": "縦横の各分割数"
     },
     "stepsPerDay": {
         "type": "range",
-        "description": {
+        "name": {
             "JA": "1日当たりステップ数",
-            "EN": "Steps per day"
+            "EN": "Steps per Day"
         },
-        "unit":{
+        "unit": {
             "JA": "ステップ",
-            "EN": "step"
+            "EN": "Step"
         },
         "step": "1",
-        "value": "4",
-        "min":"1",
+        "default": "16",
+        "min": "1",
         "max": "999"
     },
     "initialInfectedRate": {
         "type": "range",
-        "description" : {
+        "name" : {
             "JA": "初期感染者の割合",
-            "EN": "Rate of infected in the initial state"
+            "EN": "Rate of infected in the Initial State"
         },
         "unit" : {
             "JA": "%",
             "EN": "%"
         },
         "step": "0.1",
-        "value":"0.1",
+        "default": "0.1",
         "min": "0",
         "max": "100"
     },
     "initialRecovered": {
         "type": "range",
-        "description" : {
+        "name" : {
             "JA": "初期快復者の割合",
-            "EN": "Rate of recovered in the initial state"
+            "EN": "Rate of Recovered in the Initial State"
         },
         "unit" : {
             "JA": "%",
             "EN": "%"
         },
         "step": "0.1",
-        "value":"0",
+        "default": "0.0",
         "min": "0",
         "max": "100"
     },
     "quarantineAsymptomatic": {
         "type": "range",
-        "description" : {
+        "name" : {
             "JA": "初期無症状者の隔離率",
-            "EN": "Quarantine rate of asymptomatic in the initial state"
+            "EN": "Quarantine Rate of Asymptomatic in the Initial State"
         },
         "unit" : {
             "JA": "%",
             "EN": "%"
         },
         "step": "0.1",
-        "value":"20",
+        "default": "20.0",
         "min": "0",
         "max": "100"
     },
     "quarantineSymptomatic": {
         "type": "range",
-        "description" : {
+        "name" : {
             "JA": "初期有症状者の隔離率",
-            "EN": "Quarantine rate of symptomatic in the initial state"
+            "EN": "Quarantine Rate of Symptomatic in the Initial State"
         },
         "unit" : {
             "JA": "%",
             "EN": "%"
         },
         "step": "0.1",
-        "value":"50",
+        "default": "50.0",
         "min": "0",
         "max": "100"
     },
-    "infectionProberbility": {
-        "type": "range",
-        "description" : {
-            "JA": "感染確率",
-            "EN": "Infection probability"
+    "homeMode": {
+        "type": "radio",
+        "name" : {
+            "JA": "自宅位置設定",
+            "EN": "Mode of Home Distribution"
         },
-        "unit": {
-            "JA": "%",
-            "EN": "%"
-        },
-
-        "step" : "0.1",
-        "value": "50.0",
-        "min": "0.0",
-        "max": "100.0"
-    },
-    "infectionDistance": {
-        "type": "range",
-        "description": {
-            "JA": "感染距離",
-            "EN": "Infection distance"
-        },
-        "step": "0.1",
-        "unit": {
-            "JA": "距離単位",
-            "EN": "Distance unit"
-        },
-        "value": "4.0",
-        "min": "1.0",
-        "max": "20.0"
-    },
-    "incubation": {
-        "type": "distribution",
-        "description": {
-            "JA": "潜伏期間",
-            "EN": "Incubation Period"
-        },
-        "step": "0.1",
-        "unit": {
-            "JA": "日",
-            "EN": "days"
-        },
-        "value": ["1.0","14.0","5.0"]
-    },
-    "fatality": {
-        "type": "distribution",
-        "description": {
-            "JA": "発症から死亡まで",
-            "EN": "From onset to death"
-        },
-        "step": "0.1",
-        "unit": {
-            "JA": "日",
-            "EN": "days"
-        },
-        "value": ["4.0","20.0","16.0"]
-    },
-    "recovery": {
-        "type": "distribution",
-        "description": {
-            "JA": "快復開始まで",
-            "EN": "Period till Recovery Starts"
-        },
-        "step": "0.1",
-        "unit": {
-            "JA": "日",
-            "EN": "days"
-        },
-        "value": ["4.0","40.0","10.0"]
-    },
-    "immunity": {
-        "type": "distribution",
-        "description": {
-            "JA": "免疫有効期間",
-            "EN": "Period of Effective Immunity"
-        },
-        "step": "0.1",
-        "unit": {
-            "JA": "日",
-            "EN": "days"
-        },
-        "value": ["30.0","360.0", "180.0"]
-    },
-    "distancingStrength": {
-        "type": "range",
-        "description": {
-            "JA": "社会的距離の強さ",
-            "EN": "Strength of Social Distancing"
-        },
-        "step": "0.1",
-        "unit": {
-            "JA": "%",
-            "EN": "%"
-        },
-
-        "value": "50.0",
-        "min": "0.0",
-        "max": "100.0"
-    },
-    "distancingObedience": {
-        "type": "range",
-        "description": {
-            "JA": "社会的距離協力率",
-            "EN": "Obedience Rate of Social Distancing"
-        },
-        "step": "0.1",
-        "unit": {
-            "JA": "%",
-            "EN": "%"
-        },
-
-        "value": "20.0",
-        "min": "0.0",
-        "max": "100.0"
-    },
-    "mobilityFrequency": {
-        "type": "distribution",
-        "description": {
-            "JA": "移動頻度",
-            "EN": "Mobility Frequency"
-        },
-        "step": "0.1",
-        "unit": {
-            "JA": "%",
-            "EN": "%"
-        },
-        "value": ["40","100","70"]
-    },
-    "mobilityDistance": {
-        "type": "distribution",
-        "description": {
-            "JA": "移動距離",
-            "EN": "Mobility Distance"
-        },
-        "step": "0.1",
-        "unit": {
-            "JA": "%",
-            "EN": "%"
-        },
-        "value": ["10.0","80.0","30.0"],
-        "info": "世界の大きさとの比"
-    },
-    "contactTracing": {
-        "type": "range",
-        "description": {
-            "JA": "接触者追跡",
-            "EN": "Contact Tracing"
-        },
-        "step": "0.1",
-        "unit": {
-            "JA": "%",
-            "EN": "%"
-        },
-
-        "value": "20.0",
-        "min": "0.0",
-        "max": "100.0",
-        "info": "捕捉率"
-    },
-    "testDelay": {
-        "type": "range",
-        "description": {
-            "JA": "検査の遅れ",
-            "EN": "Test Delay"
-        },
-        "step" : "0.1",
-        "unit": {
-            "JA": "日",
-            "EN": "days"
-        },
-        "value": "1.0",
-        "min": "0.0",
-        "max": "10.0"
-    },
-    "testProcess": {
-        "type": "range",
-        "description": {
-            "JA": "処理期間",
-            "EN": "Test Process"
-        },
-        "step": "0.1",
-        "unit": {
-            "JA": "日",
-            "EN": "days"
-        },
-        "value": "1.0",
-        "min": "0.0",
-        "max": "10.0",
-        "info": "検査から判明まで"
-    },
-    "testInterval": {
-        "type": "range",
-        "description": {
-            "JA": "検査間隔",
-            "EN": "Test Interval"
-        },
-        "step": "0.1",
-        "unit": {
-            "JA": "日",
-            "EN": "days"
-        },
-        "value": "2.0",
-        "min": "0.0",
-        "max": "10.0",
-        "info": "次の検査まで"
-    },
-    "testSensitivity": {
-        "type": "range",
-        "description": {
-            "JA": "感度",
-            "EN": "Sensitivity"
-        },
-        "step": "0.1",
-        "unit": {
-            "JA": "%",
-            "EN": "%"
-        },
-
-        "value": "70.0",
-        "min": "0.0",
-        "max": "100.0"
-    },
-    "testSpecificity": {
-        "type": "range",
-        "description": {
-            "JA": "特異度",
-            "EN": "Specificity"
-        },
-        "step": "0.1",
-        "unit": {
-            "JA": "%",
-            "EN": "%"
-        },
-
-        "value": "99.8",
-        "min": "0.0",
-        "max": "100.0"
-    },
-    "subjectAsymptomatic": {
-        "type": "range",
-        "description": {
-            "JA": "疑症状検査対象者",
-            "EN": "Subject Asymptomatic"
-        },
-        "step": "0.1",
-        "unit": {
-            "JA": "%",
-            "EN": "%"
-        },
-
-        "value": "1.0",
-        "min": "0.0",
-        "max": "100.0"
-    },
-    "subjectSymptomatic": {
-        "type": "range",
-        "description": {
-            "JA": "有症状検査対象者",
-            "EN": "Subject Symptomatic"
-        },
-        "step": "0.1",
-        "unit": {
-            "JA": "%",
-            "EN": "%"
-        },
-
-        "value": "99.0",
-        "min": "0.0",
-        "max": "100.0"
+        "default": 0,
+        "options": [
+            {
+                "val": 0,
+                "name": {
+                    "JA": "設定なし",
+                    "EN": "Disabled"
+                }
+            },
+            {
+                "val": 1,
+                "name": {
+                    "JA": "一様分布",
+                    "EN": "Uniform Distribution"
+                }
+            },
+            {
+                "val": 2,
+                "name": {
+                    "JA": "中央集中分布",
+                    "EN": "Central Concentrated Distribution"
+                }
+            }
+        ]
     },
     "mass": {
         "type": "range",
-        "description": {
+        "name": {
             "JA": "質量",
             "EN": "Mass"
         },
@@ -401,14 +164,14 @@
             "EN": "%"
         },
 
-        "value": "50",
-        "min": "10.0",
+        "default": "20.0",
+        "min": "0.0",
         "max": "100.0",
         "info": "個体加速度の係数"
     },
     "friction": {
         "type": "range",
-        "description": {
+        "name": {
             "JA": "摩擦",
             "EN": "Friction"
         },
@@ -417,15 +180,14 @@
             "JA": "%",
             "EN": "%"
         },
-
-        "value": "50",
+        "default": "80.0",
         "min": "0.0",
         "max": "100.0",
         "info": "個体加速度の減速係数"
     },
     "avoidance": {
         "type": "range",
-        "description": {
+        "name": {
             "JA": "衝突回避",
             "EN": "Avoidance"
         },
@@ -434,206 +196,378 @@
             "JA": "%",
             "EN": "%"
         },
-
-        "value": "80",
+        "default": "80.0",
         "min": "0.0",
         "max": "100.0",
         "info": "個体間の斥力"
     },
     "maxSpeed": {
         "type": "range",
-        "description": {
+        "name": {
             "JA": "制限速度",
             "EN": "Max Speed"
         },
-        "unit":{
+        "unit": {
             "JA": "20距離単位/日",
-            "EN": "20 Distance unit/Day"
+            "EN": "20 Distance Unit/Day"
         },
         "step": "0.1",
-        "value": "50",
+        "default": "50.0",
         "min": "10.0",
         "max": "100.0",
         "info": "短距離移動の速さ"
     },
     "activenessMode": {
         "type": "range",
-        "description": {
+        "name": {
             "JA": "活発さ最頻値",
             "EN": "Activeness Mode"
         },
-        "unit":{
+        "unit": {
             "JA": "%",
             "EN": "%"
         },
         "step": "0.1",
-        "value": "50",
+        "default": "50.0",
         "min": "0.0",
         "max": "100.0",
         "info": "分布の最頻値"
     },
     "activenessKurtosis": {
         "type": "range",
-        "description": {
+        "name": {
             "JA": "活発さの尖度",
             "EN": "Activeness Kurtosis"
         },
-        "unit":{
+        "unit": {
             "JA": "%",
             "EN": "%"
         },
         "step": "0.1",
-        "value": "0",
+        "default": "0.0",
         "min": "-100.0",
         "max": "100.0",
         "info": "分布の尖度"
     },
+    "massBias": {
+        "type": "range",
+        "name": {
+            "JA": "質量への影響",
+            "EN": "Mass Bias"
+        },
+        "unit": {
+            "JA": "",
+            "EN": ""
+        },
+        "step": "0.1",
+        "default": "4.0",
+        "min": "0.0",
+        "max": "10.0",
+        "info": "活発さの影響"
+    },
     "mobilityBias": {
         "type": "range",
-        "description": {
+        "name": {
             "JA": "移動への影響",
             "EN": "Mobility Bias"
         },
-        "unit":{
+        "unit": {
             "JA": "%",
             "EN": "%"
         },
         "step": "0.1",
-        "value": "50",
+        "default": "50.0",
         "min": "0.0",
         "max": "100.0",
         "info": "活発さの影響"
     },
     "gatheringBias": {
         "type": "range",
-        "description": {
+        "name": {
             "JA": "集会参加への影響",
             "EN": "Gathering Bias"
         },
-        "unit":{
+        "unit": {
             "JA": "%",
             "EN": "%"
         },
         "step": "0.1",
-        "value": "50",
+        "default": "50.0",
         "min": "0.0",
         "max": "100.0",
         "info": "活発さの影響"
     },
     "incubationBias": {
         "type": "range",
-        "description": {
+        "name": {
             "JA": "潜伏期間への影響",
             "EN": "Incubation Bias"
         },
-        "unit":{
+        "unit": {
             "JA": "%",
             "EN": "%"
         },
         "step": "0.1",
-        "value": "0",
+        "default": "0.0",
         "min": "-100.0",
         "max": "100.0",
         "info": "活発さとの相関"
     },
     "fatalityBias": {
         "type": "range",
-        "description": {
+        "name": {
             "JA": "死亡期間への影響",
             "EN": "Fatality Bias"
         },
-        "unit":{
+        "unit": {
             "JA": "%",
             "EN": "%"
         },
         "step": "0.1",
-        "value": "0",
+        "default": "0.0",
         "min": "-100.0",
         "max": "100.0",
         "info": ""
     },
     "recoveryBias": {
         "type": "range",
-        "description": {
+        "name": {
             "JA": "快復期間への影響",
             "EN": "Recovery Bias"
         },
-        "unit":{
+        "unit": {
             "JA": "%",
             "EN": "%"
         },
         "step": "0.1",
-        "value": "50",
+        "default": "0.0",
         "min": "-100.0",
         "max": "100.0",
         "info": ""
     },
     "immunityBias": {
         "type": "range",
-        "description": {
+        "name": {
             "JA": "免疫有効期間への影響",
             "EN": "Immunity Bias"
         },
-        "unit":{
+        "unit": {
             "JA": "%",
             "EN": "%"
         },
         "step": "0.1",
-        "value": "0",
+        "default": "0.0",
         "min": "-100.0",
         "max": "100.0",
         "info": ""
     },
+    "infectionProberbility": {
+        "type": "range",
+        "name" : {
+            "JA": "感染確率",
+            "EN": "Infection Probability"
+        },
+        "unit": {
+            "JA": "%",
+            "EN": "%"
+        },
+
+        "step": "0.1",
+        "default": "50.0",
+        "min": "0.0",
+        "max": "100.0"
+    },
+    "infectionDistance": {
+        "type": "range",
+        "name": {
+            "JA": "感染距離",
+            "EN": "Infection Distance"
+        },
+        "step": "0.1",
+        "unit": {
+            "JA": "距離単位",
+            "EN": "Distance Unit"
+        },
+        "default": "3.0",
+        "min": "1.0",
+        "max": "10.0"
+    },
     "contagionDelay": {
         "type": "range",
-        "description": {
-            "JA": "感染症の遅れ",
+        "name": {
+            "JA": "感染性の遅れ",
             "EN": "Contagion Delay"
         },
         "step": "0.1",
         "unit": {
             "JA": "日",
-            "EN": "days"
+            "EN": "Days"
         },
-        "value": "5.0",
+        "default": "5.0",
         "min": "0.0",
         "max": "10.0",
         "info": "感染からの期間"
     },
     "contagionPeak": {
         "type": "range",
-        "description": {
-            "JA": "感染症のピーク",
+        "name": {
+            "JA": "感染性のピーク",
             "EN": "Contagion Peak"
         },
         "step": "0.1",
         "unit": {
             "JA": "日",
-            "EN": "days"
+            "EN": "Days"
         },
-        "value": "3.0",
-        "min": "0.0",
+        "default": "3.0",
+        "min": "1.0",
         "max": "10.0",
         "info": "感染からの期間"
     },
-    "gatheringFrequency":{
+    "incubation": {
+        "type": "distribution",
+        "name": {
+            "JA": "潜伏期間",
+            "EN": "Incubation Period"
+        },
+        "step": "0.1",
+        "unit": {
+            "JA": "日",
+            "EN": "Days"
+        },
+        "default": ["1.0","5.0","14.0"]
+    },
+    "fatality": {
+        "type": "distribution",
+        "name": {
+            "JA": "発症から死亡まで",
+            "EN": "From Onset to Death"
+        },
+        "step": "0.1",
+        "unit": {
+            "JA": "日",
+            "EN": "Days"
+        },
+        "default": ["4.0","16.0","20.0"]
+    },
+    "recovery": {
+        "type": "distribution",
+        "name": {
+            "JA": "快復開始まで",
+            "EN": "Period till Recovery Starts"
+        },
+        "step": "0.1",
+        "unit": {
+            "JA": "日",
+            "EN": "Days"
+        },
+        "default": ["4.0","10.0","40.0"]
+    },
+    "immunity": {
+        "type": "distribution",
+        "name": {
+            "JA": "免疫有効期間",
+            "EN": "Period of Effective Immunity"
+        },
+        "step": "0.1",
+        "unit": {
+            "JA": "日",
+            "EN": "Days"
+        },
+        "default": ["30.0","180.0", "360.0"]
+    },
+    "distancingStrength": {
         "type": "range",
-        "description": {
+        "name": {
+            "JA": "社会的距離の強さ",
+            "EN": "Strength of Social Distancing"
+        },
+        "step": "0.1",
+        "unit": {
+            "JA": "%",
+            "EN": "%"
+        },
+        "default": "50.0",
+        "min": "0.0",
+        "max": "100.0"
+    },
+    "distancingObedience": {
+        "type": "range",
+        "name": {
+            "JA": "社会的距離協力率",
+            "EN": "Obedience Rate of Social Distancing"
+        },
+        "step": "0.1",
+        "unit": {
+            "JA": "%",
+            "EN": "%"
+        },
+        "default": "20.0",
+        "min": "0.0",
+        "max": "100.0"
+    },
+    "mobilityFrequency": {
+        "type": "distribution",
+        "name": {
+            "JA": "移動頻度",
+            "EN": "Mobility Frequency"
+        },
+        "step": "0.1",
+        "unit": {
+            "JA": "%",
+            "EN": "%"
+        },
+        "default": ["40.0","70.0","100.0"]
+    },
+    "mobilityDistance": {
+        "type": "distribution",
+        "name": {
+            "JA": "移動距離",
+            "EN": "Mobility Distance"
+        },
+        "step": "0.1",
+        "unit": {
+            "JA": "%",
+            "EN": "%"
+        },
+        "default": ["10.0","30.0","80.0"],
+        "info": "世界の大きさとの比"
+    },
+    "backHomeRate": {
+        "type": "range",
+        "name": {
+            "JA": "帰宅率",
+            "EN": "Back to Home Rate"
+        },
+        "step": "0.1",
+        "unit": {
+            "JA": "%/日",
+            "EN": "%/Day"
+        },
+        "default": "75.0",
+        "min": "0.0",
+        "max": "100.0",
+        "info": "長距離移動から戻る確率"
+
+    },
+    "gatheringFrequency": {
+        "type": "range",
+        "name": {
             "JA": "集会の頻度",
             "EN": "Gathering Frequency"
         },
         "step": "0.1",
         "unit": {
             "JA": "個/面積/日",
-            "EN": "Number/area/day"
+            "EN": "Number/Area/Day"
         },
-        "value": "50.0",
+        "default": "50.0",
         "min": "0.0",
         "max": "100.0"
     },
-    "gatheringSize":{
+    "gatheringSize": {
         "type": "distribution",
-        "description": {
+        "name": {
             "JA": "集会の大きさ",
             "EN": "Gathering Size"
         },
@@ -642,24 +576,24 @@
             "JA": "距離単位",
             "EN": "Distance Unit"
         },
-        "value": ["10.0","100.0","20.0"]
+        "default": ["5.0","10.0","20.0"]
     },
-    "gatheringDuration":{
+    "gatheringDuration": {
         "type": "distribution",
-        "description": {
+        "name": {
             "JA": "集会の持続時間",
             "EN": "Gathering Duration"
         },
         "step": "0.1",
         "unit": {
             "JA": "時間",
-            "EN": "time unit"
+            "EN": "Time Unit"
         },
-        "value": ["10.0","168.0","24.0"]
+        "default": ["6.0","12.0","24.0"]
     },
-    "gatheringStrength":{
+    "gatheringStrength": {
         "type": "distribution",
-        "description": {
+        "name": {
             "JA": "集会の強さ",
             "EN": "Gathering Strength"
         },
@@ -668,7 +602,272 @@
             "JA": "%",
             "EN": "%"
         },
-
-        "value": ["0.0","100.0","50.0"]
+        "default": ["50.0","80.0","100.0"]
+    },
+    "gatheringParticipation": {
+        "type": "distribution",
+        "name": {
+            "JA": "集会への参加率",
+            "EN": "Participation Rate for Gathering"
+        },
+        "step": "0.1",
+        "unit": {
+            "JA": "%",
+            "EN": "%"
+        },
+        "default": ["40.0","70.0","100.0"]
+    },
+    "contactTracing": {
+        "type": "range",
+        "name": {
+            "JA": "接触者追跡",
+            "EN": "Contact Tracing"
+        },
+        "step": "0.1",
+        "unit": {
+            "JA": "%",
+            "EN": "%"
+        },
+        "default": "20.0",
+        "min": "0.0",
+        "max": "100.0",
+        "info": "捕捉率"
+    },
+    "testDelay": {
+        "type": "range",
+        "name": {
+            "JA": "検査の遅れ",
+            "EN": "Test Delay"
+        },
+        "step": "0.1",
+        "unit": {
+            "JA": "日",
+            "EN": "Days"
+        },
+        "default": "1.0",
+        "min": "0.0",
+        "max": "10.0"
+    },
+    "testProcess": {
+        "type": "range",
+        "name": {
+            "JA": "処理期間",
+            "EN": "Test Process"
+        },
+        "step": "0.1",
+        "unit": {
+            "JA": "日",
+            "EN": "Days"
+        },
+        "default": "1.0",
+        "min": "0.0",
+        "max": "10.0",
+        "info": "検査から判明まで"
+    },
+    "testInterval": {
+        "type": "range",
+        "name": {
+            "JA": "検査間隔",
+            "EN": "Test Interval"
+        },
+        "step": "0.1",
+        "unit": {
+            "JA": "日",
+            "EN": "Days"
+        },
+        "default": "2.0",
+        "min": "0.0",
+        "max": "10.0",
+        "info": "次の検査まで"
+    },
+    "testSensitivity": {
+        "type": "range",
+        "name": {
+            "JA": "感度",
+            "EN": "Sensitivity"
+        },
+        "step": "0.1",
+        "unit": {
+            "JA": "%",
+            "EN": "%"
+        },
+        "default": "70.0",
+        "min": "0.0",
+        "max": "100.0"
+    },
+    "testSpecificity": {
+        "type": "range",
+        "name": {
+            "JA": "特異度",
+            "EN": "Specificity"
+        },
+        "step": "0.1",
+        "unit": {
+            "JA": "%",
+            "EN": "%"
+        },
+        "default": "99.8",
+        "min": "0.0",
+        "max": "100.0"
+    },
+    "subjectAsymptomatic": {
+        "type": "range",
+        "name": {
+            "JA": "疑症状検査対象者",
+            "EN": "Subject Asymptomatic"
+        },
+        "step": "0.1",
+        "unit": {
+            "JA": "%",
+            "EN": "%"
+        },
+        "default": "1.0",
+        "min": "0.0",
+        "max": "100.0"
+    },
+    "subjectSymptomatic": {
+        "type": "range",
+        "name": {
+            "JA": "有症状検査対象者",
+            "EN": "Subject Symptomatic"
+        },
+        "step": "0.1",
+        "unit": {
+            "JA": "%",
+            "EN": "%"
+        },
+        "default": "99.0",
+        "min": "0.0",
+        "max": "100.0"
+    },
+    "vaccinePerformRate": {
+        "type": "range",
+        "name": {
+            "JA": "ワクチン接種実施速度",
+            "EN": "Vaccine Perform Rate"
+        },
+        "step": "0.1",
+        "unit": {
+            "JA": "%",
+            "EN": "%"
+        },
+        "default": "1.0",
+        "min": "0.0",
+        "max": "10.0",
+        "info": "１日当たり接種実施人数比"
+    },
+    "vaccineFirstDoseEfficacy": {
+        "type": "range",
+        "name": {
+            "JA": "1回目の摂取の効果",
+            "EN": "Vaccine First Dose Efficacy"
+        },
+        "step": "0.1",
+        "unit": {
+            "JA": "%",
+            "EN": "%"
+        },
+        "default": "30.0",
+        "min": "0.0",
+        "max": "100.0",
+        "info": "感染リスク抑制率"
+    },
+    "vaccineMaxEfficacy": {
+        "type": "range",
+        "name": {
+            "JA": "ワクチン最大効果",
+            "EN": "Vaccine Max Efficacy"
+        }, "step": "0.1",
+        "unit": {
+            "JA": "%",
+            "EN": "%"
+        },
+        "default": "95.0",
+        "min": "0.0",
+        "max": "100.0",
+        "info": ""
+    },
+    "vaccineEffectDelay": {
+        "type": "range",
+        "name": {
+            "JA": "ワクチン効果の遅れ",
+            "EN": "Vaccine Effect Delay"
+        }, "step": "0.1",
+        "unit": {
+            "JA": "日",
+            "EN": "Days"
+        },
+        "default": "14.0",
+        "min": "0.0",
+        "max": "30.0",
+        "info": "2回目接種から最大効果までの日数"
+    },
+    "vaccineEffectPeriod": {
+        "type": "range",
+        "name": {
+            "JA": "ワクチン有効期間",
+            "EN": "Vaccine Effect Period"
+        }, "step": "0.1",
+        "unit": {
+            "JA": "%",
+            "EN": "%"
+        },
+        "default": "200.0",
+        "min": "0.0",
+        "max": "500.0",
+        "info": "免疫有効期間に対する比"
+    },
+    "vaccineAntiRate": {
+        "type": "range",
+        "name": {
+            "JA": "ワクチン拒否",
+            "EN": "Vaccine Anti Rate"
+        }, "step": "0.1",
+        "unit": {
+            "JA": "%",
+            "EN": "%"
+        },
+        "default": "0.0",
+        "min": "0.0",
+        "max": "100.0",
+        "info": ""
+    },
+    "vaccinePriority": {
+        "type": "radio",
+        "name": {
+            "JA": "ワクチン接種の優先順",
+            "EN": "Vaccine Priority"
+        },
+        "default": 0,
+        "options": [
+            {
+                "val": 0,
+                "name": {
+                    "JA": "ランダム",
+                    "EN": "Random"
+                }
+            },
+            {
+                "val": 1,
+                "name": {
+                    "JA": "活発さ優先",
+                    "EN": "Active Person"
+                }
+            },
+            {
+                "val": 2,
+                "name": {
+                    "JA": "不活発さ優先",
+                    "EN": "Inactive Person"
+                }
+            },
+            {
+                "val": 3,
+                "name": {
+                    "JA": "中央優先",
+                    "EN": "Central"
+                }
+            }
+        ]
     }
 }

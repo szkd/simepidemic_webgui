@@ -4,14 +4,14 @@
             "JA": "世界",
             "EN": "World"
         },
-        "param-list": "populationSize,worldSize,mesh,stepsPerDay,initialInfectedRate,initialRecovered,quarantineAsymptomatic,quarantineSymptomatic"
+        "param-list": "populationSize,worldSize,mesh,stepsPerDay,initialInfectedRate,initialRecovered,quarantineAsymptomatic,quarantineSymptomatic,homeMode"
     },
     "move": {
         "name": {
             "JA": "移動",
             "EN": "Movement"
         },
-        "param-list":"mass,friction,avoidance,maxSpeed,activenessMode,activenessKurtosis,mobilityBias,gatheringBias,incubationBias,fatalityBias,recoveryBias,immunityBias"
+        "param-list":"mass,friction,avoidance,maxSpeed,activenessMode,activenessKurtosis,massBias,mobilityBias,gatheringBias,incubationBias,fatalityBias,recoveryBias,immunityBias"
     },
     "mechanism": {
         "name": {
@@ -25,13 +25,20 @@
             "JA": "対策",
             "EN": "Measures"
         },
-        "param-list": "distancingStrength,distancingObedience,mobilityFrequency,mobilityDistance,gatheringFrequency,gatheringSize,gatheringDuration,gatheringStrength,contactTracing"
+        "param-list": "distancingStrength,distancingObedience,mobilityFrequency,mobilityDistance,backHomeRate,gatheringFrequency,gatheringSize,gatheringDuration,gatheringStrength,gatheringParticipation,contactTracing"
     },
     "tests": {
-        "name" : {
+        "name": {
             "JA": "検査",
             "EN": "Tests"
         },
-        "param-list": "testProcess,testInterval,testDelay,testSensitivity,testSpecificity,subjectAsymptomatic,subjectSymptomatic"
+        "param-list": "testDelay,testProcess,testInterval,testSensitivity,testSpecificity,subjectAsymptomatic,subjectSymptomatic"
+    },
+    "vaccine": {
+        "name": {
+            "JA": "ワクチン",
+            "EN": "Vaccine"
+        },
+        "param-list": "vaccinePerformRate,vaccineFirstDoseEfficacy,vaccineMaxEfficacy,vaccineEffectDelay,vaccineEffectPeriod,vaccineAntiRate,vaccinePriority"
     }
 }
