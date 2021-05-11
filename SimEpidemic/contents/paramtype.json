@@ -149,8 +149,75 @@
                     "JA": "中央集中分布",
                     "EN": "Central Concentrated Distribution"
                 }
+            },
+            {
+                "val": 3,
+                "name": {
+                    "JA": "人口密度地図に従う",
+                    "EN": "Follow the Population Distribution Map"
+                }
             }
         ]
+    },
+    "vaccineAntiRate": {
+        "type": "range",
+        "name": {
+            "JA": "ワクチン拒否率",
+            "EN": "Vaccine Anti Rate"
+        }, "step": "0.1",
+        "unit": {
+            "JA": "%",
+            "EN": "%"
+        },
+        "default": "30.0",
+        "min": "0.0",
+        "max": "100.0",
+        "info": ""
+    },
+    "antiVaxClusterRate": {
+        "type": "range",
+        "name": {
+            "JA": "被接種者クラスタ率",
+            "EN": "Non-Vaccinated Cluster Rate"
+        }, "step": "0.1",
+        "unit": {
+            "JA": "%",
+            "EN": "%"
+        },
+        "default": "60.0",
+        "min": "0.0",
+        "max": "100.0",
+        "info": ""
+    },
+    "antiVaxClusterGranularity": {
+        "type": "range",
+        "name": {
+            "JA": "非摂取者クラスタ粒度",
+            "EN": "Non-Vaccinated Cluster Granularity"
+        }, "step": "0.1",
+        "unit": {
+            "JA": "%",
+            "EN": "%"
+        },
+        "default": "50.0",
+        "min": "0.0",
+        "max": "100.0",
+        "info": ""
+    },
+    "antiVaxTestRate": {
+        "type": "range",
+        "name": {
+            "JA": "非接種者検査率",
+            "EN": "Non-Vaccinated Test Rate"
+        }, "step": "0.1",
+        "unit": {
+            "JA": "%",
+            "EN": "%"
+        },
+        "default": "50.0",
+        "min": "0.0",
+        "max": "100.0",
+        "info": ""
     },
     "mass": {
         "type": "range",
@@ -740,6 +807,37 @@
         "min": "0.0",
         "max": "100.0"
     },
+    "tracingOperation": {
+        "type": "radio",
+        "name" : {
+            "JA": "追跡後の処置",
+            "EN": "Operation after Tracing"
+        },
+        "default": 0,
+        "options": [
+            {
+                "val": 0,
+                "name": {
+                    "JA": "検査",
+                    "EN": "Tests"
+                }
+            },
+            {
+                "val": 1,
+                "name": {
+                    "JA": "ワクチン接種",
+                    "EN": "Vaccine"
+                }
+            },
+            {
+                "val": 2,
+                "name": {
+                    "JA": "両方",
+                    "EN": "Both"
+                }
+            }
+        ]
+    },
     "vaccinePerformRate": {
         "type": "range",
         "name": {
@@ -817,21 +915,6 @@
         "max": "500.0",
         "info": "免疫有効期間に対する比"
     },
-    "vaccineAntiRate": {
-        "type": "range",
-        "name": {
-            "JA": "ワクチン拒否",
-            "EN": "Vaccine Anti Rate"
-        }, "step": "0.1",
-        "unit": {
-            "JA": "%",
-            "EN": "%"
-        },
-        "default": "0.0",
-        "min": "0.0",
-        "max": "100.0",
-        "info": ""
-    },
     "vaccinePriority": {
         "type": "radio",
         "name": {
@@ -867,7 +950,22 @@
                     "JA": "中央優先",
                     "EN": "Central"
                 }
+            },
+            {
+                "val": 4,
+                "name": {
+                    "JA": "",
+                    "EN": ""
+                }
+            },
+            {
+                "val": 5,
+                "name": {
+                    "JA": "密集地優先",
+                    "EN": "Densely Populated Area"
+                }
             }
         ]
     }
+
 }

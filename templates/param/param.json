@@ -25,13 +25,13 @@
             "JA": "検査",
             "EN": "Tests"
         },
-        "param-list": "testDelay,testProcess,testInterval,testSensitivity,testSpecificity,subjectAsymptomatic,subjectSymptomatic"
+        "param-list": "testDelay,testProcess,testInterval,testSensitivity,testSpecificity,subjectAsymptomatic,subjectSymptomatic,tracingOperation"
     },
     "vaccine": {
         "name": {
             "JA": "ワクチン",
             "EN": "Vaccine"
         },
-        "param-list": "vaccinePerformRate,vaccineFirstDoseEfficacy,vaccineMaxEfficacy,vaccineEffectDelay,vaccineEffectPeriod,vaccineAntiRate,vaccinePriority"
+        "param-list": "vaccinePerformRate,vaccineFirstDoseEfficacy,vaccineMaxEfficacy,vaccineEffectDelay,vaccineEffectPeriod,vaccinePriority"
     }
 }
