@@ -7,9 +7,9 @@ const popup = {};
 popup.stacked_keys = ["died","asymptomatic", "symptomatic", "recovered", "vaccinated", "susceptible"];
 popup.index_keys = {
     idx: ["died","asymptomatic", "symptomatic", "recovered", "vaccinated", "susceptible",
-    "quarantineAsymptomatic", "quarantineSymptomatic",
-    "tests", "testPositive", "testNegative",
-    "testAsSymptom", "testAsContact", "testAsSuspected"]};
+        "quarantineAsymptomatic", "quarantineSymptomatic",
+        "tests", "testPositive", "testNegative",
+        "testAsSymptom", "testAsContact", "testAsSuspected"]};
 popup.positiveRate_key = "testPositiveRate";
 /**
  * contacts(接触者数(人)/人日)は未実装
@@ -64,9 +64,9 @@ popup.makeLegend = function (name, p_node_id, indexes, w, margin_x, margin_y, st
     //凡例の本文
     legend.append('text').attr("x", 10).attr("y", 10)
         .text(function (d, i) { return d;})
-            .attr("class", "textselected")
-            .style("text-anchor", "start")
-            .style("font-size", 11);
+        .attr("class", "textselected")
+        .style("text-anchor", "start")
+        .style("font-size", 11);
     legend_svg.attr('transform', `translate(${popup.graph_width + margin_x}, 0)`);
 }
 
@@ -400,4 +400,3 @@ server.get((m)=>{
         updateCharts();
     }, "getParams?world=" + w_id.innerText, responseType="json");
 }, "contents/stats_msg.json", responseType = "json");
-

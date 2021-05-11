@@ -60,14 +60,13 @@ server.get = function(callback, _req, responseType ='') {
  * POSTリクエスト
  * @param {object:function} callback - 関数
  * @param {string} action - リクエスト文字列, 先頭に「/」をつけない
- * @param {string} type - 送信データのタイプ．form, dict, fileのどれか
- * @param {object:node:form} senddata - 送信データ
+ * @param {string} type - 送信データのタイプ．dict, fileのどれか
+ * @param {object} senddata - 送信データ
  * @param {object:dict} [options={}] - value = options[key]，formのname:valueとしてkey:valueを追加する
  * @return (serverPostReqからのもの)可読性のため．実質的には何も返さない
  * @return コールバック関数の結果(この関数からのものではない)
  */
-server.post = function(callback, action, type, senddata, options={}, w_id='') {
-    let fd = new FormData();
+server.post = function(callback, action, type, senddata, options={}, w_id) {
     const req = new XMLHttpRequest();
     req.error = function () {
         alert("ERROR:POST " + action);
@@ -77,26 +76,8 @@ server.post = function(callback, action, type, senddata, options={}, w_id='') {
     }
     req.open('POST', SERVERNAME + action);
 
-    function appendDict(dict) {
-        for(let key in dict) {
-            fd.append(key, dict[key]);
-        }
-        return fd;
-    }
-    if(options != {}) {
-        appendDict(options);
-    }
-    if (type == 'form') {
-        fd.append(senddata);
-        req.send(fd);
-        return;
-    }
-    if (type == 'dict') {
-        appendDict(senddata);
-        req.send(fd);
-        return;
-    }
     if(type=="file" && senddata.files.length > 0) {
+        let fd = new FormData();
         const file = senddata.files[0];
         fd.append(w_id, file);
         req.send(fd);
@@ -106,14 +87,25 @@ server.post = function(callback, action, type, senddata, options={}, w_id='') {
         alert('ファイルを選択してください');
         return;
     }
+
+    if(type == "dict") {
+        req.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        const encoded_array = [];
+        const data = {...options, ...senddata};
+        for (let key in data) {
+            const name = encodeURIComponent(key);
+            let val = encodeURIComponent(data[key]);
+            if(Array.isArray(data[key])) {
+                //console.log('isArray: ' + key);
+                val = '[' + data[key].join(',') + ']';
+            }
+            encoded_array.push(name + '=' + val);
+        }
+        const url = encoded_array.join('&').replace(/%20/g, '+');
+        console.log(url);
+        req.send(url);
+    }
 }
-server.version = function(result_view) {
-    server.get(function (val) {
-        const result = document.getElementById(result_view);
-        console.log(result);
-        result.innerText = val;
-    }, "version");
-};
 server.jobQueStatus = function (result_view) {
     this.get(function (val) {
         const result = document.getElementById(result_view);
