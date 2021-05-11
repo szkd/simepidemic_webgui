@@ -286,10 +286,21 @@ def statistics(lang):
 
 """ ********************************* """
 """ ********************************* """
+def job(lang):
+    html_str = ""
+    html_str += serverVersion();
+    html_str += tag("button", "実行待ちの試行の数",{\
+            "type": "button",\
+            "onclick": "getJobQueueStatus();",\
+            "class": "command-button"
+            })
+    return html_str
+
+""" ********************************* """
+""" ********************************* """
 def development(lang):
     protocol = json2dict(DEVELOP_DIR + "protocol.json")
     html_str = ""
-    html_str += job();
     html_str += serverVersion();
     th_style = "background-color: grey; color: white;"
     th_row = ""
@@ -322,19 +333,11 @@ def serverVersion():
     html_str = ""
     html_str += tag("button", "SV version",{\
             "type": "button",\
-            "onclick": "getServerVersion('SVversion');"
+            "class": "command-button",\
+            "onclick": "getServerVersion();"
             })
-    html_str += tag("span", '', {"id": "SVversion"})
     return html_str
 
-def job():
-    html_str = ""
-    html_str += tag("button", "ジョブの待ち行列の監視",{\
-            "type": "button",\
-            "onclick": "getJobQueueStatus('job_queue');"
-            })
-    html_str += tag("span", '', {"id": "job_queue"})
-    return html_str
 """ ****************************** 
 page function
 ********************************* """
@@ -342,6 +345,7 @@ PAGE_FUNC = {}
 PAGE_FUNC["sim"] = sim
 PAGE_FUNC["param"] = param
 PAGE_FUNC["scenario"] = scenario
+PAGE_FUNC["job"] = job
 PAGE_FUNC["statistics"] = statistics
 PAGE_FUNC["development"] = development
 """ ****************************** 

@@ -18,6 +18,12 @@
             "EN": "Scenario"
         }
     },
+    "job": {
+        "tabname": {
+            "JA": "バッチジョブ管理",
+            "EN": "Job Control"
+        }
+    },
     "development": {
         "tabname": {
             "JA": "開発",

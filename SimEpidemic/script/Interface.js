@@ -110,12 +110,16 @@ function resetForm(formname) {
 }
 //loadScenario()
 //saveScenario()
-function getJobQueueStatus(target) {
-    server.jobQueStatus(target);
+function getJobQueueStatus() {
+    server.get(function (val) {
+        alert("実行待ちの試行: " + val['length'] + " 個");
+    }, "getJobQueueStatus", 'json');
 }
 
-function getServerVersion(target) {
-    server.version(target);
+function getServerVersion() {
+    server.get(function (val) {
+        alert(val);
+    }, "version");
 }
 
 function pauseOrResume(world, button) {
