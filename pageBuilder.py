@@ -161,24 +161,16 @@ def settingSection(lang, section, key, label_cl, opt_cl, opt_style, file_attr):
         result += tag("div", opt_html)
     return result
 
+def defineWorld(id, lang):
+    paramtype = json2dict(CONTENTS_DIR + "paramtype.json")
+    world_panel = paramPanels(lang, paramtype, PARAM_DIR + 'param_world.json', COMMON_DIR + 'panel.html', checked = False, world='default', add_property = False)
+    return world_panel
+
 def simSettings(id, lang):
     template  = json2dict(SIM_DIR + "sim_settings.json")
     sections = template['sections']
     info = template['info']
-    html_str = tag("button", "×",\
-            {
-                "type": "button",
-                "class": "close-btn",
-                "onclick": "hideElement('sim-"+id+"');"
-                })
-    html_str += tag("div", info['description'][lang], {"style": "margin-top: 15px; margin-bottom:20px;"});
-    html_str += tag("button", info['button'][lang],\
-            {
-                "type": "button",
-                "class": "apply-btn",
-                "name": "apply-settings",
-                "onclick": "applySettings('sim-" + id +'-form' + "', '" + id + "');"
-            });
+    html_str = ""
     for sec in sections:
         html_str += settingSection(\
                 lang,
@@ -190,7 +182,14 @@ def simSettings(id, lang):
                 info['file-attr']\
                 )
 
-    html_str = tag("form",\
+    html_str += tag("button", info['button'][lang],\
+            {
+                "type": "button",
+                "class": "apply-btn",
+                "name": "apply-settings",
+                "onclick": "executeSim('sim-" + id +'-form' + "', '" + id + "', 'default-world-form');"
+            });
+    html_str = defineWorld(id, lang) + tag("form",\
         tag("div", html_str,\
         {"class": info['option-container']}),\
         {'name': 'sim-'+id+'-form'})
@@ -406,27 +405,29 @@ def paramDistribution(lang, param):
             }
     return rephrase(PARAM_DIR + "distribution.html", rep_dict, 1000)
 
-def panel(lang, _id, str_list, title, content, template_file, icon_normal = '"▶︎"', icon_checked = '"▼"', add_property = True):
+def panel(lang, _id, str_list, title, content, template_file, icon_normal = '"▶︎"', icon_checked = '"▼"', add_property = True, checked = True, world='universal'):
+    formname = world + '-' + _id + '-form'
     if add_property:
-        addProperty('param_formnames', _id + '-form')
+        addProperty('param_formnames', formname)
     attr = {}
     attr['PANEL-CMD'] = buttonGroup(\
             jsonStr2dict(\
                 rephrase(\
                     COMMON_DIR + "panel.json",\
-                    {"ID": _id}, 1000),\
+                    {"ID": _id, "FORMNAME": formname}, 1000),\
                 True),\
             lang)
     attr['ID'] = _id
-    attr['FORMNAME'] = _id + "-form"
+    attr['FORMNAME'] = formname
     attr['VAL'] = str_list
     attr['PANEL-TITLE'] = title
     attr['PANEL-CONTENT'] = content
     attr['ICON-NORMAL'] = icon_normal
     attr['ICON-CHECKED'] = icon_checked
+    attr['CHECKED'] = 'checked = "checked"' if checked else ''
     return rephrase(template_file, attr, 1000)
 
-def paramPanels(lang, p_types, paramjsonfile, template_file, add_property = True):
+def paramPanels(lang, p_types, paramjsonfile, template_file, add_property = True, checked = True, world = 'universal'):
     categories = json2dict(paramjsonfile)
     panels =""
     for category in categories:
@@ -447,7 +448,7 @@ def paramPanels(lang, p_types, paramjsonfile, template_file, add_property = True
                 params += paramRadio(lang, param)
             else:
                 params += '謎のふぉーむ: ' + param['type']
-        panels += panel(lang, category, c['param-list'], panel_title, params, template_file)
+        panels += panel(lang, category, c['param-list'], panel_title, params, template_file, world=world, add_property = add_property,checked = checked)
     return panels
 
 def head(title, stylesheets=[], scripts=[]):

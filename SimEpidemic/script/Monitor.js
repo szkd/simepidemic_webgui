@@ -179,6 +179,7 @@ class MonitorPIXI {
         this.pixi.stage.scale.y = this.ratio;
         this.pixi.stage.scale.y *= -1;
         this.event_src = null;
+        this.isStarted = false;
     }
 
     /**
@@ -187,7 +188,6 @@ class MonitorPIXI {
      * @param {float} [interval = 0.1] - レポート間隔（秒）
      */
     start(b_id, w_id, interval = 0.1) {
-        console.log("monitor.start");
         if(this.event_src == null) {
             this.event_src = new Worker("../script/EventWork.js");
             this.event_src.onmessage = this.workerwork;

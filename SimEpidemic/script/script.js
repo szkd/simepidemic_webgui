@@ -5,8 +5,14 @@ window.onload = function(){
     if (typeof tool.getBrowserId() === 'undefined') {
         tool.setBrowserId();
     }
-    server.get(tool.setHiddenValues, 'getParams', responseType = 'json');
-    addMonitor('default');
+    server.get(
+        function (param_default_values) {
+            tool.setHiddenValues(param_default_values);
+            param.resetAll(false);
+            param.resetForm('default-world-form');
+            addMonitor('default');
+        },
+        'getParams', responseType = 'json');
 }
 
 /**
@@ -34,18 +40,19 @@ const param = {};
  */
 param.form2dict = function(formname) {
     const p_list = document.getElementById(formname + "-plist").innerText.split(',');
-    const d = tool.getHiddenValues();
-    //console.log(d);
-    //console.log(p_list);
+    const d = tool.getHiddenValues('default_values');
     const p_dict = {};
     const form = document.forms[formname];
     for(let p of p_list) {
-        //console.log(p);
+        if(d[p] == undefined) {
+            console.log(p);
+            continue;
+        }
         if(d[p].split(',').length > 1) {
             p_dict[p] = new Array();
             p_dict[p].push(form[p + '-min'].value - 0);
-            p_dict[p].push(form[p + '-max'].value - 0);
             p_dict[p].push(form[p + '-mode'].value - 0);
+            p_dict[p].push(form[p + '-max'].value - 0);
             continue;
         }
         p_dict[p] = form[p].value - 0;
@@ -101,6 +108,7 @@ param.loadFromFile = function(file_input, formname) {
  */
 param.resetForm = function(formname) {
     const d = tool.getHiddenValues();
+    console.log("reset: " + formname);
     param.load(d, formname);
 }
 /**
@@ -114,10 +122,14 @@ param.getParamForms = function() {
 /**
  * 全てのパラメータパネルの値を既定値に戻す
  */
-param.resetAll =  function() {
-    const result = confirm(msg.resetAll[LANGUAGE]);
+param.resetAll =  function(need_confirm = true) {
+    result = true;
+    if(need_confirm) {
+        result = confirm(msg.resetAll[LANGUAGE]);
+    }
     if(!result) return;
 
+    //worldでない分類のパラメータのフォームを全て取得
     const para_forms = param.getParamForms();
     for (let f of para_forms) {
         resetForm(f);
@@ -155,8 +167,21 @@ param.loadAll = function(file_input) {
  */
 const sim = {};
 /**
+ *
+ */
+sim.defineWorld = function(formname, world, callback) {
+    const p_dict = param.form2dict(formname);
+    const option = {'world': world, 'me': tool.getBrowserId()};
+    server.post(function(val) {
+        console.log('POST/setParams[defineWorld]: ' + val + '@' + world);
+        callback(val);
+    }, 'setParams', 'dict', p_dict, option);
+
+}
+
+/**
  * パラメータを設定
- * @param {string} formname - 適用したいパラメータ情報
+ * @param {string} formname - タブ,ファイルのどちらからパラメータを設定するか選択
  * @param {string} world - ワールドID
  */
 sim.setParams = function(formname, world) {
@@ -174,13 +199,14 @@ sim.setParams = function(formname, world) {
             console.log('POST/setParams[file]: ' + val);
         }, 'setParams', 'file', file, option);
         return;
-    } else {
+    } else if (form['sim-param'].value == 'tab') {
         const prop = tool.getHiddenValues('property');
         const forms = prop.param_formnames.split(",");
         let p_dict = {}
         for (let p_form of forms) {
             p_dict = {...p_dict, ...param.form2dict(p_form)};
         }
+        //console.log(p_dict);
         server.post(function(val) {
             console.log('POST/setParams[tab]: ' + val);
         }, 'setParams', 'dict', p_dict, option);
@@ -210,15 +236,6 @@ sim.setScenario =  function(formname, world) {
         console.log("シナリオなし");
     }
     return;
-}
-/**
- * シミュレーションに設定を適用する
- * @param {string} formname - 適用したいパラメータ情報
- * @param {string} world - ワールドID
- */
-sim.applySettings = function (formname, world) {
-    sim.setParams(formname, world);
-    sim.setScenario(formname, world);
 }
 /**
  * その瞬間に取得できるデータを取得する
@@ -382,5 +399,3 @@ function addMonitor(w_id) {
     const width = document.querySelector("#world-template .offset").offsetWidth;
     MONITORS[w_id] = new MonitorPIXI(p_node, width, w_id);
 }
-
-

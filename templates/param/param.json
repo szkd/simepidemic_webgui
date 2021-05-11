@@ -1,11 +1,4 @@
 {
-    "world": {
-        "name": {
-            "JA": "世界",
-            "EN": "World"
-        },
-        "param-list": "populationSize,worldSize,mesh,stepsPerDay,initialInfectedRate,initialRecovered,quarantineAsymptomatic,quarantineSymptomatic,workPlaceMode"
-    },
     "move": {
         "name": {
             "JA": "移動",

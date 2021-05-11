@@ -15,8 +15,8 @@
             "style": "display:none;"
         },
         "button": {
-            "JA": "適用",
-            "EN": "Apply"
+            "JA": "シミュレーションを始める",
+            "EN": "Execute the Simulation"
         }
     },
     "sections": {

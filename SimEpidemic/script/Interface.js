@@ -73,8 +73,19 @@ function shareDefaultId() {
     sim.shareDefaultId();
 }
 
-function applySettings(formname, world) {
-    sim.applySettings(formname, world);
+/**
+ * シミュレーションに設定を適用する/
+ */
+function executeSim(formname, w_id, world_formname) {
+    sim.defineWorld(world_formname, w_id, function(val) {
+        sim.worldControl('start', w_id, function(v) {
+            sim.setParams(formname, w_id);
+            sim.setScenario(formname, w_id);
+            MONITORS[w_id].start(tool.getBrowserId(), w_id);
+        });
+        MONITORS[w_id].isStarted = true;
+        hideElement('sim-' + w_id);
+    });
 }
 
 function addNewWorld() {
@@ -108,26 +119,21 @@ function getServerVersion(target) {
 }
 
 function pauseOrResume(world, button) {
-    if(button.innerText == "▶︎") {
+    if(!MONITORS[world].isStarted) {
+        showElement("sim-" + world);
         button.innerText = "Ⅱ";
-        startSim(world);
+        return;
+    } else if(button.innerText == "▶︎") {
+        button.innerText = "Ⅱ";
+        //const filtername = world + '-draw-filter';
+        sim.worldControl('start', world);
+        MONITORS[world].start(tool.getBrowserId(), world);
     } else {
         button.innerText = "▶︎";
-        stopSim(world);
+        sim.worldControl('stop', world);
+        MONITORS[world].stop();
     }
     return;
-}
-
-function startSim(world) {
-    const filtername = world + '-draw-filter';
-    sim.worldControl('start', world, function () {
-        MONITORS[world].start(tool.getBrowserId(), world);
-    });
-}
-
-function stopSim(world) {
-    sim.worldControl('stop', world);
-    MONITORS[world].stop();
 }
 
 function stepSim(world) {

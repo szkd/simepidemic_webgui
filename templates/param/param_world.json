@@ -1,0 +1,9 @@
+{
+    "world": {
+        "name": {
+            "JA": "シミュレーション世界を定義する",
+            "EN": "Definition of the Simulation World"
+        },
+        "param-list": "populationSize,worldSize,mesh,stepsPerDay,initialInfectedRate,initialRecovered,quarantineAsymptomatic,quarantineSymptomatic,workPlaceMode,vaccineAntiRate,antiVaxClusterRate,antiVaxClusterGranularity,antiVaxTestRate"
+    }
+}
