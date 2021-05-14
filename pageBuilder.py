@@ -161,12 +161,12 @@ def settingSection(lang, section, key, label_cl, opt_cl, opt_style, file_attr):
         result += tag("div", opt_html)
     return result
 
-def defineWorld(id, lang):
+def defineWorld(w_id, lang):
     paramtype = json2dict(CONTENTS_DIR + "paramtype.json")
     world_panel = paramPanels(lang, paramtype, PARAM_DIR + 'param_world.json', COMMON_DIR + 'panel.html', checked = False, world='default', add_property = False)
     return world_panel
 
-def simSettings(id, lang):
+def simSettings(w_id, lang, onclick = "executeSim('sim-default-form', 'default', 'default-world-form');"):
     template  = json2dict(SIM_DIR + "sim_settings.json")
     sections = template['sections']
     info = template['info']
@@ -187,12 +187,13 @@ def simSettings(id, lang):
                 "type": "button",
                 "class": "apply-btn",
                 "name": "apply-settings",
-                "onclick": "executeSim('sim-" + id +'-form' + "', '" + id + "', 'default-world-form');"
+                "onclick": onclick
             });
-    html_str = defineWorld(id, lang) + tag("form",\
+    worldform = defineWorld(w_id, lang)
+    html_str = worldform + tag("form",\
         tag("div", html_str,\
         {"class": info['option-container']}),\
-        {'name': 'sim-'+id+'-form'})
+        {'name': 'sim-' + w_id + '-form'})
     return html_str
 
 def animSettings(jsonfile, lang):
