@@ -106,12 +106,6 @@ server.post = function(callback, action, type, senddata, options={}, w_id) {
         req.send(url);
     }
 }
-server.jobQueStatus = function (result_view) {
-    this.get(function (val) {
-        const result = document.getElementById(result_view);
-        result.innerText = val;
-    }, "getJobQueueStatus");
-};
 /********************************************
  ***************************************** */
 /**

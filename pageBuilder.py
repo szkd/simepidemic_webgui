@@ -6,6 +6,7 @@ from collections import OrderedDict
 """ ********************************
 const
 ******************************** """
+
 TEMPLATE_DIR = "templates/"
 OUTPUT_DIR = "SimEpidemic/"
 STYLES = "../css/"
@@ -22,6 +23,7 @@ PARAM_DIR = TEMPLATE_DIR + "param/"
 COMMON_DIR = TEMPLATE_DIR + "common/"
 SCENARIO_DIR = TEMPLATE_DIR + "scenario/"
 DEVELOP_DIR = TEMPLATE_DIR + "dev/"
+JOB_DIR = TEMPLATE_DIR + "job/"
 
 """ ********************************
 common
@@ -129,6 +131,9 @@ def inputGroupFromJson(jsonfile, lang, i_type = "button", formname = ''):
 """ ********************************
 pages
 ******************************** """
+""" ********************************
+sim
+******************************** """
 def settingSection(lang, section, key, label_cl, opt_cl, opt_style, file_attr):
     options = section['options']
     result = ""
@@ -163,10 +168,18 @@ def settingSection(lang, section, key, label_cl, opt_cl, opt_style, file_attr):
 
 def defineWorld(w_id, lang):
     paramtype = json2dict(CONTENTS_DIR + "paramtype.json")
-    world_panel = paramPanels(lang, paramtype, PARAM_DIR + 'param_world.json', COMMON_DIR + 'panel.html', checked = False, world='default', add_property = False)
+    world_panel = paramPanels(lang, paramtype,\
+            PARAM_DIR + 'param_world.json',\
+            COMMON_DIR + 'panel.html',\
+            checked = False, world = w_id,\
+            add_property = False)
     return world_panel
 
-def simSettings(w_id, lang, onclick = "executeSim('sim-default-form', 'default', 'default-world-form');"):
+def simSettings(w_id, lang, btnclass="apply-btn",\
+        onclick = "executeSim(\
+        'sim-default-form', 'default', \
+        'world-default-form');",\
+        btntitle=""):
     template  = json2dict(SIM_DIR + "sim_settings.json")
     sections = template['sections']
     info = template['info']
@@ -182,10 +195,12 @@ def simSettings(w_id, lang, onclick = "executeSim('sim-default-form', 'default',
                 info['file-attr']\
                 )
 
-    html_str += tag("button", info['button'][lang],\
+    if btntitle == '':
+        btntitle = info['button'][lang]
+    html_str += tag("button", btntitle,\
             {
                 "type": "button",
-                "class": "apply-btn",
+                "class": btnclass,
                 "name": "apply-settings",
                 "onclick": onclick
             });
@@ -262,12 +277,13 @@ def sim(lang):
                 "ANIMATION-FILTER": anim_filters,\
                 "ANIMATION-STG": anim_settings,\
                 "ID": "default",\
-                "SETTINGS": simSettings('default', lang)\
+                "SETTINGS": simSettings("default", lang)\
             }, 1000)
     return tag("div", world_template, {"id": "world-list"}) + cmd
 
-""" ********************************* """
-""" ********************************* """
+""" *********************************
+param
+********************************* """
 def param(lang):
     commands = inputGroupFromJson(PARAM_DIR + "commands.json", lang);
     paramtype = json2dict(CONTENTS_DIR + "paramtype.json")
@@ -275,34 +291,104 @@ def param(lang):
     params += paramPanels(lang, paramtype, PARAM_DIR + 'param.json', COMMON_DIR + 'panel.html')
     return commands + params
 
-""" ********************************* """
-""" ********************************* """
+""" *********************************
+scenario
+********************************* """
 def scenario(lang):
     commands = inputGroupFromJson(SCENARIO_DIR + "commands.json", lang);
     return rephrase(SCENARIO_DIR + "scenario.html", {"COMMANDS": commands});
-""" ********************************* """
-""" ********************************* """
-def statistics(lang):
-    return 'statistics'
-
-""" ********************************* """
-""" ********************************* """
+""" *********************************
+job
+********************************* """
 def job(lang):
+    option = serverVersion(lang)
+    option += jobQueueLength(lang)
+    sentences = {
+            "title": {
+                "JA": "新規ジョブを投入",
+                "EN": "Assign a New Job"
+                },
+            "button": {
+                "JA": "投入",
+                "EN": "Submit"
+                },
+            "tabletitle": {
+                "JA": "ジョブ一覧",
+                "EN": "Overview of the Assigned Jobs"
+                }
+            }
+    rep_dict = {
+            "OPTIONS": option,
+            "FORMNAME": "world-job-form",
+            "SUBMITTITLE": sentences['title'][lang],
+            "INPUTS": \
+             simSettings("job", lang,\
+             btnclass = "command-button",\
+             onclick = "submitJob('world-job-form');",\
+             btntitle = sentences['button'][lang]),
+            "EVENTCATCHER": "submitJob",
+            "JOBTABLETITLE": sentences['tabletitle'][lang],
+            "HEADERCELL": jobTableHead(lang),
+            "ROWS": ''
+            }
+    return rephrase(JOB_DIR + "job.html", rep_dict, 1000)
+
+def jobTableHead(lang):
+    template = json2dict(JOB_DIR + "table_header.json")
+    rowspan = template["multirow"]
+    rows = []
+
+    for _ in range(rowspan):
+        rows.append("")
+
+    for head in template['head']:
+        attr = {}
+        attr['style'] = "background-color: var(--hover-color); color: white;"
+        attr['rowspan'] = str(rowspan)
+        if head["multicell"]:
+            colspan = len(template[head['name']])
+            attr.pop('rowspan')
+            cols = template[head['name']]
+            for c in cols:
+                attr['name'] = c['name']
+                rows[1] += tag('th', c['title'][lang], attr)
+            attr.pop('name')
+            attr['colspan'] = str(colspan)
+        rows[0] += tag('th', head['title'][lang], attr)
+    return tag("tr", rows[0]) + tag("tr", rows[1])
+
+
+def jobQueueLength(lang):
+    title = {
+            "JA": "実行待ちの試行の数",
+            "EN": "Number of Wating Trials"
+            }
     html_str = ""
-    html_str += serverVersion();
-    html_str += tag("button", "実行待ちの試行の数",{\
+    html_str += tag("button", title[lang], {\
             "type": "button",\
-            "onclick": "getJobQueueStatus();",\
+            "onclick": "getJobQueueStatus('" + lang + "');",\
             "class": "command-button"
             })
     return html_str
 
+def serverVersion(lang):
+    title = {
+            "JA": "サーバのバージョンを見る",
+            "EN": "Show Server Version"
+            }
+    html_str = ""
+    html_str += tag("button", title[lang], {\
+            "type": "button",\
+            "class": "command-button",\
+            "onclick": "getServerVersion();"
+            })
+    return html_str
 """ ********************************* """
 """ ********************************* """
 def development(lang):
     protocol = json2dict(DEVELOP_DIR + "protocol.json")
     html_str = ""
-    html_str += serverVersion();
+    html_str += serverVersion(lang);
     th_style = "background-color: grey; color: white;"
     th_row = ""
     for elem in ["method", "action", "option", "stage", "hint"]:
@@ -328,16 +414,6 @@ def development(lang):
                     rows += tag("tr", row)
         html_str += rephrase(DEVELOP_DIR + "table.html", {"CATEGORY": protocol[section]['category'], "TABLEROW": rows})
     return html_str
-""" ********************************* """
-""" ********************************* """
-def serverVersion():
-    html_str = ""
-    html_str += tag("button", "SV version",{\
-            "type": "button",\
-            "class": "command-button",\
-            "onclick": "getServerVersion();"
-            })
-    return html_str
 
 """ ****************************** 
 page function
@@ -347,7 +423,6 @@ PAGE_FUNC["sim"] = sim
 PAGE_FUNC["param"] = param
 PAGE_FUNC["scenario"] = scenario
 PAGE_FUNC["job"] = job
-PAGE_FUNC["statistics"] = statistics
 PAGE_FUNC["development"] = development
 """ ****************************** 
 partial
@@ -411,7 +486,7 @@ def paramDistribution(lang, param):
     return rephrase(PARAM_DIR + "distribution.html", rep_dict, 1000)
 
 def panel(lang, _id, str_list, title, content, template_file, icon_normal = '"▶︎"', icon_checked = '"▼"', add_property = True, checked = True, world='universal'):
-    formname = world + '-' + _id + '-form'
+    formname = _id + '-' + world + '-form'
     if add_property:
         addProperty('param_formnames', formname)
     attr = {}
@@ -422,7 +497,7 @@ def panel(lang, _id, str_list, title, content, template_file, icon_normal = '"�
                     {"ID": _id, "FORMNAME": formname}, 1000),\
                 True),\
             lang)
-    attr['ID'] = _id
+    attr['ID'] = world + _id
     attr['FORMNAME'] = formname
     attr['VAL'] = str_list
     attr['PANEL-TITLE'] = title

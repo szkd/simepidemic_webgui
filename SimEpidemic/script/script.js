@@ -9,7 +9,8 @@ window.onload = function(){
         function (param_default_values) {
             tool.setHiddenValues(param_default_values);
             param.resetAll(false);
-            param.resetForm('default-world-form');
+            param.resetForm('world-default-form');
+            param.resetForm('world-job-form');
             addMonitor('default');
         },
         'getParams', responseType = 'json');
@@ -39,6 +40,7 @@ const param = {};
  * @return {object} - パラメータID:値の辞書
  */
 param.form2dict = function(formname) {
+    console.log(formname);
     const p_list = document.getElementById(formname + "-plist").innerText.split(',');
     const d = tool.getHiddenValues('default_values');
     const p_dict = {};
@@ -129,7 +131,7 @@ param.resetAll =  function(need_confirm = true) {
     }
     if(!result) return;
 
-    //worldでない分類のパラメータのフォームを全て取得
+    //universalから始まる名前のパラメータフォームを全て取得
     const para_forms = param.getParamForms();
     for (let f of para_forms) {
         resetForm(f);
@@ -170,6 +172,7 @@ const sim = {};
  *
  */
 sim.defineWorld = function(formname, world, callback) {
+    console.log(formname);
     const p_dict = param.form2dict(formname);
     const option = {'world': world, 'me': tool.getBrowserId()};
     server.post(function(val) {

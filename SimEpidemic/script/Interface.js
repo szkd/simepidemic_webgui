@@ -110,9 +110,15 @@ function resetForm(formname) {
 }
 //loadScenario()
 //saveScenario()
-function getJobQueueStatus() {
+function getJobQueueStatus(lang) {
     server.get(function (val) {
-        alert("実行待ちの試行: " + val['length'] + " 個");
+        if (lang == "JA") {
+            alert("実行待ちの試行: " + val['length'] + " 個");
+        } if (lang == "EN") {
+            alert("Number of Waiting Trials: " + val['length']);
+        } else {
+            console.log("ERROR: Unknown Language "+ lang + "@getJobQueueStatus")
+        }
     }, "getJobQueueStatus", 'json');
 }
 
@@ -181,6 +187,9 @@ function closeWorld(world_id, shared = false){
     delete MONITORS[world_id];
 }
 
+function submitJob() {
+    alert("submitJob");
+}
 /********************************************
  * oninput
  ***************************************** */

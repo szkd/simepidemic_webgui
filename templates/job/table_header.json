@@ -1,0 +1,69 @@
+{
+    "multirow": 2,
+    "head": [
+        {
+            "name": "job_id",
+            "title": {
+                "JA": "ジョブID",
+                "EN": "Job ID"
+            },
+            "multicell": false
+        },
+        {
+            "name": "stopAt",
+            "title": {
+                "JA": "最大実行日数",
+                "EN": "Max Simulation Days"
+            },
+            "multicell": false
+        },
+        {
+            "name": "n",
+            "title": {
+                "JA": "試行回数",
+                "EN": "Number of Trial"
+            },
+            "multicell": false
+        },
+        {
+            "name": "status",
+            "title": {
+                "JA": "試行の実行状況",
+                "EN": "Status of the Trials"
+            },
+            "multicell": true,
+            "multirow": 1
+        },
+        {
+            "name": "commands",
+            "title": {
+                "JA": "操作",
+                "EN": "Commands"
+            },
+            "multicell": false
+        }
+    ],
+    "status": [
+        {
+            "name": "notYet",
+            "title": {
+                "JA": "未開始",
+                "EN": "Not Started Yet"
+            }
+        },
+        {
+            "name": "nowProcessed",
+            "title": {
+                "JA": "実行中",
+                "EN": "Processing"
+            }
+        },
+        {
+            "name": "finished",
+            "title": {
+                "JA": "終了",
+                "EN": "Finished"
+            }
+        }
+    ]
+}
