@@ -114,6 +114,7 @@ param.resetForm = function(formname) {
     param.load(d, formname);
 }
 /**
+ * universalを含む名前のパラメータフォームを全て取得
  * 全てのパラメータパネル（の中のフォーム)を取得する
  * @return {object:array} フォームのリスト
  */
@@ -131,7 +132,6 @@ param.resetAll =  function(need_confirm = true) {
     }
     if(!result) return;
 
-    //universalから始まる名前のパラメータフォームを全て取得
     const para_forms = param.getParamForms();
     for (let f of para_forms) {
         resetForm(f);

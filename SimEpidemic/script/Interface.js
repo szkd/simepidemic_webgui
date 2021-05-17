@@ -188,7 +188,31 @@ function closeWorld(world_id, shared = false){
 }
 
 function submitJob() {
-    alert("submitJob");
+    //stopAt
+    //popDistMap
+    //saveState
+    //loadState
+    //scenariro
+    const jobdata = {
+        "n": 10,
+        "out": [
+            "asymptomatic","symptomatic","recovered","died",
+            "dailyTestPositive","dailyTestNegative",
+            "incubasionPeriod","recoveryPeriod","fatalPeriod","infects"]
+    };
+
+    const formnames = ['world-job-form'];
+    let param_values = {};
+    formnames.push(...param.getParamForms());
+    for(name of formnames) {
+        param_values
+            = {...param_values, ...param.form2dict(name)}
+    }
+    jobdata["params"] = param_values;
+
+    server.post(alert,
+        'submitJob', 'dict',
+        {"job": JSON.stringify(jobdata)});
 }
 /********************************************
  * oninput

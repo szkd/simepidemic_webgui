@@ -66,7 +66,7 @@ server.get = function(callback, _req, responseType ='') {
  * @return (serverPostReqからのもの)可読性のため．実質的には何も返さない
  * @return コールバック関数の結果(この関数からのものではない)
  */
-server.post = function(callback, action, type, senddata, options={}, w_id) {
+server.post = function(callback, action, type, senddata, options={}, w_id='') {
     const req = new XMLHttpRequest();
     req.error = function () {
         alert("ERROR:POST " + action);
