@@ -122,6 +122,7 @@ param.getParamForms = function() {
     const para_forms = document.forms['property']['param_formnames'].value.split(',');
     return para_forms;
 }
+
 /**
  * 全てのパラメータパネルの値を既定値に戻す
  */
@@ -397,8 +398,54 @@ gui.deleteSharedWorld = function (w_id) {
 }
 
 function addMonitor(w_id) {
+    console.log("addmonitor: script.js");
     const p_node = document.getElementById(w_id + '-result');
     p_node.innerHTML='';
     const width = document.querySelector("#world-template .offset").offsetWidth;
     MONITORS[w_id] = new MonitorPIXI(p_node, width, w_id);
 }
+
+/**
+ * ジョブ管理
+ * @namespace
+ */
+const job = {};
+
+job.submit = function (jobdata, world_form) {
+    const formnames = [world_form];
+    let param_values = {};
+    formnames.push(...param.getParamForms());
+    for(name of formnames) {
+        param_values
+            = {...param_values, ...param.form2dict(name)}
+    }
+    jobdata["params"] = param_values;
+    server.post(tool.callbackFunc(job.addTableRow, ['jobtable', jobdata]),
+        'submitJob', 'dict',
+        {"job": JSON.stringify(jobdata)});
+}
+
+job.addTableRow = function (job_id, table_id, jobdata) {
+    const table = document.getElementById(table_id);
+    if (table == null || table == undefined) {
+        console.log("ERROR: Job Table [" + table_id + "] is Missing);");
+        return;
+    }
+    if (job_id == null || job_id == undefined) {
+        console.log("ERROR: Serever doesn't send your new job ID");
+        return;
+    }
+
+    const row = table.insertRow(-1);
+    jobdata['id'] = job_id;
+    const val = "(\"" + job_id + "\")";
+    jobdata['commands'] = tool.getHiddenValues("others")["job_commands"].replaceAll("()", val);
+    const keys = ['id', 'n', 'notYet', 'nowProcessed', 'finished', 'commands'];
+    for(key of keys) {
+        const cell = row.insertCell(-1);
+        if(!(key in jobdata)) jobdata[key] = "*";
+        cell.innerHTML = jobdata[key];
+    }
+}
+
+

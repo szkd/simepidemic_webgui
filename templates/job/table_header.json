@@ -10,14 +10,6 @@
             "multicell": false
         },
         {
-            "name": "stopAt",
-            "title": {
-                "JA": "最大実行日数",
-                "EN": "Max Simulation Days"
-            },
-            "multicell": false
-        },
-        {
             "name": "n",
             "title": {
                 "JA": "試行回数",

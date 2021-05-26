@@ -135,7 +135,7 @@ draw.agents = function(d_array, w_id) {
  * PIXIアプリケーションの描画領域の幅に設定するべき値を取得
  */
 draw.getCanvasParentWidth = function() {
-    return document.querySelector("#world-template .offset").offsetWidth;
+    return document.querySelector("#world-template").offsetWidth;
 }
 
 /**

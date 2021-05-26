@@ -1,0 +1,32 @@
+{
+    "info": {
+        "cmd_cls": "job-button",
+        "cmd_list_cls": "cmd-btn-list offset"
+    },
+    "listener": {
+        "stop": "stopJob();",
+        "getresults": "downloadJobResults();",
+        "savestate": "saveJobState();",
+        "deleteJob": "deleteJob();"
+    },
+    "buttons": {
+        "stop": {
+            "JA": "終了",
+            "EN": "Terminate"
+        },
+        "getresults": {
+            "JA": "結果",
+            "EN": "Results"
+        },
+        "savestate": {
+            "JA": "保存",
+            "EN": "Save"
+        },
+        "deleteJob": {
+            "JA": "削除",
+            "EN": "Delete"
+        }
+    },
+    "other": {
+    }
+}

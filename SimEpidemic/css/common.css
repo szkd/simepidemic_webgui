@@ -168,14 +168,24 @@ input[type="number"] {
     margin-right: var(--margin);
     padding: 2px 10px;
 }
-.command-button:hover {
+
+.job-button {
+    background-color: white;
+    color: var(--hover-color);
+    border-radius: 10px;
+    border: solid 1px var(--hover-color);
+    margin: 2px;
+    padding: 2px;
+}
+
+.job-button:hover, .command-button:hover {
     background-color: var(--hover-color);
     color: white;
 }
 .cmd-btn-list {
     display: flex;
     flex-wrap: wrap;
-    margin-bottom: calc(var(--margin)/2);
+    margin: calc(var(--margin)/2) auto;
     justify-content: flex-start;
 
 }

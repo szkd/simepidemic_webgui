@@ -1,5 +1,5 @@
 ﻿/********************************************
- * onchange
+ * onchange, oninput
  ***************************************** */
 function loadFile(file) {
     tool.displayFilename(file);
@@ -13,8 +13,15 @@ function loadForm(file_input, formname) {
 function changeFilter(world, index, checkbox) {
     MONITORS[world].changeFilter(index, checkbox.checked);
 }
+function sliderValueChanged(slider, outputid){
+    let element = document.getElementById(outputid);
+    element.value = slider.value;
+}
 /********************************************
  * onclick
+ ***************************************** */
+/********************************************
+ * common
  ***************************************** */
 function showElement(id) {
     tool.switchVisible(id, true);
@@ -23,6 +30,9 @@ function hideElement(id) {
     tool.switchVisible(id, false);
 }
 
+/********************************************
+ * chart
+ ***************************************** */
 function showCharts(world) {
     const title = document.createElement('title');
     title.innerText = "Charts:: " + world;
@@ -65,6 +75,9 @@ function showCharts(world) {
     w.document.head.appendChild(d3_script);
 }
 
+/********************************************
+ * sim
+ ***************************************** */
 function takeSnap(w_id) {
     sim.takeSnap(w_id);
 }
@@ -86,46 +99,6 @@ function executeSim(formname, w_id, world_formname) {
         MONITORS[w_id].isStarted = true;
         hideElement('sim-' + w_id);
     });
-}
-
-function addNewWorld() {
-    gui.addNewWorld();
-}
-function sharedWorld() {
-    gui.addSharedWorld();
-}
-
-function saveAll() {
-    param.saveAll();
-}
-
-function resetAll() {
-    param.resetAll();
-}
-function saveForm(formname) {
-    param.download(formname);
-}
-function resetForm(formname) {
-    param.resetForm(formname);
-}
-//loadScenario()
-//saveScenario()
-function getJobQueueStatus(lang) {
-    server.get(function (val) {
-        if (lang == "JA") {
-            alert("実行待ちの試行: " + val['length'] + " 個");
-        } if (lang == "EN") {
-            alert("Number of Waiting Trials: " + val['length']);
-        } else {
-            console.log("ERROR: Unknown Language "+ lang + "@getJobQueueStatus")
-        }
-    }, "getJobQueueStatus", 'json');
-}
-
-function getServerVersion() {
-    server.get(function (val) {
-        alert(val);
-    }, "version");
 }
 
 function pauseOrResume(world, button) {
@@ -170,7 +143,18 @@ function resetSim(world) {
     button.innerText = "▶︎";
 }
 
+/********************************************
+ * world
+ ***************************************** */
+function addNewWorld() {
+    gui.addNewWorld();
+}
+function sharedWorld() {
+    gui.addSharedWorld();
+}
+
 function addMonitor(w_id) {
+    console.log("addmonitor: Interface.js");
     const p_node = document.getElementById(w_id + '-result');
     p_node.innerHTML='';
     MONITORS[w_id] = new MonitorPIXI(p_node, w_id);
@@ -187,7 +171,51 @@ function closeWorld(world_id, shared = false){
     delete MONITORS[world_id];
 }
 
-function submitJob() {
+/********************************************
+ * param
+ ***************************************** */
+function saveAll() {
+    param.saveAll();
+}
+
+function resetAll() {
+    param.resetAll();
+}
+function saveForm(formname) {
+    param.download(formname);
+}
+function resetForm(formname) {
+    param.resetForm(formname);
+}
+/********************************************
+ * scenario
+ ***************************************** */
+//loadScenario()
+//saveScenario()
+//
+/********************************************
+ * job
+ ***************************************** */
+function getJobQueueStatus(lang) {
+    server.get(function (val) {
+        if (lang == "JA") {
+            alert("実行待ちの試行: " + val['length'] + " 個");
+        } if (lang == "EN") {
+            alert("Number of Waiting Trials: " + val['length']);
+        } else {
+            console.log("ERROR: Unknown Language "+ lang + "@getJobQueueStatus")
+        }
+    }, "getJobQueueStatus", 'json');
+}
+
+function getServerVersion() {
+    server.get(function (val) {
+        alert(val);
+    }, "version");
+}
+
+
+function submitJob(w_formname) {
     //stopAt
     //popDistMap
     //saveState
@@ -198,26 +226,22 @@ function submitJob() {
         "out": [
             "asymptomatic","symptomatic","recovered","died",
             "dailyTestPositive","dailyTestNegative",
-            "incubasionPeriod","recoveryPeriod","fatalPeriod","infects"]
+            "incubasionPeriod","recoveryPeriod","fatalPeriod",
+            "infects"]
     };
 
-    const formnames = ['world-job-form'];
-    let param_values = {};
-    formnames.push(...param.getParamForms());
-    for(name of formnames) {
-        param_values
-            = {...param_values, ...param.form2dict(name)}
-    }
-    jobdata["params"] = param_values;
-
-    server.post(alert,
-        'submitJob', 'dict',
-        {"job": JSON.stringify(jobdata)});
+    job.submit(jobdata, w_formname);
 }
-/********************************************
- * oninput
- ***************************************** */
-function sliderValueChanged(slider, outputid){
-    let element = document.getElementById(outputid);
-    element.value = slider.value;
+
+function stopJob(jobid) {
+    alert("stopJob: " + jobid);
+}
+function downloadJobResults(jobid) {
+    alert("downloadJobResults: " + jobid);
+}
+function saveJobState(jobid) {
+    alert("saveJobState: " + jobid);
+}
+function deleteJob(jobid) {
+    alert("deleteJob: " + jobid);
 }

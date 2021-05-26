@@ -29,16 +29,19 @@ JOB_DIR = TEMPLATE_DIR + "job/"
 common
 ******************************** """
 my_property = {}
-def addProperty(name, value):
+others = {}
+def addProperty(name, value, global_dict = my_property):
     if name in my_property:
         my_property[name] += ',' + str(value)
         return
-    my_property[name] = str(value)
+    global_dict[name] = str(value)
 
-def convertMyProperty():
+def convertHiddenData(global_dict = my_property):
     html_str = ""
-    for name in my_property:
-        html_str += tag("input", attr={"type" : "hidden", "name": name, "value": my_property[name]}, end=False)
+    for name in global_dict:
+        html_str += tag("input", attr={"type" : "hidden", "name": name, "value": global_dict[name]}, end=False)
+    html_str = html_str.replace('\n', '', 100)
+
     return html_str
 
 def checkboxGroup(formname, d, lang):
@@ -87,10 +90,6 @@ def buttonGroup(d, lang):
             content = content[lang]
         attr = cmd['attr']
         html_str += tag(cmd['tag'], content, cmd['attr'], cmd['end'])
-
-    html_str = tag("div", html_str, {\
-            'class': info['cmd_list_cls']\
-            })
     return html_str
 
 def numberGroup(d, lang):
@@ -303,6 +302,9 @@ job
 def job(lang):
     option = serverVersion(lang)
     option += jobQueueLength(lang)
+    commands = inputGroupFromJson(JOB_DIR + "job_command.json", lang)
+    commands = commands.replace('"', "'", 100)
+    addProperty("job_commands", commands, others)
     sentences = {
             "title": {
                 "JA": "新規ジョブを投入",
@@ -314,13 +316,19 @@ def job(lang):
                 },
             "tabletitle": {
                 "JA": "ジョブ一覧",
-                "EN": "Overview of the Assigned Jobs"
+                "EN": "Overview of the Assigned Jobs",
+                },
+            "loadstatetitle": {
+                "JA": "ジョブの状態を読み込む",
+                "EN": "Load Job State",
                 }
             }
     rep_dict = {
             "OPTIONS": option,
             "FORMNAME": "world-job-form",
             "SUBMITTITLE": sentences['title'][lang],
+            "LOADSTATETITLE": sentences['loadstatetitle'][lang],
+            "LOADSTATEFORM": "",
             "INPUTS": \
              simSettings("job", lang,\
              btnclass = "command-button",\
@@ -329,7 +337,7 @@ def job(lang):
             "EVENTCATCHER": "submitJob",
             "JOBTABLETITLE": sentences['tabletitle'][lang],
             "HEADERCELL": jobTableHead(lang),
-            "ROWS": ''
+            "TABLEID": 'jobtable'
             }
     return rephrase(JOB_DIR + "job.html", rep_dict, 1000)
 
@@ -682,7 +690,11 @@ def buildPage(lang):
         tab_contents += tab['tab_content']
 
     data["MAIN"] = tabItemContainer(tab_items + tab_contents,'tabs')
-    data["PROPERTY"] = tag("form", convertMyProperty(), {"style": "display:none;", "name": "property"})
+    data["PROPERTY"] =\
+            tag("form", convertHiddenData(),\
+            {"style": "display:none;", "name": "property"}) +\
+            tag("form", convertHiddenData(others),\
+            {"style": "display:none;", "name": "others"})
     with open(OUTPUT_FILE["index"][lang], mode="w") as f:
         f.write(rephrase(COMMON_DIR + "base.html", data))
 
